@@ -1,0 +1,5 @@
+name: Content Entity Base
+type: module
+description: Provides base classes for bundle-able custom entities.
+core: 8.x
+package: Entities

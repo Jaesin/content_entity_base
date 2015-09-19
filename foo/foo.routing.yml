@@ -1,0 +1,96 @@
+# Foo routing definition
+# @todo remove this file when https://www.drupal.org/node/2350509 lands.
+# List entities.
+entity.foo_content.collection:
+  path: '/admin/content/foo_content'
+  defaults:
+    _entity_list: 'foo_content'
+    _title: 'Foo content'
+  requirements:
+    _permission: 'view foo_content entity'
+# View an entity.
+entity.foo_content.canonical:
+  path: '/admin/foo_content/{foo_content}'
+  defaults:
+    _entity_view: 'foo_content'
+    _title: 'Foo content'
+  requirements:
+    _entity_access: 'foo_content.view'
+foo_content.add_page:
+  path: '/admin/foo_content/add'
+  defaults:
+    _controller: '\Drupal\content_entity_base\Entity\Controller\EntityBaseController::addPage'
+    _title: 'Add Foo content'
+    entity_type: foo_content
+  options:
+    _admin_route: TRUE
+  requirements:
+    _entity_create_access: foo_content
+
+entity.foo_content.add_form:
+  path: '/admin/foo_content/add/{entity_bundle_id}'
+  defaults:
+    _controller: '\Drupal\content_entity_base\Entity\Controller\EntityBaseController::addForm'
+    _title_callback: '\Drupal\content_entity_base\Entity\Controller\EntityBaseController::getAddFormTitle'
+    entity_type: foo_content
+  requirements:
+    _entity_create_access: foo_content
+
+entity.foo_content.edit_form:
+  path: '/admin/foo_content/{foo_content}/edit'
+  defaults:
+    _entity_form: foo_content.edit
+    _title_callback: '\Drupal\content_entity_base\Entity\Controller\EntityBaseController::getEntityFormTitle'
+    action: edit
+  requirements:
+    _entity_access: foo_content.edit
+
+entity.foo_content.delete_form:
+  path: '/admin/foo_content/{foo_content}/delete'
+  defaults:
+    _entity_form: foo_content.delete
+    _title_callback: '\Drupal\content_entity_base\Entity\Controller\EntityBaseController::getEntityFormTitle'
+    action: delete
+  requirements:
+    _entity_access: 'foo_content.delete'
+
+# Foo content type routing definition
+entity.foo_content_type.collection:
+  path: '/admin/structure/foo-content-types'
+  defaults:
+    _entity_list: 'foo_content_type'
+    _title: "Foo content types"
+  options:
+    _admin_route: TRUE
+  requirements:
+    _permission: 'administer foo_content types'
+
+entity.foo_content_type.add_form:
+  path: '/admin/structure/foo-content-types/add'
+  defaults:
+    _entity_form: 'foo_content_type.add'
+    _title: 'Add Foo content type'
+  options:
+    _admin_route: TRUE
+  requirements:
+    _permission: 'administer foo_content types'
+
+entity.foo_content_type.edit_form:
+  path: '/admin/structure/foo-content-types/manage/{foo_content_type}'
+  defaults:
+    _entity_form: 'foo_content_type.edit'
+    _title: 'Edit Foo content type %foo_content_type'
+  options:
+    _admin_route: TRUE
+  requirements:
+    _permission: 'administer foo_content types'
+
+entity.foo_content_type.delete_form:
+  path: '/admin/structure/foo-content-types/manage/{foo_content_type}/delete'
+  defaults:
+    _entity_form: 'foo_content_type.delete'
+    _title: 'Delete Foo content type'
+  options:
+    _admin_route: TRUE
+  requirements:
+    _permission: 'administer foo_content types'
