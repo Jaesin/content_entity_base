@@ -1,0 +1,7 @@
+name: Foo
+type: module
+description: Provides a bundle-able Foo content entity used to store Foo content.
+core: 8.x
+package: Entities
+dependencies:
+  - content_entity_base

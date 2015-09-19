@@ -1,0 +1,23 @@
+<?php
+
+/**
+ * @file
+ *   Contains the foo.module file for the Foo module.
+ */
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function foo_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the foo module.
+    case 'help.page.foo':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Provides a bundle-able Foo content entity used to store Foo content.') . '</p>';
+      return $output;
+
+    default:
+  }
+}

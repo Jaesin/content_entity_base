@@ -1,0 +1,143 @@
+<?php
+
+/**
+ * @file
+ * Contains \Drupal\content_entity_base\Entity\Access\EntityBasePermissions.
+ */
+
+namespace Drupal\content_entity_base\Entity\Access;
+
+use Drupal\content_entity_base\Entity\EntityTypeBaseInterface;
+use Drupal\Core\Entity\ContentEntityTypeInterface;
+use Drupal\Core\Routing\UrlGeneratorTrait;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+
+/**
+ * Defines a class containing permission callbacks.
+ */
+class EntityBasePermissions {
+
+  use StringTranslationTrait;
+  use UrlGeneratorTrait;
+
+  /**
+   * Gets an array of entity type permissions.
+   *
+   * @param ContentEntityTypeInterface $entity
+   *   The custom entity definition.
+   * @return array
+   *   The entity type permissions.
+   *   @see \Drupal\user\PermissionHandlerInterface::getPermissions()
+   */
+  public function entityPermissions(ContentEntityTypeInterface $entity = NULL) {
+    $perms = [];
+
+    if (!empty($entity)) {
+      // Get the entity ID.
+      $entity_id = $entity->id();
+      // Build replacement data for lables and descriptions.
+      $replacements = [
+        '!entity_id' => $entity_id,
+        '@entity_label' => $entity->getLabel(),
+      ];
+      // Add the default entity permissions.
+      $perms = [
+        "bypass $entity_id access" => [
+          'title' => $this->t('Bypass @entity_label access control', $replacements),
+          'description' => $this->t('View, edit and delete all @entity_label regardless of permission restrictions.', $replacements),
+          'restrict access' => TRUE,
+        ],
+        "administer $entity_id types" => [
+          'title' => $this->t('Administer @entity_label types', $replacements),
+          'description' => $this->t('Promote, change ownership, edit revisions, and perform other tasks across all @entity_label types.', $replacements),
+          'restrict access' => TRUE,
+        ],
+        "administer $entity_id" => [
+          'title' => $this->t('Administer @entity_label', $replacements),
+          'restrict access' => TRUE,
+        ],
+        "access $entity_id overview" => [
+          'title' => $this->t('Access the @entity_label overview page', $replacements),
+          'description' => $this->t('Get an overview of all @entity_label.', $replacements),
+        ],
+        "access $entity_id" => [
+          'title' => $this->t('View published @entity_label', $replacements),
+        ],
+        "view own unpublished $entity_id" => [
+          'title' => $this->t('View own unpublished @entity_label', $replacements),
+        ],
+        "view all $entity_id revisions" => [
+          'title' => $this->t('View all @entity_label revisions', $replacements),
+        ],
+        "revert all $entity_id revisions" => [
+          'title' => $this->t('Revert all @entity_label revisions', $replacements),
+          'description' => $this->t('Role requires permission <em>View all @entity_label revisions</em> and <em>edit rights</em> for @entity_label in question or <em>Administer @entity_label</em>.', $replacements),
+        ],
+        "delete all $entity_id revisions" => [
+          'title' => $this->t('Delete all @entity_label revisions', $replacements),
+          'description' => $this->t('Role requires permission to <em>View all @entity_label revisions</em> and <em>delete rights</em> for @entity_label in question or <em>Administer @entity_label</em>.', $replacements),
+        ],
+      ];
+      // Load bundles if any are defined.
+      if (($entity_type_storage = \Drupal::entityManager()->getStorage($entity->getBundleEntityType()))
+        && ($entity_types = $entity_type_storage->loadMultiple())) {
+        // Generate entity permissions for all types for this entity.
+        foreach ($entity_types as $type) {
+          $perms += $this->buildPermissions($type);
+        }
+      }
+    }
+
+    return $perms;
+  }
+
+  /**
+   * Builds a standard list of entity permissions for a given type.
+   *
+   * @param \Drupal\content_entity_base\Entity\EntityTypeBaseInterface $type
+   *   The machine name of the entity type.
+   *
+   * @return array
+   *   An array of permission names and descriptions.
+   */
+  protected function buildPermissions(EntityTypeBaseInterface $type) {
+
+    $entity_id = $type->bundleOf();
+    // Get the referring entity definition.
+    $entity_definition = \Drupal::entityManager()->getDefinition($entity_id);
+    $type_id = $type->id();
+    $type_params = [
+      '%entity_label' => $entity_definition->getLabel(),
+      '%type_name' => $type->label(),
+    ];
+
+    return array(
+      "create $type_id $entity_id" => [
+        'title' => $this->t('%type_name: Create new %entity_label', $type_params),
+      ],
+      "edit own $type_id $entity_id" => [
+        'title' => $this->t('%type_name: Edit own %entity_label', $type_params),
+      ],
+      "edit any $type_id $entity_id" => [
+        'title' => $this->t('%type_name: Edit any %entity_label', $type_params),
+      ],
+      "delete own $type_id $entity_id" => [
+        'title' => $this->t('%type_name: Delete own %entity_label', $type_params),
+      ],
+      "delete any $type_id $entity_id" => [
+        'title' => $this->t('%type_name: Delete any %entity_label', $type_params),
+      ],
+      "view $type_id $entity_id revisions" => [
+        'title' => $this->t('%type_name: View %entity_label revisions', $type_params),
+      ],
+      "revert $type_id $entity_id revisions" => [
+        'title' => $this->t('%type_name: Revert %entity_label revisions', $type_params),
+        'description' => t('Role requires permission <em>view revisions</em> and <em>edit rights</em> for %entity_label in question, or <em>Administer %entity_label</em>.', $type_params),
+      ],
+      "delete $type_id $entity_id revisions" => [
+        'title' => $this->t('%type_name: Delete %entity_label revisions', $type_params),
+        'description' => $this->t('Role requires permission to <em>view revisions</em> and <em>delete rights</em> for %entity_label in question, or <em>Administer %entity_label</em>.', $type_params),
+      ],
+    );
+  }
+}
