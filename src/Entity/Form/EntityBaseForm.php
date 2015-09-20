@@ -16,7 +16,7 @@ use Drupal\Core\Form\FormStateInterface;
  */
 class EntityBaseForm extends ContentEntityForm {
 
-  /** @var \Drupal\content_entity_base\Entity\EntityTypeBaseInterface */
+  /** @var \Drupal\content_entity_base\Entity\EntityBaseInterface */
   protected $entity;
 
   /**
@@ -57,14 +57,16 @@ class EntityBaseForm extends ContentEntityForm {
       ]);
     }
 
-    $form['advanced'] = array(
+    $form['advanced'] = [
       '#type' => 'vertical_tabs',
       '#weight' => 99,
-    );
+    ];
 
     // Add a log field if the "Create new revision" option is checked, or if the
     // current user has the ability to check that option.
-    $form['revision_information'] = array(
+    // @todo Could we autogenerate this form by using some widget on the
+    //   revision info field.
+    $form['revision_information'] = [
       '#type' => 'details',
       '#title' => $this->t('Revision information'),
       // Open by default when "Create new revision" is checked.
@@ -72,33 +74,33 @@ class EntityBaseForm extends ContentEntityForm {
       '#group' => 'advanced',
       '#weight' => 20,
       '#access' => $this->entity->isNewRevision() || $account->hasPermission($entity_type->get('admin_permission')),
-    );
+    ];
 
-    $form['revision_information']['revision'] = array(
+    $form['revision_information']['revision'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Create new revision'),
       '#default_value' => $this->entity->isNewRevision(),
       '#access' => $account->hasPermission($entity_type->get('admin_permission')),
-    );
+    ];
 
     // Check the revision log checkbox when the log textarea is filled in.
     // This must not happen if "Create new revision" is enabled by default,
     // since the state would auto-disable the checkbox otherwise.
     if (!$this->entity->isNewRevision()) {
-      $form['revision_information']['revision']['#states'] = array(
-        'checked' => array(
-          'textarea[name="revision_log"]' => array('empty' => FALSE),
-        ),
-      );
+      $form['revision_information']['revision']['#states'] = [
+        'checked' => [
+          'textarea[name="revision_log"]' => ['empty' => FALSE],
+        ],
+      ];
     }
 
-    $form['revision_information']['revision_log'] = array(
+    $form['revision_information']['revision_log'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Revision log message'),
       '#rows' => 4,
       '#default_value' => $this->entity->getRevisionLog(),
       '#description' => $this->t('Briefly describe the changes you have made.'),
-    );
+    ];
 
     return parent::form($form, $form_state);
   }
@@ -117,9 +119,9 @@ class EntityBaseForm extends ContentEntityForm {
 
     $insert = $this->entity->isNew();
     $this->entity->save();
-    $context = array('@type' => $this->entity->bundle(), '%info' => $this->entity->label());
+    $context = ['@type' => $this->entity->bundle(), '%info' => $this->entity->label()];
     $logger = $this->logger($this->entity->id());
-    $t_args = array('@type' => $entity_type->label(), '%info' => $this->entity->label());
+    $t_args = ['@type' => $entity_type->label(), '%info' => $this->entity->label()];
 
     if ($insert) {
       $logger->notice('@type: added %info.', $context);
@@ -153,7 +155,7 @@ class EntityBaseForm extends ContentEntityForm {
       if (!empty($exists)) {
         $form_state->setErrorByName('info', $this->t('A @entity_label with description %name already exists.', [
           '@entity_label' => $this->entity->label(),
-          '%name' => $form_state->getValue(array('info', 0, 'value')),
+          '%name' => $form_state->getValue(['info', 0, 'value']),
         ]));
       }
     }

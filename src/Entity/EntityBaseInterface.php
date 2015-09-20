@@ -15,15 +15,6 @@ use Drupal\Core\Entity\EntityChangedInterface;
  */
 interface EntityBaseInterface extends ContentEntityInterface, EntityChangedInterface {
 
-
-  /**
-   * Returns the entity revision log message.
-   *
-   * @return string
-   *   The revision log message.
-   */
-  public function getRevisionLog();
-
   /**
    * Sets the entity description.
    *
@@ -34,6 +25,16 @@ interface EntityBaseInterface extends ContentEntityInterface, EntityChangedInter
    *   The class instance that this method is called on.
    */
   public function setInfo($info);
+
+  /**
+   * @todo Ideally this would be its own interface?
+   *
+   * Returns the entity revision log message.
+   *
+   * @return string
+   *   The revision log message.
+   */
+  public function getRevisionLog();
 
   /**
    * Sets the entity revision log message.
