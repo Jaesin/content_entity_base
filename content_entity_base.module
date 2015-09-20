@@ -4,6 +4,7 @@
  * @file
  * Contains content_entity_base.module.
  */
+
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**

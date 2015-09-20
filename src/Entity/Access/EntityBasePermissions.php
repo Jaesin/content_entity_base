@@ -9,6 +9,7 @@ namespace Drupal\content_entity_base\Entity\Access;
 
 use Drupal\content_entity_base\Entity\EntityTypeBaseInterface;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Routing\UrlGeneratorTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
@@ -19,6 +20,15 @@ class EntityBasePermissions {
 
   use StringTranslationTrait;
   use UrlGeneratorTrait;
+
+  /**
+   * @var \Drupal\Core\Entity\EntityManagerInterface
+   */
+  protected $entityManager;
+
+  public function __construct(EntityManagerInterface $entity_manager) {
+    $this->entityManager = $entity_manager;
+  }
 
   /**
    * Gets an array of entity type permissions.
@@ -79,7 +89,7 @@ class EntityBasePermissions {
         ],
       ];
       // Load bundles if any are defined.
-      if (($entity_type_storage = \Drupal::entityManager()->getStorage($entity->getBundleEntityType()))
+      if (($entity_type_storage = $this->entityManager->getStorage($entity->getBundleEntityType()))
         && ($entity_types = $entity_type_storage->loadMultiple())) {
         // Generate entity permissions for all types for this entity.
         foreach ($entity_types as $type) {
@@ -104,14 +114,14 @@ class EntityBasePermissions {
 
     $entity_id = $type->bundleOf();
     // Get the referring entity definition.
-    $entity_definition = \Drupal::entityManager()->getDefinition($entity_id);
+    $entity_definition = $this->entityManager->getDefinition($entity_id);
     $type_id = $type->id();
     $type_params = [
       '%entity_label' => $entity_definition->getLabel(),
       '%type_name' => $type->label(),
     ];
 
-    return array(
+    return [
       "create $type_id $entity_id" => [
         'title' => $this->t('%type_name: Create new %entity_label', $type_params),
       ],
@@ -138,6 +148,6 @@ class EntityBasePermissions {
         'title' => $this->t('%type_name: Delete %entity_label revisions', $type_params),
         'description' => $this->t('Role requires permission to <em>view revisions</em> and <em>delete rights</em> for %entity_label in question, or <em>Administer %entity_label</em>.', $type_params),
       ],
-    );
+    ];
   }
 }
