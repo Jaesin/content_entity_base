@@ -64,4 +64,5 @@ class EntityTypeBase extends ConfigEntityBundleBase implements EntityTypeBaseInt
   public function shouldCreateNewRevision() {
     return $this->revision;
   }
+
 }
