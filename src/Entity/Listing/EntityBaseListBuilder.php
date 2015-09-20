@@ -40,6 +40,9 @@ class EntityBaseListBuilder extends EntityListBuilder {
     if (isset($operations['edit'])) {
       $operations['edit']['query']['destination'] = $entity->url('collection');
     }
+    if (isset($operations['delete'])) {
+      $operations['delete']['query']['destination'] = $entity->url('collection');
+    }
     return $operations;
   }
 
