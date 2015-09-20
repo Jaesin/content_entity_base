@@ -16,6 +16,9 @@ use Drupal\Core\Form\FormStateInterface;
  */
 class EntityBaseForm extends ContentEntityForm {
 
+  /** @var \Drupal\content_entity_base\Entity\EntityTypeBaseInterface */
+  protected $entity;
+
   /**
    * Overrides \Drupal\Core\Entity\EntityForm::prepareEntity().
    *

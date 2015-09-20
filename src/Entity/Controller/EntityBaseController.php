@@ -31,7 +31,7 @@ class EntityBaseController extends ControllerBase {
    */
   public function addPage(Request $request, $entity_type = NULL) {
     // Get the entity definition.
-    /** @var ContentEntityTypeInterface $entity_definition */
+    /** @var \Drupal\Core\Entity\ContentEntityTypeInterface $entity_definition */
     $entity_definition = !empty($entity_type)
       ? $this->entityManager()->getDefinition($entity_type)
       : NULL;
@@ -48,12 +48,12 @@ class EntityBaseController extends ControllerBase {
       return $this->addForm($entity_type, $type->id());
     }
     if (count($types) === 0) {
-      return array(
-        '#markup' => $this->t('You have not created any @entity_label types yet. Go to the <a href="!url">@entity_label type creation page</a> to add a new @entity_label type.', [
+      return [
+        '#markup' => $this->t('You have not created any @entity_label types yet. Go to the <a href="@url">@entity_label type creation page</a> to add a new @entity_label type.', [
           '@entity_label' => $entity_definition->label(),
-          '!url' => Url::fromRoute($entity_definition->id().'.type_add')->toString(),
+          '@url' => Url::fromRoute($entity_definition->id().'.type_add')->toString(),
         ]),
-      );
+      ];
     }
 
     $build = ['add_links'=>[
@@ -106,7 +106,7 @@ class EntityBaseController extends ControllerBase {
    * @return array
    *   A form array as expected by drupal_render().
    */
-  public function addForm($entity_type = NULL, $entity_bundle_id = NULL) {
+  public function addForm(EntityBaseInterface $entity_type = NULL, $entity_bundle_id = NULL) {
     // Get the entity type from the entity_type_id.
     $entity_definition = $this->entityManager()->getDefinition($entity_type);
 
@@ -115,11 +115,12 @@ class EntityBaseController extends ControllerBase {
 
     // Validate the bundle.
     if (!$entity_bundle) {
+      // @todo Replace it with https://www.drupal.org/node/2571521.
       \Drupal::logger('content_entity_base')->error($this->t('Cannot create a @entity_type entity with an invalid bundle type of "%entity_bundle_id".'), [
         '@entity_type' => $entity_definition->getLabel(),
         '%entity_bundle_id' => $entity_bundle_id,
       ]);
-      return new RedirectResponse(\Drupal::url($entity_type.'.add_page'));
+      return new RedirectResponse(Url::fromRoute($entity_type . '.add_page')->toString());
     }
     // Get the entity storage for this entity type.
     $entity_storage = $this->entityManager()->getStorage($entity_definition->id());
