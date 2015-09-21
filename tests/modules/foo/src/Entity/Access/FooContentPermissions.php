@@ -2,10 +2,10 @@
 
 /**
  * @file
- *   Contains \Drupal\foo\Entity\Access\FooContentPermissions.
+ *   Contains \Drupal\foo_entity\Entity\Access\FooContentPermissions.
  */
 
-namespace Drupal\foo\Entity\Access;
+namespace Drupal\foo_entity\Entity\Access;
 
 use Drupal\content_entity_base\Entity\Access\EntityBasePermissions;
 use Drupal\Core\Entity\ContentEntityTypeInterface;

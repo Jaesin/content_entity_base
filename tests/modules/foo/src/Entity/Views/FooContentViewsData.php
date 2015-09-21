@@ -2,10 +2,10 @@
 
 /**
  * @file
- *   Contains Drupal\foo\Entity\Views\FooContentViewsData.
+ *   Contains Drupal\foo_entity\Entity\Views\FooContentViewsData.
  */
 
-namespace Drupal\foo\Entity\Views;
+namespace Drupal\foo_entity\Entity\Views;
 
 use Drupal\content_entity_base\Entity\Views\EntityBaseViewsData;
 
