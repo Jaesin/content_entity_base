@@ -2,10 +2,10 @@
 
 /**
  * @file
- *   Contains Drupal\foo\Entity\FooContentType.
+ *   Contains Drupal\foo_entity\Entity\FooContentType.
  */
 
-namespace Drupal\foo\Entity;
+namespace Drupal\foo_entity\Entity;
 
 use Drupal\content_entity_base\Entity\EntityTypeBase;
 

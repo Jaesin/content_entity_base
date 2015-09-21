@@ -2,10 +2,10 @@
 
 /**
  * @file
- *   Contains Drupal\foo\Entity\FooContent.
+ *   Contains Drupal\foo_entity\Entity\DCContent.
  */
 
-namespace Drupal\foo\Entity;
+namespace Drupal\foo_entity\Entity;
 
 use Drupal\content_entity_base\Entity\EntityBase;
 
@@ -14,8 +14,8 @@ use Drupal\content_entity_base\Entity\EntityBase;
  *
  * @ContentEntityType(
  *   id                      = "foo_content",
- *   label                   = @Translation("Foo content"),
- *   bundle_label            = @Translation("Foo content type"),
+ *   label                   = @Translation("Destination Central content"),
+ *   bundle_label            = @Translation("Destination Central content type"),
  *   base_table              = "foo_content",
  *   revision_table          = "foo_content_revision",
  *   data_table              = "foo_content_field_data",
@@ -32,7 +32,7 @@ use Drupal\content_entity_base\Entity\EntityBase;
  *     "translation"  = "\Drupal\content_translation\ContentTranslationHandler",
  *     "list_builder" = "\Drupal\content_entity_base\Entity\Listing\EntityBaseListBuilder",
  *     "view_builder" = "\Drupal\Core\Entity\EntityViewBuilder",
- *     "views_data"   = "\Drupal\foo\Entity\Views\FooContentViewsData",
+ *     "views_data"   = "\Drupal\foo_entity\Entity\Views\DCContentViewsData",
  *     "form" = {
  *       "add"        = "\Drupal\content_entity_base\Entity\Form\EntityBaseForm",
  *       "edit"       = "\Drupal\content_entity_base\Entity\Form\EntityBaseForm",
@@ -56,5 +56,5 @@ use Drupal\content_entity_base\Entity\EntityBase;
  *   },
  * )
  */
-class FooContent extends EntityBase {
+class DCContent extends EntityBase {
 }
