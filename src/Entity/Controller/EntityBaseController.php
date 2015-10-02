@@ -8,33 +8,26 @@
 namespace Drupal\content_entity_base\Entity\Controller;
 
 use Drupal\content_entity_base\Entity\EntityBaseInterface;
+use Drupal\content_entity_base\Entity\EntityTypeBaseInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
 
 class EntityBaseController extends ControllerBase {
 
   /**
    * Displays add custom entity links for available types.
    *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The current request object.
-   * @param (string) $entity_type
-   *   The custom entity type to add.
+   * @param \Drupal\Core\Entity\ContentEntityTypeInterface $entity_definition
+   *   The custom entity definition.
    *
    * @return array
    *   A render array for a list of the custom entity types that can be added or
    *   if there is only one custom entity type defined for the site, the function
    *   returns the custom entity add page for that custom entity type.
    */
-  public function addPage(Request $request, $entity_type = NULL) {
-    // Get the entity definition.
-    /** @var \Drupal\Core\Entity\ContentEntityTypeInterface $entity_definition */
-    $entity_definition = !empty($entity_type)
-      ? $this->entityManager()->getDefinition($entity_type)
-      : NULL;
+  public function addPage(ContentEntityTypeInterface $entity_definition = NULL) {
     // Get the storage controller for this entity.
     $bundle_storage = $entity_definition
       ? $this->entityManager()->getStorage($entity_definition->getBundleEntityType())
@@ -45,7 +38,7 @@ class EntityBaseController extends ControllerBase {
     // Check for existing types.
     if ($types && count($types) == 1) {
       $type = reset($types);
-      return $this->addForm($entity_type, $type->id());
+      return $this->addForm($entity_definition, $type);
     }
     if (count($types) === 0) {
       return [
@@ -71,7 +64,7 @@ class EntityBaseController extends ControllerBase {
     foreach ($types as $type) {
       $build['add_links']['#links'][$type->id()] = [
         'title' => $type->label(),
-        'url' => new Url('entity.'.$entity_definition->id().'.add_form', ['entity_bundle_id' => $type->id()], ['query' => $query]),
+        'url' => new Url('entity.'.$entity_definition->id().'.add_form', ['entity_bundle' => $type->id()], ['query' => $query]),
       ];
     }
 
@@ -81,46 +74,49 @@ class EntityBaseController extends ControllerBase {
   /**
    * Gets the title for the "Entity Add" page.
    *
-   * @param \Drupal\content_entity_base\Entity\EntityBaseInterface $entity_definition
-   *   The custom entity type to add.
+   * @param \Drupal\Core\Entity\ContentEntityTypeInterface $entity_definition
+   *   The custom entity definition.
    *
    * @return string
    *   The title customized for this entity type.
    */
-  public function getAddPageTitle(EntityBaseInterface $entity_definition) {
-    return $this->t('Add @entity_label', [
-      '@entity_label' => $entity_definition->label(),
+  public function getAddPageTitle(ContentEntityTypeInterface $entity_definition = NULL) {
+    // Get the storage controller for this entity.
+    $bundle_storage = $entity_definition
+      ? $this->entityManager()->getStorage($entity_definition->getBundleEntityType())
+      : NULL;
+    // Load all entity types for this entity definition.
+    $types = $bundle_storage->loadMultiple();
+
+    // Check for existing types.
+    $entity_bundle  = $types && count($types) == 1 ? reset($types)  : FALSE;
+
+    return $this->t($entity_bundle ? 'Add %type @entity_label content' : 'Add @entity_label', [
+      '@entity_label' => $entity_definition->getLabel(),
+      '%type' => $entity_bundle ? $entity_bundle->label() : '',
     ]);
   }
 
   /**
    * Presents the custom entity creation form.
    *
-   * @param \Drupal\content_entity_base\Entity\EntityBaseInterface $entity_definition
-   *   The custom entity type to add.
+   * @param \Drupal\Core\Entity\ContentEntityTypeInterface $entity_definition
+   *   The custom entity definition.
    * @param \Drupal\content_entity_base\Entity\EntityTypeBaseInterface $entity_bundle
    *   The custom entity type bundle to use.
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The current request object.
    *
    * @return array
    *   A form array as expected by drupal_render().
    */
-  public function addForm(EntityBaseInterface $entity_type = NULL, $entity_bundle_id = NULL) {
-    // Get the entity type from the entity_type_id.
-    $entity_definition = $this->entityManager()->getDefinition($entity_type);
-
-    // Load the bundle.
-    $entity_bundle = $this->entityManager->getStorage($entity_definition->getBundleEntityType())->load($entity_bundle_id);
-
+  public function addForm(ContentEntityTypeInterface $entity_definition = NULL, EntityTypeBaseInterface $entity_bundle = NULL) {
     // Validate the bundle.
-    if (!$entity_bundle) {
+    if (!$entity_bundle || !$entity_definition) {
       // @todo Replace it with https://www.drupal.org/node/2571521.
       \Drupal::logger('content_entity_base')->error($this->t('Cannot create a @entity_type entity with an invalid bundle type of "%entity_bundle_id".'), [
-        '@entity_type' => $entity_definition->getLabel(),
-        '%entity_bundle_id' => $entity_bundle_id,
+        '@entity_type' => (string) $entity_definition,
+        '%entity_bundle_id' => (string) $entity_bundle,
       ]);
-      return new RedirectResponse(Url::fromRoute($entity_type . '.add_page')->toString());
+      return new RedirectResponse(Url::fromRoute($entity_definition . '.add_page')->toString());
     }
     // Get the entity storage for this entity type.
     $entity_storage = $this->entityManager()->getStorage($entity_definition->id());
@@ -133,17 +129,16 @@ class EntityBaseController extends ControllerBase {
   /**
    * Provides the page title for the entity form.
    *
+   * @param \Drupal\Core\Entity\ContentEntityTypeInterface $entity_definition
+   *   The custom entity definition.
    * @param \Drupal\content_entity_base\Entity\EntityTypeBaseInterface $entity_bundle
-   *   The custom entity type to add.
+   *   The custom entity type bundle to use.
    *
    * @return string
    *   The page title.
    */
-  public function getAddFormTitle($entity_type = NULL, $entity_bundle_id = NULL) {
-    $entity_definition = $this->entityManager()->getDefinition($entity_type);
-
-    $entity_bundle = $this->entityManager->getStorage($entity_definition->getBundleEntityType())->load($entity_bundle_id);
-
+  public function getAddFormTitle(ContentEntityTypeInterface $entity_definition = NULL, EntityTypeBaseInterface $entity_bundle = NULL) {
+    // Build the form page title using the type.
     return $this->t('Add %type @entity_label', [
       '@entity_label' => $entity_definition->getLabel(),
       '%type' => $entity_bundle ? $entity_bundle->label() : 'Invalid Bundle',

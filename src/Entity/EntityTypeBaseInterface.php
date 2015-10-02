@@ -1,8 +1,7 @@
 <?php
-
 /**
  * @file
- * Contains \Drupal\content_entity_base\Entity\EntityTypeBaseInterface.
+ *   Contains \Drupal\content_entity_base\Entity\EntityTypeBaseInterface.
  */
 
 namespace Drupal\content_entity_base\Entity;

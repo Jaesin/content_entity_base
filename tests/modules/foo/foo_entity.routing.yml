@@ -8,6 +8,7 @@ entity.foo_content.collection:
     _title: 'Foo content'
   requirements:
     _permission: 'view foo_content entity'
+
 # View an entity.
 entity.foo_content.canonical:
   path: '/admin/foo_content/{foo_content}'
@@ -16,14 +17,36 @@ entity.foo_content.canonical:
     _title: 'Foo content'
   requirements:
     _entity_access: 'foo_content.view'
+
 foo_content.add_page:
   path: '/admin/foo_content/add'
   defaults:
+    entity_definition: foo_content
     _controller: '\Drupal\content_entity_base\Entity\Controller\EntityBaseController::addPage'
-    _title: 'Add Foo content'
-    entity_type: foo_content
+    _title_callback: '\Drupal\content_entity_base\Entity\Controller\EntityBaseController::getAddPageTitle'
   options:
     _admin_route: TRUE
+    parameters:
+      # This applies to the default parameter entity_definition (foo_content) in this case.
+      entity_definition:
+        type: entity_definition
+  requirements:
+    _entity_create_access: foo_content
+
+entity.foo_content.add_form:
+  path: '/admin/foo_content/add/{entity_bundle}'
+  defaults:
+    entity_definition: foo_content
+    _controller: '\Drupal\content_entity_base\Entity\Controller\EntityBaseController::addForm'
+    _title_callback: '\Drupal\content_entity_base\Entity\Controller\EntityBaseController::getAddFormTitle'
+  options:
+    _admin_route: TRUE
+    parameters:
+      entity_bundle:
+        type: entity:foo_content_type
+      # This applies to the default parameter entity_definition (foo_content) in this case.
+      entity_definition:
+        type: entity_definition
   requirements:
     _entity_create_access: foo_content
 
