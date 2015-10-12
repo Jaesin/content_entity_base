@@ -2,10 +2,10 @@
 
 /**
  * @file
- *   Contains \Drupal\foo_entity\Entity\Access\FooContentPermissions.
+ * Contains \Drupal\ceb_test\Entity\Access\CebTestContentPermissions.
  */
 
-namespace Drupal\foo_entity\Entity\Access;
+namespace Drupal\ceb_test\Entity\Access;
 
 use Drupal\content_entity_base\Entity\Access\EntityBasePermissions;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
@@ -13,12 +13,12 @@ use Drupal\Core\Entity\ContentEntityTypeInterface;
 /**
  * Defines a class containing permission callbacks.
  */
-class FooContentPermissions extends EntityBasePermissions {
+class CebTestContentPermissions extends EntityBasePermissions {
 
   /**
    * @inheritdoc{}
    */
   public function entityPermissions(ContentEntityTypeInterface $entity = NULL) {
-    return parent::entityPermissions(\Drupal::entityManager()->getDefinition('foo_content'));
+    return parent::entityPermissions(\Drupal::entityManager()->getDefinition('ceb_test_content'));
   }
 }

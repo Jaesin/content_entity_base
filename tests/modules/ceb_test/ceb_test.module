@@ -1,0 +1,23 @@
+<?php
+
+/**
+ * @file
+ *   Contains the ceb_test.module file for the Ceb_test module.
+ */
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function ceb_test_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the ceb_test module.
+    case 'help.page.ceb_test':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Provides a bundle-able Ceb_test content entity used to store Ceb_test content.') . '</p>';
+      return $output;
+
+    default:
+  }
+}

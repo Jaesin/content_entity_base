@@ -1,7 +1,7 @@
-foo.content_type.*:
+ceb_test.content_type.*:
   type: config_entity
-  label: 'Foo Content Type'
-  plural_label: 'Foo Content Types'
+  label: 'CEB test Content Type'
+  plural_label: 'CEB Content Types'
   mapping:
     id:
       type: string
