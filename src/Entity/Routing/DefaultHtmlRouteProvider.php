@@ -69,7 +69,7 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface {
       $route
         ->addDefaults([
           '_entity_view' => "{$entity_type_id}.full",
-          '_title_callback' => '\Drupal\Core\Entity\Controller\EntityController::title',
+          '_title_callback' => '\Drupal\content_entity_base\Entity\Controller\EntityController::title',
         ])
         ->setRequirement('_entity_access', "{$entity_type_id}.view")
         ->setOption('parameters', [
@@ -100,7 +100,7 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface {
       $route
         ->setDefaults([
           '_entity_form' => "{$entity_type_id}.{$operation}",
-          '_title_callback' => '\Drupal\Core\Entity\Controller\EntityController::editTitle'
+          '_title_callback' => '\Drupal\content_entity_base\Entity\Controller\EntityController::editTitle'
         ])
         ->setRequirement('_entity_access', "{$entity_type_id}.update")
         ->setOption('parameters', [
@@ -126,7 +126,7 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface {
       $route
         ->addDefaults([
           '_entity_form' => "{$entity_type_id}.delete",
-          '_title_callback' => '\Drupal\Core\Entity\Controller\EntityController::deleteTitle',
+          '_title_callback' => '\Drupal\content_entity_base\Entity\Controller\EntityController::deleteTitle',
         ])
         ->setRequirement('_entity_access', "{$entity_type_id}.delete")
         ->setOption('parameters', [
