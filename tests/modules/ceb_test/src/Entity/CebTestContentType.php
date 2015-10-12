@@ -2,22 +2,22 @@
 
 /**
  * @file
- *   Contains Drupal\foo_entity\Entity\FooContentType.
+ *   Contains Drupal\ceb_test\Entity\CebTestContentType.
  */
 
-namespace Drupal\foo_entity\Entity;
+namespace Drupal\ceb_test\Entity;
 
 use Drupal\content_entity_base\Entity\EntityTypeBase;
 
 /**
- * Defines the foo_content type configuration entity.
+ * Defines the ceb_test_content type configuration entity.
  *
  * @ConfigEntityType(
- *   id               = "foo_content_type",
- *   label            = @Translation("Foo content type"),
- *   admin_permission = "administer foo_content",
+ *   id               = "ceb_test_content_type",
+ *   label            = @Translation("Ceb_test content type"),
+ *   admin_permission = "administer ceb_test_content",
  *   config_prefix    = "content_type",
- *   bundle_of        = "foo_content",
+ *   bundle_of        = "ceb_test_content",
  *   handlers = {
  *     "form" = {
  *       "default" = "Drupal\content_entity_base\Entity\Form\EntityTypeBaseForm",
@@ -32,9 +32,9 @@ use Drupal\content_entity_base\Entity\EntityTypeBase;
  *     "label"        = "label",
  *   },
  *   links = {
- *     "edit-form"    = "/admin/structure/foo_content/manage/{foo_content_type}",
- *     "delete-form"  = "/admin/structure/foo_content/manage/{foo_content_type}/delete",
- *     "collection"   = "/admin/structure/foo_content",
+ *     "edit-form"    = "/admin/structure/ceb_test_content/manage/{ceb_test_content_type}",
+ *     "delete-form"  = "/admin/structure/ceb_test_content/manage/{ceb_test_content_type}/delete",
+ *     "collection"   = "/admin/structure/ceb_test_content",
  *   },
  *   config_export = {
  *     "id",
@@ -44,5 +44,5 @@ use Drupal\content_entity_base\Entity\EntityTypeBase;
  *   }
  * )
  */
-class FooContentType extends EntityTypeBase {
+class CebTestContentType extends EntityTypeBase {
 }

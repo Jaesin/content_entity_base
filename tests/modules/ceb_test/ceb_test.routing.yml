@@ -1,0 +1,119 @@
+# Ceb_test routing definition
+# @todo remove this file when https://www.drupal.org/node/2350509 lands.
+# List entities.
+entity.ceb_test_content.collection:
+  path: '/admin/content/ceb_test_content'
+  defaults:
+    _entity_list: 'ceb_test_content'
+    _title: 'Ceb_test content'
+  requirements:
+    _permission: 'view ceb_test_content entity'
+
+# View an entity.
+entity.ceb_test_content.canonical:
+  path: '/admin/ceb_test_content/{ceb_test_content}'
+  defaults:
+    _entity_view: 'ceb_test_content'
+    _title: 'Ceb_test content'
+  requirements:
+    _entity_access: 'ceb_test_content.view'
+
+ceb_test_content.add_page:
+  path: '/admin/ceb_test_content/add'
+  defaults:
+    entity_definition: ceb_test_content
+    _controller: '\Drupal\content_entity_base\Entity\Controller\EntityBaseController::addPage'
+    _title_callback: '\Drupal\content_entity_base\Entity\Controller\EntityBaseController::getAddPageTitle'
+  options:
+    _admin_route: TRUE
+    parameters:
+      # This applies to the default parameter entity_definition (ceb_test_content) in this case.
+      entity_definition:
+        type: entity_definition
+  requirements:
+    _entity_create_access: ceb_test_content
+
+entity.ceb_test_content.add_form:
+  path: '/admin/ceb_test_content/add/{entity_bundle}'
+  defaults:
+    entity_definition: ceb_test_content
+    _controller: '\Drupal\content_entity_base\Entity\Controller\EntityBaseController::addForm'
+    _title_callback: '\Drupal\content_entity_base\Entity\Controller\EntityBaseController::getAddFormTitle'
+  options:
+    _admin_route: TRUE
+    parameters:
+      entity_bundle:
+        type: entity:ceb_test_content_type
+      # This applies to the default parameter entity_definition (ceb_test_content) in this case.
+      entity_definition:
+        type: entity_definition
+  requirements:
+    _entity_create_access: ceb_test_content
+
+entity.ceb_test_content.add_form:
+  path: '/admin/ceb_test_content/add/{entity_bundle_id}'
+  defaults:
+    _controller: '\Drupal\content_entity_base\Entity\Controller\EntityBaseController::addForm'
+    _title_callback: '\Drupal\content_entity_base\Entity\Controller\EntityBaseController::getAddFormTitle'
+    entity_type: ceb_test_content
+  requirements:
+    _entity_create_access: ceb_test_content
+
+entity.ceb_test_content.edit_form:
+  path: '/admin/ceb_test_content/{ceb_test_content}/edit'
+  defaults:
+    _entity_form: ceb_test_content.edit
+    _title_callback: '\Drupal\content_entity_base\Entity\Controller\EntityBaseController::getEntityFormTitle'
+    action: edit
+  requirements:
+    _entity_access: ceb_test_content.edit
+
+entity.ceb_test_content.delete_form:
+  path: '/admin/ceb_test_content/{ceb_test_content}/delete'
+  defaults:
+    _entity_form: ceb_test_content.delete
+    _title_callback: '\Drupal\content_entity_base\Entity\Controller\EntityBaseController::getEntityFormTitle'
+    action: delete
+  requirements:
+    _entity_access: 'ceb_test_content.delete'
+
+# Ceb_test content type routing definition
+entity.ceb_test_content_type.collection:
+  path: '/admin/structure/ceb_test-content-types'
+  defaults:
+    _entity_list: 'ceb_test_content_type'
+    _title: "Ceb_test content types"
+  options:
+    _admin_route: TRUE
+  requirements:
+    _permission: 'administer ceb_test_content types'
+
+entity.ceb_test_content_type.add_form:
+  path: '/admin/structure/ceb_test-content-types/add'
+  defaults:
+    _entity_form: 'ceb_test_content_type.add'
+    _title: 'Add Ceb_test content type'
+  options:
+    _admin_route: TRUE
+  requirements:
+    _permission: 'administer ceb_test_content types'
+
+entity.ceb_test_content_type.edit_form:
+  path: '/admin/structure/ceb_test-content-types/manage/{ceb_test_content_type}'
+  defaults:
+    _entity_form: 'ceb_test_content_type.edit'
+    _title: 'Edit Ceb_test content type %ceb_test_content_type'
+  options:
+    _admin_route: TRUE
+  requirements:
+    _permission: 'administer ceb_test_content types'
+
+entity.ceb_test_content_type.delete_form:
+  path: '/admin/structure/ceb_test-content-types/manage/{ceb_test_content_type}/delete'
+  defaults:
+    _entity_form: 'ceb_test_content_type.delete'
+    _title: 'Delete Ceb_test content type'
+  options:
+    _admin_route: TRUE
+  requirements:
+    _permission: 'administer ceb_test_content types'

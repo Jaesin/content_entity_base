@@ -2,10 +2,10 @@
 
 /**
  * @file
- *   Contains Drupal\foo_entity\Entity\DCContent.
+ *   Contains Drupal\ceb_test_entity\Entity\DCContent.
  */
 
-namespace Drupal\foo_entity\Entity;
+namespace Drupal\ceb_test\Entity;
 
 use Drupal\content_entity_base\Entity\EntityBase;
 
@@ -13,16 +13,16 @@ use Drupal\content_entity_base\Entity\EntityBase;
  * Defines a custom entity class.
  *
  * @ContentEntityType(
- *   id                      = "foo_content",
+ *   id                      = "ceb_test_content",
  *   label                   = @Translation("Destination Central content"),
  *   bundle_label            = @Translation("Destination Central content type"),
- *   base_table              = "foo_content",
- *   revision_table          = "foo_content_revision",
- *   data_table              = "foo_content_field_data",
+ *   base_table              = "ceb_test_content",
+ *   revision_table          = "ceb_test_content_revision",
+ *   data_table              = "ceb_test_content_field_data",
  *   translatable            = TRUE,
- *   admin_permission        = "administer foo_content",
- *   bundle_entity_type      = "foo_content_type",
- *   field_ui_base_route     = "entity.foo_content_type.edit_form",
+ *   admin_permission        = "administer ceb_test_content",
+ *   bundle_entity_type      = "ceb_test_content_type",
+ *   field_ui_base_route     = "entity.ceb_test_content_type.edit_form",
  *   common_reference_target = TRUE,
  *   permission_granularity  = "bundle",
  *   render_cache            = TRUE,
@@ -32,7 +32,7 @@ use Drupal\content_entity_base\Entity\EntityBase;
  *     "translation"  = "\Drupal\content_translation\ContentTranslationHandler",
  *     "list_builder" = "\Drupal\content_entity_base\Entity\Listing\EntityBaseListBuilder",
  *     "view_builder" = "\Drupal\Core\Entity\EntityViewBuilder",
- *     "views_data"   = "\Drupal\foo_entity\Entity\Views\DCContentViewsData",
+ *     "views_data"   = "\Drupal\ceb_test\Entity\Views\DCContentViewsData",
  *     "form" = {
  *       "add"        = "\Drupal\content_entity_base\Entity\Form\EntityBaseForm",
  *       "edit"       = "\Drupal\content_entity_base\Entity\Form\EntityBaseForm",
@@ -49,10 +49,10 @@ use Drupal\content_entity_base\Entity\EntityBase;
  *     "revision"     = "revision_id",
  *   },
  *   links = {
- *     "collection"   = "/admin/foo_content/",
- *     "canonical"    = "/admin/foo_content/{foo_content}",
- *     "delete-form"  = "/admin/foo_content/{foo_content}/delete",
- *     "edit-form"    = "/admin/foo_content/{foo_content}/edit",
+ *     "collection"   = "/admin/ceb_test_content/",
+ *     "canonical"    = "/admin/ceb_test_content/{ceb_test_content}",
+ *     "delete-form"  = "/admin/ceb_test_content/{ceb_test_content}/delete",
+ *     "edit-form"    = "/admin/ceb_test_content/{ceb_test_content}/edit",
  *   },
  * )
  */

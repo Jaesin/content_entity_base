@@ -1,0 +1,494 @@
+diff --git a/src/Entity/Controller/RevisionControllerTrait.php b/src/Entity/Controller/RevisionControllerTrait.php
+new file mode 100644
+index 0000000..04b3aef
+--- /dev/null
++++ b/src/Entity/Controller/RevisionControllerTrait.php
+@@ -0,0 +1,280 @@
++<?php
++
++/**
++ * @file
++ * Contains
++ *   \Drupal\content_entity_base\Entity\Controller\RevisionControllerTrait.
++ */
++
++namespace Drupal\content_entity_base\Entity\Controller;
++
++use Drupal\content_entity_base\Entity\Revision\TimestampedRevisionInterface;
++use Drupal\Core\Entity\ContentEntityInterface;
++use Drupal\Core\Entity\EntityManagerInterface;
++use Drupal\Core\Language\LanguageInterface;
++use Drupal\Core\Render\RendererInterface;
++use Drupal\Core\Entity\EntityInterface;
++use Drupal\Core\StringTranslation\StringTranslationTrait;
++
++/**
++ * Defines a trait for common revision UI functionality.
++ */
++trait RevisionControllerTrait {
++
++  use StringTranslationTrait;
++
++  /**
++   * @return \Drupal\Core\Entity\EntityManagerInterface
++   */
++  public abstract function entityManager();
++
++  /**
++   * @return \Drupal\Core\Render\RendererInterface
++   */
++  public abstract function renderer();
++
++  /**
++   * @return \Drupal\Core\Language\LanguageManagerInterface
++   */
++  public abstract function languageManager();
++
++  /**
++   * Displays an entity revision.
++   *
++   * @param int $revision_id
++   *   The entity revision ID.
++   *
++   * @return array
++   *   An array suitable for drupal_render().
++   */
++  public function showRevision($revision_id) {
++    $entity = $this->entityManager()
++      ->getStorage($this->getRevisionEntityTypeId())
++      ->loadRevision($revision_id);
++    $view_controller = $this->getEntityViewBuilder($this->entityManager(), $this->renderer());
++    $page = $view_controller->view($entity);
++    unset($page[$this->getRevisionEntityTypeId() . 's'][$entity->id()]['#cache']);
++    return $page;
++  }
++
++  /**
++   * Page title callback for an entity revision.
++   *
++   * @param int $revision_id
++   *   The entity revision ID.
++   *
++   * @return string
++   *   The page title.
++   */
++  public function revisionPageTitle($revision_id) {
++    $entity = $this->entityManager()
++      ->getStorage($this->getRevisionEntityTypeId())
++      ->loadRevision($revision_id);
++    if ($entity instanceof TimestampedRevisionInterface) {
++      return $this->t('Revision of %title from %date', array(
++        '%title' => $entity->label(),
++        '%date' => \Drupal::service('date.formatter')
++          ->format($entity->getRevisionCreationTime()),
++      ));
++    }
++    else {
++      return $this->t('Revision of %title', array(
++        '%title' => $entity->label(),
++      ));
++    }
++  }
++
++  /**
++   * Determines if the user has permission to revert revisions.
++   *
++   * @param \Drupal\Core\Entity\EntityInterface $entity
++   *   The entity to check revert access for.
++   *
++   * @return bool
++   *   TRUE if the user has revert access.
++   */
++  abstract protected function hasRevertRevisionPermission(EntityInterface $entity);
++
++  /**
++   * Determines if the user has permission to delete revisions.
++   *
++   * @param \Drupal\Core\Entity\EntityInterface $entity
++   *   The entity to check delete revision access for.
++   *
++   * @return bool
++   *   TRUE if the user has delete revision access.
++   */
++  abstract protected function hasDeleteRevisionPermission(EntityInterface $entity);
++
++  /**
++   * Builds a link to revert an entity revision.
++   *
++   * @param \Drupal\Core\Entity\EntityInterface $entity
++   *   The entity to build a revert revision link for.
++   * @param int $revision_id
++   *   The revision ID of the revert link.
++   *
++   * @return array
++   *   A link render array.
++   */
++  abstract protected function buildRevertRevisionLink(EntityInterface $entity, $revision_id);
++
++  /**
++   * Builds a link to delete an entity revision.
++   *
++   * @param \Drupal\Core\Entity\EntityInterface $entity
++   *   The entity to build a delete revision link for.
++   * @param int $revision_id
++   *   The revision ID of the delete link.
++   *
++   * @return array
++   *   A link render array.
++   */
++  abstract protected function buildDeleteRevisionLink(EntityInterface $entity, $revision_id);
++
++  /**
++   * Returns a string providing details of the revision.
++   *
++   * E.g. Node describes its revisions using {date} by {username}. For the
++   *   non-current revision, it also provides a link to view that revision.
++   *
++   * @param \Drupal\Core\Entity\EntityInterface $revision
++   *   Returns a string to provide the details of the revision.
++   * @param bool $is_current
++   *   TRUE if the revision is the current revision.
++   *
++   * @return string
++   *   Revision description.
++   */
++  abstract protected function getRevisionDescription(EntityInterface $revision, $is_current = FALSE);
++
++  /**
++   * Returns a string providing the title of the revision.
++   *
++   * @param \Drupal\Core\Entity\EntityInterface $revision
++   *   Returns a string to provide the title of the revision.
++   *
++   * @return string
++   *   Revision title.
++   */
++  abstract protected function getRevisionTitle(EntityInterface $revision);
++
++
++  /**
++   * Gets the entity type ID for this revision controller.
++   *
++   * @return string
++   *   Entity Type ID for this revision controller.
++   */
++  abstract protected function getRevisionEntityTypeId();
++
++  /**
++   * Gets the entity's view controller.
++   *
++   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
++   *   Entity manager.
++   * @param \Drupal\Core\Render\RendererInterface $renderer
++   *   Renderer service.
++   *
++   * @return \Drupal\Core\Entity\EntityViewBuilderInterface
++   *   A new entity view builder.
++   */
++  abstract protected function getEntityViewBuilder(EntityManagerInterface $entity_manager, RendererInterface $renderer);
++
++  /**
++   * Generates an overview table of older revisions of an entity.
++   *
++   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
++   *   An entity object.
++   *
++   * @return array
++   *   An array as expected by drupal_render().
++   */
++  public function revisionOverview(ContentEntityInterface $entity) {
++    $langcode = $this->languageManager()
++      ->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)
++      ->getId();
++    $entity_storage = $this->entityManager()
++      ->getStorage($this->getRevisionEntityTypeId());
++
++    $build['#title'] = $this->getRevisionTitle($entity);
++    $header = array($this->t('Revision'), $this->t('Operations'));
++
++    $rows = [];
++
++    $vids = $entity_storage->revisionIds($entity);
++
++    $latest_revision = TRUE;
++
++    foreach (array_reverse($vids) as $vid) {
++      $row = [];
++      /** @var \Drupal\node\NodeInterface $revision */
++      $revision = $entity_storage->loadRevision($vid);
++      if ($revision->hasTranslation($langcode) && $revision->getTranslation($langcode)
++          ->isRevisionTranslationAffected()
++      ) {
++        if ($latest_revision) {
++          $row[] = $this->getRevisionDescription($revision, TRUE);
++          $row[] = [
++            'data' => [
++              '#prefix' => '<em>',
++              '#markup' => $this->t('Current revision'),
++              '#suffix' => '</em>',
++            ],
++          ];
++          foreach ($row as &$current) {
++            $current['class'] = ['revision-current'];
++          }
++          $latest_revision = FALSE;
++        }
++        else {
++          $row[] = $this->getRevisionDescription($revision, FALSE);
++          $links = $this->getOperationLinks($entity, $vid);
++
++          $row[] = [
++            'data' => [
++              '#type' => 'operations',
++              '#links' => $links,
++            ],
++          ];
++        }
++      }
++
++      $rows[] = $row;
++    }
++
++    $build[$this->getRevisionEntityTypeId() . '_revisions_table'] = array(
++      '#theme' => 'table',
++      '#rows' => $rows,
++      '#header' => $header,
++    );
++
++    return $build;
++  }
++
++  /**
++   * Get the links of the operations for an entity revision.
++   *
++   * @param \Drupal\Core\Entity\EntityInterface $entity
++   *   The entity to build the revision links for.
++   * @param int $revision_id
++   *   The revision ID of the delete link.
++   *
++   * @return array
++   *   The operation links.
++   */
++  protected function getOperationLinks(EntityInterface $entity, $revision_id) {
++    $links = [];
++    $revert_permission = $this->hasRevertRevisionPermission($entity);
++    $delete_permission = $this->hasDeleteRevisionPermission($entity);
++    if ($revert_permission) {
++      $links['revert'] = $this->buildRevertRevisionLink($entity, $revision_id);
++    }
++
++    if ($delete_permission) {
++      $links['delete'] = $this->buildDeleteRevisionLink($entity, $revision_id);
++    }
++    return $links;
++  }
++
++}
+diff --git a/src/Entity/Revision/TimestampedRevisionInterface.php b/src/Entity/Revision/TimestampedRevisionInterface.php
+new file mode 100644
+index 0000000..867fe90
+--- /dev/null
++++ b/src/Entity/Revision/TimestampedRevisionInterface.php
+@@ -0,0 +1,35 @@
++<?php
++
++/**
++ * @file
++ * Contains
++ *   \Drupal\content_entity_base\Entity\Revision\TimestampedRevisionInterface.
++ */
++
++namespace Drupal\content_entity_base\Entity\Revision;
++
++/**
++ * Defines an interface with timestamped revisions.
++ */
++interface TimestampedRevisionInterface {
++
++  /**
++   * Returns the revision creation timestamp.
++   *
++   * @return int
++   *   The UNIX timestamp of when this revision was created.
++   */
++  public function getRevisionCreationTime();
++
++  /**
++   * Sets the revision creation timestamp.
++   *
++   * @param int $timestamp
++   *   The UNIX timestamp of when this revision was created.
++   *
++   * @return $this
++   *   The called object.
++   */
++  public function setRevisionCreationTime($timestamp);
++
++}
+diff --git a/src/Entity/Routing/RevisionHtmlRouteProvider.php b/src/Entity/Routing/RevisionHtmlRouteProvider.php
+new file mode 100644
+index 0000000..3b2a59f
+--- /dev/null
++++ b/src/Entity/Routing/RevisionHtmlRouteProvider.php
+@@ -0,0 +1,81 @@
++<?php
++
++/**
++ * @file
++ * Contains \Drupal\content_entity_base\Routing\RevisionHtmlRouteProvider.
++ */
++
++namespace Drupal\content_entity_base\Routing;
++
++use Drupal\Core\Entity\EntityTypeInterface;
++use Drupal\Core\Entity\Routing\EntityRouteProviderInterface;
++use Symfony\Component\Routing\Route;
++use Symfony\Component\Routing\RouteCollection;
++
++class RevisionHtmlRouteProvider implements EntityRouteProviderInterface {
++
++  public function getRoutes(EntityTypeInterface $entity_type) {
++    $collection = new RouteCollection();
++
++    $route = $this->revisionHistoryRoute($entity_type);
++    $collection->add('entity.' . $entity_type->id() . '.version_history', $route);
++
++    $route = $this->revisionViewRoute($entity_type);
++    $collection->add('entity.' . $entity_type->id() . '.revision', $route);
++
++    $route = $this->revisionRevertRoute($entity_type);
++    $collection->add('entity.' . $entity_type->id() . '.revision_revert_confirm', $route);
++
++    $route = $this->revisionDeleteRoute($entity_type);
++    $collection->add('entity.' . $entity_type->id() . '.revision_delete_confirm', $route);
++  }
++
++  protected function revisionHistoryRoute(EntityTypeInterface $entity_type) {
++    $route = new Route($entity_type->getLinkTemplate('canonical') . '/revisions');
++    $route->setDefault('_title', 'Revisions');
++    $route->setDefault('_controller', '');
++    $route->setRequirement('_access_entity_revision', 'view');
++  }
++
++  protected function revisionViewRoute(EntityTypeInterface $entity_type) {
++    $route = new Route($entity_type->getLinkTemplate('canonical') . '/revisions/{entity_revision}/view');
++    $route->setDefault('_title', 'Revisions');
++    $route->setDefault('_controller', '');
++    $route->setRequirement('_access_entity_revision', 'view');
++  }
++
++  protected function revisionRevertRoute(EntityTypeInterface $entity_type) {
++  }
++
++  protected function revisionDeleteRoute(EntityTypeInterface $entity_type) {
++  }
++
++entity.node.revision:
++  path: '/node/{node}/revisions/{node_revision}/view'
++  defaults:
++    _controller: '\Drupal\node\Controller\NodeController::revisionShow'
++    _title_callback: '\Drupal\node\Controller\NodeController::revisionPageTitle'
++  requirements:
++    _access_node_revision: 'view'
++
++node.revision_revert_confirm:
++  path: '/node/{node}/revisions/{node_revision}/revert'
++  defaults:
++    _form: '\Drupal\node\Form\NodeRevisionRevertForm'
++    _title: 'Revert to earlier revision'
++  requirements:
++    _access_node_revision: 'update'
++  options:
++    _node_operation_route: TRUE
++
++node.revision_delete_confirm:
++  path: '/node/{node}/revisions/{node_revision}/delete'
++  defaults:
++    _form: '\Drupal\node\Form\NodeRevisionDeleteForm'
++    _title: 'Delete earlier revision'
++  requirements:
++    _access_node_revision: 'delete'
++  options:
++    _node_operation_route: TRUE
++
++}
+diff --git a/tests/modules/foo/src/Entity/Controller/RevisionController.php b/tests/modules/foo/src/Entity/Controller/RevisionController.php
+new file mode 100644
+index 0000000..5885b92
+--- /dev/null
++++ b/tests/modules/foo/src/Entity/Controller/RevisionController.php
+@@ -0,0 +1,74 @@
++<?php
++
++/**
++ * @file
++ * Contains \Drupal\foo\Entity\Controller\RevisionController.
++ */
++
++namespace Drupal\foo\Entity\Controller;
++
++use Drupal\content_entity_base\Entity\Controller\RevisionControllerTrait;
++use Drupal\Core\Controller\ControllerBase;
++use Drupal\Core\Entity\ContentEntityInterface;
++use Drupal\Core\Entity\EntityInterface;
++use Drupal\Core\Entity\EntityManagerInterface;
++use Drupal\Core\Render\RendererInterface;
++
++class RevisionController extends ControllerBase {
++
++  use RevisionControllerTrait;
++
++  public function entityManager() {
++    // TODO: Implement entityManager() method.
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public function renderer() {
++    return \Drupal::service('renderer');
++  }
++
++  public function languageManager() {
++    return \Drupal::service('language_manager');
++  }
++
++  public function showRevision($revision_id) {
++  }
++
++  public function revisionPageTitle($revision_id) {
++  }
++
++  protected function hasRevertRevisionPermission(EntityInterface $entity) {
++    return $this->currentUser()->hasPermission("revert all {$entity->id()} revisions");
++  }
++
++  protected function hasDeleteRevisionPermission(EntityInterface $entity) {
++    return $this->currentUser()->hasPermission("delete all {$entity->id()} revisions");
++  }
++
++  protected function buildRevertRevisionLink(EntityInterface $entity, $revision_id) {
++  }
++
++  protected function buildDeleteRevisionLink(EntityInterface $entity, $revision_id) {
++  }
++
++  protected function getRevisionDescription(EntityInterface $revision, $is_current = FALSE) {
++  }
++
++  protected function getRevisionTitle(EntityInterface $revision) {
++  }
++
++  protected function getRevisionEntityTypeId() {
++  }
++
++  protected function getEntityViewBuilder(EntityManagerInterface $entity_manager, RendererInterface $renderer) {
++  }
++
++  public function revisionOverview(ContentEntityInterface $entity) {
++  }
++
++  protected function getOperationLinks(EntityInterface $entity, $revision_id) {
++  }
++
++}
