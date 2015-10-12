@@ -7,6 +7,7 @@
 
 namespace Drupal\content_entity_base\Entity\Controller;
 
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -25,7 +26,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @deprecated
  *   This class will be moved to core in https://www.drupal.org/node/2578955
  */
-class EntityController {
+class EntityController implements ContainerInjectionInterface {
 
   use StringTranslationTrait;
 

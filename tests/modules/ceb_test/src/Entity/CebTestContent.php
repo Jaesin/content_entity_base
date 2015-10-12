@@ -33,6 +33,9 @@ use Drupal\content_entity_base\Entity\EntityBase;
  *     "list_builder" = "\Drupal\content_entity_base\Entity\Listing\EntityBaseListBuilder",
  *     "view_builder" = "\Drupal\Core\Entity\EntityViewBuilder",
  *     "views_data"   = "\Drupal\ceb_test\Entity\Views\DCContentViewsData",
+ *     "route_provider" = {
+ *       "html" = "\Drupal\content_entity_base\Entity\Routing\DefaultHtmlRouteProvider"
+ *     },
  *     "form" = {
  *       "add"        = "\Drupal\content_entity_base\Entity\Form\EntityBaseForm",
  *       "edit"       = "\Drupal\content_entity_base\Entity\Form\EntityBaseForm",
