@@ -4,9 +4,9 @@ dependencies:
   module:
     - ceb_test
     - text
-id: ceb_content.body
+id: ceb_test_content.body
 field_name: body
-entity_type: ceb_content
+entity_type: ceb_test_content
 type: text_with_summary
 settings: {  }
 module: text

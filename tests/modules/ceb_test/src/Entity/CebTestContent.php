@@ -2,7 +2,7 @@
 
 /**
  * @file
- *   Contains Drupal\ceb_test_entity\Entity\DCContent.
+ *   Contains Drupal\ceb_test_entity\Entity\CebTestContent.
  */
 
 namespace Drupal\ceb_test\Entity;
@@ -56,5 +56,5 @@ use Drupal\content_entity_base\Entity\EntityBase;
  *   },
  * )
  */
-class DCContent extends EntityBase {
+class CebTestContent extends EntityBase {
 }
