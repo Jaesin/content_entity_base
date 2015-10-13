@@ -1,0 +1,15 @@
+entity.ceb_test_content.collection:
+  title: 'CEB test Content'
+  route_name: entity.ceb_test_content.collection
+  description: 'List CEB test content'
+  parent: system.admin_content
+
+entity.ceb_test_content_type.collection:
+  title: 'CEB test Content types'
+  route_name: entity.ceb_test_content_type.collection
+  description: 'Manage ceb_test_content types.'
+  parent: system.admin_structure
+
+ceb_test_content.add_page:
+  title: 'Add CEB test content'
+  route_name: entity.ceb_test_content.add_page

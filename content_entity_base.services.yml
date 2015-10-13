@@ -1,0 +1,6 @@
+services:
+  language_converter:
+    class: Drupal\content_entity_base\ParamConverter\EntityDefinitionConverter
+    arguments: ['@entity.manager']
+    tags:
+      - { name: paramconverter }

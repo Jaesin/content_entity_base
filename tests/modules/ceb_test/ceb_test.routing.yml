@@ -1,0 +1,44 @@
+# Ceb_test routing definition
+# @todo remove this file when https://www.drupal.org/node/2350509 lands.
+# List entities.
+
+# Ceb_test content type routing definition
+entity.ceb_test_content_type.collection:
+  path: '/admin/structure/ceb_test-content-types'
+  defaults:
+    _entity_list: 'ceb_test_content_type'
+    _title: "Ceb_test content types"
+  options:
+    _admin_route: TRUE
+  requirements:
+    _permission: 'administer ceb_test_content types'
+
+entity.ceb_test_content_type.add_form:
+  path: '/admin/structure/ceb_test-content-types/add'
+  defaults:
+    _entity_form: 'ceb_test_content_type.add'
+    _title: 'Add Ceb_test content type'
+  options:
+    _admin_route: TRUE
+  requirements:
+    _permission: 'administer ceb_test_content types'
+
+entity.ceb_test_content_type.edit_form:
+  path: '/admin/structure/ceb_test-content-types/manage/{ceb_test_content_type}'
+  defaults:
+    _entity_form: 'ceb_test_content_type.edit'
+    _title: 'Edit Ceb_test content type %ceb_test_content_type'
+  options:
+    _admin_route: TRUE
+  requirements:
+    _permission: 'administer ceb_test_content types'
+
+entity.ceb_test_content_type.delete_form:
+  path: '/admin/structure/ceb_test-content-types/manage/{ceb_test_content_type}/delete'
+  defaults:
+    _entity_form: 'ceb_test_content_type.delete'
+    _title: 'Delete Ceb_test content type'
+  options:
+    _admin_route: TRUE
+  requirements:
+    _permission: 'administer ceb_test_content types'
