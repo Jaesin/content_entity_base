@@ -21,8 +21,6 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
  */
 trait RevisionControllerTrait {
 
-  use StringTranslationTrait;
-
   /**
    * @return \Drupal\Core\Entity\EntityManagerInterface
    */
