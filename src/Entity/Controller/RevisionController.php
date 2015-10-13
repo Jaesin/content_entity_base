@@ -5,9 +5,8 @@
  * Contains \Drupal\foo\Entity\Controller\RevisionController.
  */
 
-namespace Drupal\foo\Entity\Controller;
+namespace Drupal\content_entity_base\Entity\Controller;
 
-use Drupal\content_entity_base\Entity\Controller\RevisionControllerTrait;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -66,6 +65,7 @@ class RevisionController extends ControllerBase {
   }
 
   public function revisionOverview(ContentEntityInterface $entity) {
+    $a = 123;
   }
 
   protected function getOperationLinks(EntityInterface $entity, $revision_id) {
