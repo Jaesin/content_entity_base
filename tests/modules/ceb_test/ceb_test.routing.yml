@@ -1,54 +1,6 @@
 # Ceb_test routing definition
 # @todo remove this file when https://www.drupal.org/node/2350509 lands.
 # List entities.
-entity.ceb_test_content.collection:
-  path: '/admin/content/ceb_test_content'
-  defaults:
-    _entity_list: 'ceb_test_content'
-    _title: 'Ceb_test content'
-  requirements:
-    _permission: 'view ceb_test_content entity'
-
-ceb_test_content.add_page:
-  path: '/admin/ceb_test_content/add'
-  defaults:
-    entity_definition: ceb_test_content
-    _controller: '\Drupal\content_entity_base\Entity\Controller\EntityBaseController::addPage'
-    _title_callback: '\Drupal\content_entity_base\Entity\Controller\EntityBaseController::getAddPageTitle'
-  options:
-    _admin_route: TRUE
-    parameters:
-      # This applies to the default parameter entity_definition (ceb_test_content) in this case.
-      entity_definition:
-        type: entity_definition
-  requirements:
-    _entity_create_access: ceb_test_content
-
-entity.ceb_test_content.add_form:
-  path: '/admin/ceb_test_content/add/{entity_bundle}'
-  defaults:
-    entity_definition: ceb_test_content
-    _controller: '\Drupal\content_entity_base\Entity\Controller\EntityBaseController::addForm'
-    _title_callback: '\Drupal\content_entity_base\Entity\Controller\EntityBaseController::getAddFormTitle'
-  options:
-    _admin_route: TRUE
-    parameters:
-      entity_bundle:
-        type: entity:ceb_test_content_type
-      # This applies to the default parameter entity_definition (ceb_test_content) in this case.
-      entity_definition:
-        type: entity_definition
-  requirements:
-    _entity_create_access: ceb_test_content
-
-entity.ceb_test_content.add_form:
-  path: '/admin/ceb_test_content/add/{entity_bundle_id}'
-  defaults:
-    _controller: '\Drupal\content_entity_base\Entity\Controller\EntityBaseController::addForm'
-    _title_callback: '\Drupal\content_entity_base\Entity\Controller\EntityBaseController::getAddFormTitle'
-    entity_type: ceb_test_content
-  requirements:
-    _entity_create_access: ceb_test_content
 
 # Ceb_test content type routing definition
 entity.ceb_test_content_type.collection:

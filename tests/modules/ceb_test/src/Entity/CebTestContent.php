@@ -34,7 +34,8 @@ use Drupal\content_entity_base\Entity\EntityBase;
  *     "view_builder" = "\Drupal\Core\Entity\EntityViewBuilder",
  *     "views_data"   = "\Drupal\ceb_test\Entity\Views\DCContentViewsData",
  *     "route_provider" = {
- *       "html" = "\Drupal\content_entity_base\Entity\Routing\DefaultHtmlRouteProvider"
+ *       "html" = "\Drupal\content_entity_base\Entity\Routing\DefaultHtmlRouteProvider",
+ *       "crud" = "\Drupal\content_entity_base\Entity\Routing\CrudUiRouteProvider"
  *     },
  *     "form" = {
  *       "add"        = "\Drupal\content_entity_base\Entity\Form\EntityBaseForm",
@@ -52,8 +53,10 @@ use Drupal\content_entity_base\Entity\EntityBase;
  *     "revision"     = "revision_id",
  *   },
  *   links = {
- *     "collection"   = "/admin/ceb_test_content/",
+ *     "collection"   = "/admin/content/ceb_test_content",
  *     "canonical"    = "/admin/ceb_test_content/{ceb_test_content}",
+ *     "add-page"    = "/admin/ceb_test_content/add",
+ *     "add-form"    = "/admin/ceb_test_content/add/{entity_bundle_id}",
  *     "delete-form"  = "/admin/ceb_test_content/{ceb_test_content}/delete",
  *     "edit-form"    = "/admin/ceb_test_content/{ceb_test_content}/edit",
  *   },
