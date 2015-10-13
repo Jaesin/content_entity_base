@@ -1,8 +1,0 @@
-id: foo_content.full
-label: Full
-status: false
-cache: true
-targetEntityType: foo_content
-dependencies:
-  module:
-    - foo

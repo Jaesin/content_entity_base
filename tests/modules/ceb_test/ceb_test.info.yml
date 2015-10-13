@@ -1,0 +1,7 @@
+name: ceb test Entity
+type: module
+description: Provides a bundle-able CEB test content entity used to store CEB test content.
+core: 8.x
+package: Entities
+dependencies:
+  - content_entity_base

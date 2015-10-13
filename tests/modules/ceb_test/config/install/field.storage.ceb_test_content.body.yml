@@ -2,11 +2,11 @@ langcode: en
 status: true
 dependencies:
   module:
-    - foo
+    - ceb_test
     - text
-id: foo_content.body
+id: ceb_test_content.body
 field_name: body
-entity_type: foo_content
+entity_type: ceb_test_content
 type: text_with_summary
 settings: {  }
 module: text

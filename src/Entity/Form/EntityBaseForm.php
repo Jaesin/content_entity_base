@@ -110,7 +110,8 @@ class EntityBaseForm extends ContentEntityForm {
    */
   public function save(array $form, FormStateInterface $form_state) {
     /** @var EntityTypeBaseInterface $entity_type */
-    $entity_type = reset($this->entity->type->referencedEntities());
+    $entities = $this->entity->type->referencedEntities();
+    $entity_type = reset($entities);
 
     // Save as a new revision if requested to do so.
     if (!$form_state->isValueEmpty('revision')) {

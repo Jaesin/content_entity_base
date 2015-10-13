@@ -1,0 +1,8 @@
+id: ceb_test_content.full
+label: Full
+status: false
+cache: true
+targetEntityType: ceb_test_content
+dependencies:
+  module:
+    - ceb_test
