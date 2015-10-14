@@ -40,9 +40,6 @@ class RevisionHtmlRouteProvider implements EntityRouteProviderInterface {
       $entity_type->id() => [
         'type' => 'entity:' . $entity_type->id(),
       ],
-      $entity_type->id() . '_revision' => [
-        'type' => 'entity_revision:' . $entity_type->id(),
-      ],
     ]);
     return $route;
   }
@@ -50,8 +47,17 @@ class RevisionHtmlRouteProvider implements EntityRouteProviderInterface {
   protected function revisionViewRoute(EntityTypeInterface $entity_type) {
     $route = new Route($entity_type->getLinkTemplate('revision'));
     $route->setDefault('_title', 'Revisions');
-    $route->setDefault('_controller', '');
-    $route->setRequirement('_entity_access_revision', 'view');
+    $route->setDefault('_controller', '\Drupal\content_entity_base\Entity\Controller\RevisionControllerTrait::showRevision');
+    $route->setRequirement('_entity_access_revision', $entity_type->id() . '.view');
+
+    $route->setOption('parameters', [
+      $entity_type->id() => [
+        'type' => 'entity:' . $entity_type->id(),
+      ],
+      $entity_type->id() . '_revision' => [
+        'type' => 'entity_revision:' . $entity_type->id(),
+      ],
+    ]);
     return $route;
   }
 
@@ -60,14 +66,6 @@ class RevisionHtmlRouteProvider implements EntityRouteProviderInterface {
 
   protected function revisionDeleteRoute(EntityTypeInterface $entity_type) {
   }
-//
-//entity.node.revision:
-//  path: '/node/{node}/revisions/{node_revision}/view'
-//  defaults:
-//    _controller: '\Drupal\node\Controller\NodeController::revisionShow'
-//    _title_callback: '\Drupal\node\Controller\NodeController::revisionPageTitle'
-//  requirements:
-//    _access_node_revision: 'view'
 //
 //node.revision_revert_confirm:
 //  path: '/node/{node}/revisions/{node_revision}/revert'
