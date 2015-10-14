@@ -14,8 +14,8 @@ use Drupal\content_entity_base\Entity\EntityBase;
  *
  * @ContentEntityType(
  *   id                      = "ceb_test_content",
- *   label                   = @Translation("Destination Central content"),
- *   bundle_label            = @Translation("Destination Central content type"),
+ *   label                   = @Translation("CEB test content"),
+ *   bundle_label            = @Translation("CEB test content type"),
  *   base_table              = "ceb_test_content",
  *   revision_table          = "ceb_test_content_revision",
  *   data_table              = "ceb_test_content_field_data",
