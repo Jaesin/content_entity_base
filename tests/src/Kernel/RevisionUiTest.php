@@ -131,6 +131,12 @@ class RevisionUiTest extends KernelTestBase {
 
     $response = $this->httpKernel->handle(Request::create($entity->url('version-history')));
     $this->assertEquals(200, $response->getStatusCode());
+    $this->setRawContent($response->getContent());
+
+    $this->assertText('Current revision');
+    // Ensure that we have a link to the current and prevision revision.
+    $this->assertLinkByHref($entity->url('canonical'));
+    $this->assertLinkByHref($entity->url('revision'));
   }
 
 }

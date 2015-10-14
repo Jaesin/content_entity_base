@@ -25,6 +25,9 @@ trait RevisionObjectExtractionTrait {
     $options = $route->getOptions();
     if (isset($options['parameters'])) {
       foreach ($options['parameters'] as $name => $details) {
+        if (!empty($details['type']) && strpos($details['type'], 'entity_revision:') !== FALSE) {
+          return $route_match->getParameter($name);
+        }
         if (!empty($details['type']) && strpos($details['type'], 'entity:') !== FALSE) {
           return $route_match->getParameter($name);
         }

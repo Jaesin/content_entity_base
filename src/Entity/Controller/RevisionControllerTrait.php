@@ -39,19 +39,16 @@ trait RevisionControllerTrait {
   /**
    * Displays an entity revision.
    *
-   * @param int $revision_id
+   * @param ContentEntityInterface $entity_revision
    *   The entity revision ID.
    *
    * @return array
    *   An array suitable for drupal_render().
    */
-  public function showRevision($revision_id) {
-    $entity = $this->entityManager()
-      ->getStorage($this->getRevisionEntityTypeId())
-      ->loadRevision($revision_id);
+  public function showRevision(ContentEntityInterface $entity_revision) {
     $view_controller = $this->getEntityViewBuilder($this->entityManager(), $this->renderer());
-    $page = $view_controller->view($entity);
-    unset($page[$this->getRevisionEntityTypeId() . 's'][$entity->id()]['#cache']);
+    $page = $view_controller->view($entity_revision);
+    unset($page[$entity_revision->getEntityTypeId() . 's'][$entity_revision->id()]['#cache']);
     return $page;
   }
 
@@ -64,9 +61,9 @@ trait RevisionControllerTrait {
    * @return string
    *   The page title.
    */
-  public function revisionPageTitle($revision_id) {
+  public function revisionPageTitle($revision_id, $entity_type_id) {
     $entity = $this->entityManager()
-      ->getStorage($this->getRevisionEntityTypeId())
+      ->getStorage($entity_type_id)
       ->loadRevision($revision_id);
     if ($entity instanceof TimestampedRevisionInterface) {
       return $this->t('Revision of %title from %date', array(
@@ -136,15 +133,14 @@ trait RevisionControllerTrait {
    * E.g. Node describes its revisions using {date} by {username}. For the
    *   non-current revision, it also provides a link to view that revision.
    *
-   * @param \Drupal\Core\Entity\EntityInterface $revision
-   *   Returns a string to provide the details of the revision.
+   * @param \Drupal\Core\Entity\ContentEntityInterface $revision
    * @param bool $is_current
    *   TRUE if the revision is the current revision.
    *
    * @return string
-   *   Revision description.
+   *   Returns a string to provide the details of the revision.
    */
-  abstract protected function getRevisionDescription(EntityInterface $revision, $is_current = FALSE);
+  abstract protected function getRevisionDescription(ContentEntityInterface $revision, $is_current = FALSE);
 
   /**
    * Returns a string providing the title of the revision.
@@ -242,7 +238,7 @@ trait RevisionControllerTrait {
       $rows[] = $row;
     }
 
-    $build[$this->getRevisionEntityTypeId() . '_revisions_table'] = array(
+    $build[$entity->getEntityTypeId() . '_revisions_table'] = array(
       '#theme' => 'table',
       '#rows' => $rows,
       '#header' => $header,
