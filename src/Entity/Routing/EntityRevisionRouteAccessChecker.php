@@ -22,6 +22,8 @@ use Symfony\Component\Routing\Route;
  */
 class EntityRevisionRouteAccessChecker implements AccessInterface {
 
+  use RevisionObjectExtractionTrait;
+
   /**
    * @var \Drupal\Core\Entity\EntityManagerInterface
    */
@@ -40,28 +42,6 @@ class EntityRevisionRouteAccessChecker implements AccessInterface {
    */
   public function __construct(EntityManagerInterface $entity_manager) {
     $this->entityManager = $entity_manager;
-  }
-
-  /**
-   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
-   *
-   * @return \Drupal\Core\Entity\ContentEntityInterface
-   *
-   * @throws \Exception
-   *   Thrown when no entity was found.
-   */
-  protected function extractEntityFromRouteMatch(RouteMatchInterface $route_match) {
-    $route = $route_match->getRouteObject();
-    $options = $route->getOptions();
-    if (isset($options['parameters'])) {
-      foreach ($options['parameters'] as $name => $details) {
-        if (!empty($details['type']) && strpos($details['type'], 'entity:') !== FALSE) {
-          return $route_match->getParameter($name);
-        }
-      }
-    }
-
-    throw new \Exception('No entity found');
   }
 
   /**
@@ -125,7 +105,7 @@ class EntityRevisionRouteAccessChecker implements AccessInterface {
       if ($entity->isDefaultRevision() && ($entity_storage->countDefaultLanguageRevisions($entity) == 1 || $operation == 'update' || $operation == 'delete')) {
         $this->access[$cid] = FALSE;
       }
-      elseif ($account->hasPermission('administer nodes')) {
+      elseif ($account->hasPermission('administer ' . $entity_type_id)) {
         $this->access[$cid] = TRUE;
       }
       else {

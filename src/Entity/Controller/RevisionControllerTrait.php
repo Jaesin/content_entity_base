@@ -192,8 +192,9 @@ trait RevisionControllerTrait {
     $langcode = $this->languageManager()
       ->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)
       ->getId();
+    /** @var \Drupal\content_entity_base\Entity\Storage\RevisionableStorageInterface $entity_storage */
     $entity_storage = $this->entityManager()
-      ->getStorage($this->getRevisionEntityTypeId());
+      ->getStorage($entity->getEntityTypeId());
 
     $build['#title'] = $this->getRevisionTitle($entity);
     $header = array($this->t('Revision'), $this->t('Operations'));
