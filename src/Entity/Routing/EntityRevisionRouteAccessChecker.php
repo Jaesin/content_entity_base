@@ -8,9 +8,9 @@
 
 namespace Drupal\content_entity_base\Entity\Routing;
 
+use Drupal\content_entity_base\Entity\Storage\RevisionableStorageInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\ContentEntityInterface;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -46,6 +46,9 @@ class EntityRevisionRouteAccessChecker implements AccessInterface {
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *
    * @return \Drupal\Core\Entity\ContentEntityInterface
+   *
+   * @throws \Exception
+   *   Thrown when no entity was found.
    */
   protected function extractEntityFromRouteMatch(RouteMatchInterface $route_match) {
     $route = $route_match->getRouteObject();
@@ -57,6 +60,8 @@ class EntityRevisionRouteAccessChecker implements AccessInterface {
         }
       }
     }
+
+    throw new \Exception('No entity found');
   }
 
   /**
@@ -68,24 +73,31 @@ class EntityRevisionRouteAccessChecker implements AccessInterface {
       $entity = $this->entityManager->getStorage($entity->getEntityTypeId())->loadRevision($entity_revision);
     }
     $operation = $route->getRequirement('_entity_access_revision');
+    list(, $operation) = explode('.', $operation, 2);
     return AccessResult::allowedIf($entity && $this->checkAccess($entity, $account, $operation))->cachePerPermissions();
   }
 
   protected function checkAccess(ContentEntityInterface $entity, AccountInterface $account, $operation = 'view') {
     $entity_type_id = $entity->getEntityTypeId();
     $entity_access = $this->entityManager->getAccessControlHandler($entity_type_id);
+
+    /** @var \Drupal\content_entity_base\Entity\Storage\RevisionableStorageInterface|\Drupal\Core\Entity\EntityStorageInterface $entity_storage */
     $entity_storage = $this->entityManager->getStorage($entity_type_id);
-    $map = array(
-      'view' => "view all revisions",
-      'update' => "revert all revisions",
-      'delete' => "delete all revisions",
-    );
+    if (!$entity_storage instanceof RevisionableStorageInterface) {
+      throw new \InvalidArgumentException('The entity storage has to implement \Drupal\content_entity_base\Entity\Storage\RevisionableStorageInterface');
+    }
+
+    $map = [
+      'view' => "view all $entity_type_id revisions",
+      'update' => "revert all $entity_type_id revisions",
+      'delete' => "delete all $entity_type_id revisions",
+    ];
     $bundle = $entity->bundle();
-    $type_map = array(
-      'view' => "view $bundle revisions",
-      'update' => "revert $bundle revisions",
-      'delete' => "delete $bundle revisions",
-    );
+    $type_map = [
+      'view' => "view $entity_type_id $bundle revisions",
+      'update' => "revert $entity_type_id $bundle revisions",
+      'delete' => "delete $entity_type_id $bundle revisions",
+    ];
 
     if (!$entity || !isset($map[$operation]) || !isset($type_map[$operation])) {
       // If there was no node to check against, or the $op was not one of the
@@ -100,7 +112,7 @@ class EntityRevisionRouteAccessChecker implements AccessInterface {
 
     if (!isset($this->access[$cid])) {
       // Perform basic permission checks first.
-      if (!$account->hasPermission($map[$operation]) && !$account->hasPermission($type_map[$op]) && !$account->hasPermission('administer nodes')) {
+      if (!$account->hasPermission($map[$operation]) && !$account->hasPermission($type_map[$operation]) && !$account->hasPermission('administer nodes')) {
         $this->access[$cid] = FALSE;
         return FALSE;
       }
@@ -119,11 +131,16 @@ class EntityRevisionRouteAccessChecker implements AccessInterface {
       else {
         // First check the access to the default revision and finally, if the
         // node passed in is not the default revision then access to that, too.
-        $this->access[$cid] = $entity_access->access($entity_storage->load($entity->id()), $operation, $account) && ($entity->isDefaultRevision() || $entity_access->access($node, $op, $account));
+        $this->access[$cid] = $entity_access->access($entity_storage->load($entity->id()), $operation, $account) && ($entity->isDefaultRevision() || $entity_access->access($entity, $operation, $account));
       }
     }
 
     return $this->access[$cid];
+  }
+
+  public function resetAccessCache() {
+    $this->access = [];
+    return $this;
   }
 
 }
