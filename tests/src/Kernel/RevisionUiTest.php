@@ -54,6 +54,11 @@ class RevisionUiTest extends KernelTestBase {
       'revision' => TRUE,
     ]);
     $this->bundle->save();
+
+    $root_user = User::create([
+      'name' => 'admin',
+    ]);
+    $root_user->save();
   }
 
   /**
@@ -76,7 +81,7 @@ class RevisionUiTest extends KernelTestBase {
     return $user;
   }
 
-  public function testPages() {
+  public function ptestPages() {
     /** @var \Drupal\Core\Session\AccountSwitcherInterface $account_switcher */
     $account_switcher = \Drupal::service('account_switcher');
     /** @var \Drupal\content_entity_base\Entity\Routing\EntityRevisionRouteAccessChecker $revision_access_check */
@@ -114,14 +119,14 @@ class RevisionUiTest extends KernelTestBase {
     $entity->setNewRevision(TRUE);
     $entity->save();
 
-    $user = $this->drupalCreateUser(['administer ceb_test_content']);
+    $user = $this->drupalCreateUser(['access ceb_test_content']);
     $account_switcher->switchTo($user);
 
     $response = $this->httpKernel->handle(Request::create($entity->url('version-history')));
     $this->assertEquals(403, $response->getStatusCode());
 
     $revision_access_check->resetAccessCache();
-    $user = $this->drupalCreateUser(['access all ceb_test revisions']);
+    $user = $this->drupalCreateUser(['access ceb_test_content', 'view all ceb_test_content revisions']);
     $account_switcher->switchTo($user);
 
     $response = $this->httpKernel->handle(Request::create($entity->url('version-history')));
