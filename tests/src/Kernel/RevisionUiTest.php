@@ -32,6 +32,11 @@ class RevisionUiTest extends KernelTestBase {
   protected $httpKernel;
 
   /**
+   * @var \Drupal\ceb_test\Entity\CebTestContentType
+   */
+  protected $bundle;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -43,43 +48,81 @@ class RevisionUiTest extends KernelTestBase {
     \Drupal::service('router.builder')->rebuild();
 
     $this->httpKernel = \Drupal::service('http_kernel');
-  }
 
-
-  public function testPages() {
-    $bundle = CebTestContentType::create([
+    $this->bundle = CebTestContentType::create([
       'id' => 'test_bundle',
       'revision' => TRUE,
     ]);
-    $bundle->save();
+    $this->bundle->save();
+  }
+
+  /**
+   * @return \Drupal\user\UserInterface
+   */
+  protected function drupalCreateUser(array $permissions = []) {
+    $role = Role::create([
+      'id' => 'test_role__' . $this->randomMachineName(),
+    ]);
+    foreach ($permissions as $permission) {
+      $role->grantPermission($permission);
+    }
+    $role->save();
+    $user = User::create([
+      'name' => 'test name  ' . $this->randomMachineName(),
+    ]);
+    $user->addRole($role->id());
+    $user->save();
+
+    return $user;
+  }
+
+  public function testPages() {
+    /** @var \Drupal\Core\Session\AccountSwitcherInterface $account_switcher */
+    $account_switcher = \Drupal::service('account_switcher');
+    /** @var \Drupal\content_entity_base\Entity\Routing\EntityRevisionRouteAccessChecker $revision_access_check */
+    $revision_access_check = \Drupal::service('content_entity_base.entity_revision_access_checker');
+
     $entity = CebTestContent::create([
       'type' => 'test_bundle',
     ]);
     $entity->save();
 
-    $role = Role::create([
-      'id' => 'test_role',
-    ]);
-    $role->grantPermission('administer ceb_test_content');
-    $role->save();
-    $user = User::create([
-      'name' => 'test name',
-    ]);
-    $user->addRole('test_role');
-    $user->save();
-
-    /** @var \Drupal\Core\Session\AccountSwitcherInterface $account_switcher */
-    $account_switcher = \Drupal::service('account_switcher');
+    $user = $this->drupalCreateUser(['administer ceb_test_content']);
     $account_switcher->switchTo($user);
 
-//    $response = $this->httpKernel->handle(Request::create($entity->url('canonical')));
-//    $this->assertEquals(200, $response->getStatusCode());
+    $response = $this->httpKernel->handle(Request::create($entity->url('canonical')));
+    $this->assertEquals(200, $response->getStatusCode());
 
-//    $response = $this->httpKernel->handle(Request::create($entity->url('add-page')));
-//    $this->assertEquals(200, $response->getStatusCode());
+    $response = $this->httpKernel->handle(Request::create($entity->url('add-page')));
+    $this->assertEquals(200, $response->getStatusCode());
 
-//    $response = $this->httpKernel->handle(Request::create($entity->url('edit-form')));
-//    $this->assertEquals(200, $response->getStatusCode());
+    $response = $this->httpKernel->handle(Request::create($entity->url('edit-form')));
+    $this->assertEquals(200, $response->getStatusCode());
+  }
+
+  public function testRevisionPagesWithMoreThanOneRevision() {
+    /** @var \Drupal\Core\Session\AccountSwitcherInterface $account_switcher */
+    $account_switcher = \Drupal::service('account_switcher');
+    /** @var \Drupal\content_entity_base\Entity\Routing\EntityRevisionRouteAccessChecker $revision_access_check */
+    $revision_access_check = \Drupal::service('content_entity_base.entity_revision_access_checker');
+
+    $entity = CebTestContent::create([
+      'type' => 'test_bundle',
+    ]);
+    $entity->save();
+
+    $entity->setNewRevision(TRUE);
+    $entity->save();
+
+    $user = $this->drupalCreateUser(['administer ceb_test_content']);
+    $account_switcher->switchTo($user);
+
+    $response = $this->httpKernel->handle(Request::create($entity->url('version-history')));
+    $this->assertEquals(403, $response->getStatusCode());
+
+    $revision_access_check->resetAccessCache();
+    $user = $this->drupalCreateUser(['access all ceb_test revisions']);
+    $account_switcher->switchTo($user);
 
     $response = $this->httpKernel->handle(Request::create($entity->url('version-history')));
     $this->assertEquals(200, $response->getStatusCode());
