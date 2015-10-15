@@ -2,11 +2,10 @@
 
 /**
  * @file
- * Contains
- *   \Drupal\content_entity_base\Entity\Revision\TimestampedRevisionInterface.
+ * Contains \Drupal\content_entity_base\Entity\TimestampedRevisionInterface.
  */
 
-namespace Drupal\content_entity_base\Entity\Revision;
+namespace Drupal\content_entity_base\Entity;
 
 /**
  * Defines an interface with timestamped revisions.
