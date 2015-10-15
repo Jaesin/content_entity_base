@@ -23,11 +23,11 @@ class RevisionHtmlRouteProvider implements EntityRouteProviderInterface {
     $route = $this->revisionViewRoute($entity_type);
     $collection->add('entity.' . $entity_type->id() . '.revision', $route);
 
-//    $route = $this->revisionRevertRoute($entity_type);
-//    $collection->add('entity.' . $entity_type->id() . '.revision_revert_confirm', $route);
+    $route = $this->revisionRevertRoute($entity_type);
+    $collection->add('entity.' . $entity_type->id() . '.revision_revert', $route);
 
-//    $route = $this->revisionDeleteRoute($entity_type);
-//    $collection->add('entity.' . $entity_type->id() . '.revision_delete_confirm', $route);
+    $route = $this->revisionDeleteRoute($entity_type);
+    $collection->add('entity.' . $entity_type->id() . '.revision_delete', $route);
     return $collection;
   }
 
@@ -62,29 +62,35 @@ class RevisionHtmlRouteProvider implements EntityRouteProviderInterface {
   }
 
   protected function revisionRevertRoute(EntityTypeInterface $entity_type) {
+    $route = new Route($entity_type->getLinkTemplate('revision-revert'));
+    $route->setDefault('_form', 'Drupal\content_entity_base\Entity\Form\EntityRevisionRevertForm');
+    $route->setDefault('_title', 'Revert to earlier revision');
+    $route->setRequirement('_entity_access_revision', $entity_type->id() . '.update');
+    $route->setOption('parameters', [
+      $entity_type->id() => [
+        'type' => 'entity:' . $entity_type->id(),
+      ],
+      $entity_type->id() . '_revision' => [
+        'type' => 'entity_revision:' . $entity_type->id(),
+      ],
+    ]);
+    return $route;
   }
 
   protected function revisionDeleteRoute(EntityTypeInterface $entity_type) {
+    $route = new Route($entity_type->getLinkTemplate('revision-delete'));
+    $route->setDefault('_form', 'Drupal\content_entity_base\Entity\Form\EntityRevisionDeleteForm');
+    $route->setDefault('_title', 'Delete earlier revision');
+    $route->setRequirement('_entity_access_revision', $entity_type->id() . '.delete');
+    $route->setOption('parameters', [
+      $entity_type->id() => [
+        'type' => 'entity:' . $entity_type->id(),
+      ],
+      $entity_type->id() . '_revision' => [
+        'type' => 'entity_revision:' . $entity_type->id(),
+      ],
+    ]);
+    return $route;
   }
-//
-//node.revision_revert_confirm:
-//  path: '/node/{node}/revisions/{node_revision}/revert'
-//  defaults:
-//    _form: '\Drupal\node\Form\NodeRevisionRevertForm'
-//    _title: 'Revert to earlier revision'
-//  requirements:
-//    _access_node_revision: 'update'
-//  options:
-//    _node_operation_route: TRUE
-//
-//node.revision_delete_confirm:
-//  path: '/node/{node}/revisions/{node_revision}/delete'
-//  defaults:
-//    _form: '\Drupal\node\Form\NodeRevisionDeleteForm'
-//    _title: 'Delete earlier revision'
-//  requirements:
-//    _access_node_revision: 'delete'
-//  options:
-//    _node_operation_route: TRUE
 
 }

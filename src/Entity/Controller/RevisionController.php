@@ -62,10 +62,18 @@ class RevisionController extends ControllerBase {
     return $this->currentUser()->hasPermission("delete all {$entity->id()} revisions");
   }
 
-  protected function buildRevertRevisionLink(EntityInterface $entity, $revision_id) {
+  protected function buildRevertRevisionLink(EntityInterface $entity_revision) {
+    return [
+      'title' => t('Revert'),
+      'url' => $entity_revision->urlInfo('revision-revert'),
+    ];
   }
 
-  protected function buildDeleteRevisionLink(EntityInterface $entity, $revision_id) {
+  protected function buildDeleteRevisionLink(EntityInterface $entity_revision) {
+    return [
+      'title' => t('Delete'),
+      'url' => $entity_revision->urlInfo('revision-delete'),
+    ];
   }
 
   protected function getRevisionDescription(ContentEntityInterface $revision, $is_current = FALSE) {
@@ -145,12 +153,6 @@ class RevisionController extends ControllerBase {
   public function revisionOverviewController(RouteMatchInterface $route_match) {
     $entity_revision = $this->extractEntityFromRouteMatch($route_match);
     return $this->revisionOverview($entity_revision);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getOperationLinks(EntityInterface $entity, $revision_id) {
   }
 
   /**
