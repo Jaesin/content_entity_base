@@ -81,28 +81,28 @@ trait RevisionControllerTrait {
   /**
    * Builds a link to revert an entity revision.
    *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
+   * @param \Drupal\Core\Entity\EntityInterface $entity_revision
    *   The entity to build a revert revision link for.
-   * @param int $revision_id
-   *   The revision ID of the revert link.
    *
-   * @return array
-   *   A link render array.
+   * @return array A link render array.
+   * A link render array.
+   * @internal param int $revision_id The revision ID of the revert link.*   The revision ID of the revert link.
+   *
    */
-  abstract protected function buildRevertRevisionLink(EntityInterface $entity, $revision_id);
+  abstract protected function buildRevertRevisionLink(EntityInterface $entity_revision);
 
   /**
    * Builds a link to delete an entity revision.
    *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
+   * @param \Drupal\Core\Entity\EntityInterface $entity_revision
    *   The entity to build a delete revision link for.
-   * @param int $revision_id
-   *   The revision ID of the delete link.
    *
-   * @return array
-   *   A link render array.
+   * @return array A link render array.
+   * A link render array.
+   * @internal param int $revision_id The revision ID of the delete link.*   The revision ID of the delete link.
+   *
    */
-  abstract protected function buildDeleteRevisionLink(EntityInterface $entity, $revision_id);
+  abstract protected function buildDeleteRevisionLink(EntityInterface $entity_revision);
 
   /**
    * Returns a string providing details of the revision.
@@ -141,13 +141,16 @@ trait RevisionControllerTrait {
     $rows = [];
 
     $vids = $entity_storage->revisionIds($entity);
+    $entity_revisions = array_combine($vids, array_map(function($vid) use ($entity_storage) {
+      return $entity_storage->loadRevision($vid);
+      }, $vids));
 
     $latest_revision = TRUE;
 
     foreach (array_reverse($vids) as $vid) {
       $row = [];
-      /** @var \Drupal\node\NodeInterface $revision */
-      $revision = $entity_storage->loadRevision($vid);
+      /** @var \Drupal\Core\Entity\ContentEntityInterface $revision */
+      $revision = $entity_revisions[$vid];
       if ($revision->hasTranslation($langcode) && $revision->getTranslation($langcode)
           ->isRevisionTranslationAffected()
       ) {
@@ -167,7 +170,7 @@ trait RevisionControllerTrait {
         }
         else {
           $row[] = $this->getRevisionDescription($revision, FALSE);
-          $links = $this->getOperationLinks($entity, $vid);
+          $links = $this->getOperationLinks($revision);
 
           $row[] = [
             'data' => [
@@ -187,30 +190,31 @@ trait RevisionControllerTrait {
       '#header' => $header,
     );
 
+    // We have no clue about caching yet.
+    $build['#cache']['max-age'] = 0;
+
     return $build;
   }
 
   /**
    * Get the links of the operations for an entity revision.
    *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
+   * @param \Drupal\Core\Entity\EntityInterface $entity_revision
    *   The entity to build the revision links for.
-   * @param int $revision_id
-   *   The revision ID of the delete link.
    *
    * @return array
    *   The operation links.
    */
-  protected function getOperationLinks(EntityInterface $entity, $revision_id) {
+  protected function getOperationLinks(EntityInterface $entity_revision) {
     $links = [];
-    $revert_permission = $this->hasRevertRevisionPermission($entity);
-    $delete_permission = $this->hasDeleteRevisionPermission($entity);
+    $revert_permission = $this->hasRevertRevisionPermission($entity_revision);
+    $delete_permission = $this->hasDeleteRevisionPermission($entity_revision);
     if ($revert_permission) {
-      $links['revert'] = $this->buildRevertRevisionLink($entity, $revision_id);
+      $links['revert'] = $this->buildRevertRevisionLink($entity_revision);
     }
 
     if ($delete_permission) {
-      $links['delete'] = $this->buildDeleteRevisionLink($entity, $revision_id);
+      $links['delete'] = $this->buildDeleteRevisionLink($entity_revision);
     }
     return $links;
   }

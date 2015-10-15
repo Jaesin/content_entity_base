@@ -36,6 +36,22 @@ class EntityBase extends ContentEntityBase implements EntityBaseInterface {
   /**
    * {@inheritdoc}
    */
+  protected function urlRouteParameters($rel) {
+    $route_parameters = parent::urlRouteParameters($rel);
+
+    if ($rel == 'revision-revert') {
+      $route_parameters[$this->getEntityTypeId() . '_revision'] = $this->getRevisionId();
+    }
+    elseif ($rel == 'revision-delete') {
+      $route_parameters[$this->getEntityTypeId() . '_revision'] = $this->getRevisionId();
+    }
+
+    return $route_parameters;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function preSaveRevision(EntityStorageInterface $storage, \stdClass $record) {
     parent::preSaveRevision($storage, $record);
 

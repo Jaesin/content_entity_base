@@ -63,6 +63,8 @@ use Drupal\content_entity_base\Entity\EntityBase;
  *     "edit-form"    = "/admin/ceb_test_content/{ceb_test_content}/edit",
  *     "version-history" = "/admin/ceb_test_content/{ceb_test_content}/revisions",
  *     "revision" = "/admin/ceb_test_content/{ceb_test_content}/revisions/{ceb_test_content_revision}/view",
+ *     "revision-revert" = "/admin/ceb_test_content/{ceb_test_content}/revisions/{ceb_test_content_revision}/revert",
+ *     "revision-delete" = "/admin/ceb_test_content/{ceb_test_content}/revisions/{ceb_test_content_revision}/delete",
  *   },
  * )
  */
