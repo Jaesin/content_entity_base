@@ -47,8 +47,8 @@ class EntityRevisionRouteAccessChecker implements AccessInterface {
   /**
    * {@inheritdoc}
    */
-  public function access(Route $route, AccountInterface $account, RouteMatchInterface $route_match, $entity_revision = NULL) {
-    $entity = $this->extractEntityFromRouteMatch($route_match);
+  public function access(Route $route, AccountInterface $account, RouteMatchInterface $route_match, $entity_revision = NULL, $_entity_revision = NULL) {
+    $entity = $_entity_revision ?: $this->extractEntityFromRouteMatch($route_match);
     if ($entity_revision) {
       $entity = $this->entityManager->getStorage($entity->getEntityTypeId())->loadRevision($entity_revision);
     }

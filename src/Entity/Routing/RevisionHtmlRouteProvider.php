@@ -46,8 +46,8 @@ class RevisionHtmlRouteProvider implements EntityRouteProviderInterface {
 
   protected function revisionViewRoute(EntityTypeInterface $entity_type) {
     $route = new Route($entity_type->getLinkTemplate('revision'));
-    $route->setDefault('_title', 'Revisions');
-    $route->setDefault('_controller', '\Drupal\content_entity_base\Entity\Controller\RevisionControllerTrait::showRevision');
+    $route->setDefault('_title_callback', '\Drupal\content_entity_base\Entity\Controller\RevisionController::revisionTitle');
+    $route->setDefault('_controller', '\Drupal\content_entity_base\Entity\Controller\RevisionController::showRevision');
     $route->setRequirement('_entity_access_revision', $entity_type->id() . '.view');
 
     $route->setOption('parameters', [

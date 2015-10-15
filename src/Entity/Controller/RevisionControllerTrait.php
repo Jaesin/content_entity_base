@@ -8,7 +8,7 @@
 
 namespace Drupal\content_entity_base\Entity\Controller;
 
-use Drupal\content_entity_base\Entity\Revision\TimestampedRevisionInterface;
+use Drupal\content_entity_base\Entity\TimestampedRevisionInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Language\LanguageInterface;
@@ -46,37 +46,14 @@ trait RevisionControllerTrait {
    *   An array suitable for drupal_render().
    */
   public function showRevision(ContentEntityInterface $entity_revision) {
-    $view_controller = $this->getEntityViewBuilder($this->entityManager(), $this->renderer());
+    return $this->doShowRevision($entity_revision);
+  }
+
+  protected function doShowRevision(ContentEntityInterface $entity_revision) {
+    $view_controller = $this->entityManager()->getViewBuilder($entity_revision->getEntityTypeId());
     $page = $view_controller->view($entity_revision);
     unset($page[$entity_revision->getEntityTypeId() . 's'][$entity_revision->id()]['#cache']);
     return $page;
-  }
-
-  /**
-   * Page title callback for an entity revision.
-   *
-   * @param int $revision_id
-   *   The entity revision ID.
-   *
-   * @return string
-   *   The page title.
-   */
-  public function revisionPageTitle($revision_id, $entity_type_id) {
-    $entity = $this->entityManager()
-      ->getStorage($entity_type_id)
-      ->loadRevision($revision_id);
-    if ($entity instanceof TimestampedRevisionInterface) {
-      return $this->t('Revision of %title from %date', array(
-        '%title' => $entity->label(),
-        '%date' => \Drupal::service('date.formatter')
-          ->format($entity->getRevisionCreationTime()),
-      ));
-    }
-    else {
-      return $this->t('Revision of %title', array(
-        '%title' => $entity->label(),
-      ));
-    }
   }
 
   /**
@@ -143,39 +120,6 @@ trait RevisionControllerTrait {
   abstract protected function getRevisionDescription(ContentEntityInterface $revision, $is_current = FALSE);
 
   /**
-   * Returns a string providing the title of the revision.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $revision
-   *   Returns a string to provide the title of the revision.
-   *
-   * @return string
-   *   Revision title.
-   */
-  abstract protected function getRevisionTitle(EntityInterface $revision);
-
-
-  /**
-   * Gets the entity type ID for this revision controller.
-   *
-   * @return string
-   *   Entity Type ID for this revision controller.
-   */
-  abstract protected function getRevisionEntityTypeId();
-
-  /**
-   * Gets the entity's view controller.
-   *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   Entity manager.
-   * @param \Drupal\Core\Render\RendererInterface $renderer
-   *   Renderer service.
-   *
-   * @return \Drupal\Core\Entity\EntityViewBuilderInterface
-   *   A new entity view builder.
-   */
-  abstract protected function getEntityViewBuilder(EntityManagerInterface $entity_manager, RendererInterface $renderer);
-
-  /**
    * Generates an overview table of older revisions of an entity.
    *
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity
@@ -192,7 +136,6 @@ trait RevisionControllerTrait {
     $entity_storage = $this->entityManager()
       ->getStorage($entity->getEntityTypeId());
 
-    $build['#title'] = $this->getRevisionTitle($entity);
     $header = array($this->t('Revision'), $this->t('Operations'));
 
     $rows = [];

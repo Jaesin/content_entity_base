@@ -81,11 +81,9 @@ class RevisionUiTest extends KernelTestBase {
     return $user;
   }
 
-  public function ptestPages() {
+  public function testPages() {
     /** @var \Drupal\Core\Session\AccountSwitcherInterface $account_switcher */
     $account_switcher = \Drupal::service('account_switcher');
-    /** @var \Drupal\content_entity_base\Entity\Routing\EntityRevisionRouteAccessChecker $revision_access_check */
-    $revision_access_check = \Drupal::service('content_entity_base.entity_revision_access_checker');
 
     $entity = CebTestContent::create([
       'type' => 'test_bundle',
@@ -105,7 +103,38 @@ class RevisionUiTest extends KernelTestBase {
     $this->assertEquals(200, $response->getStatusCode());
   }
 
-  public function testRevisionPagesWithMoreThanOneRevision() {
+  public function testRevisionViewPage() {
+    /** @var \Drupal\Core\Session\AccountSwitcherInterface $account_switcher */
+    $account_switcher = \Drupal::service('account_switcher');
+
+    $entity = CebTestContent::create([
+      'type' => 'test_bundle',
+      'name' => 'original name',
+    ]);
+    $entity->save();
+    $old_revision = clone $entity;
+    $old_revision->isDefaultRevision(FALSE);
+
+    $entity->setNewRevision(TRUE);
+    $entity->isDefaultRevision(TRUE);
+    $entity->name->value = 'revision name';
+    $entity->save();
+
+    $response = $this->httpKernel->handle(Request::create($old_revision->url('revision')));
+    $this->assertEquals(403, $response->getStatusCode());
+
+    $user = $this->drupalCreateUser(['access ceb_test_content', "view all ceb_test_content revisions"]);
+    $account_switcher->switchTo($user);
+
+    $response = $this->httpKernel->handle(Request::create($old_revision->url('revision')));
+    $this->assertEquals(200, $response->getStatusCode());
+
+    $this->setRawContent($response->getContent());
+    $this->assertTitle('Revision of original name | ');
+    $this->assertRaw('<h1>Revision of <em class="placeholder">original name</em>');
+  }
+
+  public function testRevisionHistoryPagesWithMoreThanOneRevision() {
     /** @var \Drupal\Core\Session\AccountSwitcherInterface $account_switcher */
     $account_switcher = \Drupal::service('account_switcher');
     /** @var \Drupal\content_entity_base\Entity\Routing\EntityRevisionRouteAccessChecker $revision_access_check */

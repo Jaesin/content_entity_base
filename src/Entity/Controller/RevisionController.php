@@ -11,6 +11,8 @@ use Drupal\Component\Utility\Xss;
 use Drupal\content_entity_base\Entity\EntityRevisionLogInterface;
 use Drupal\content_entity_base\Entity\ExpandedEntityRevisionInterface;
 use Drupal\content_entity_base\Entity\Routing\RevisionObjectExtractionTrait;
+use Drupal\content_entity_base\Entity\TimestampedRevisionInterface;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -23,6 +25,13 @@ class RevisionController extends ControllerBase {
 
   use RevisionControllerTrait;
   use RevisionObjectExtractionTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function showRevision(ContentEntityInterface $_entity_revision) {
+    return $this->doShowRevision($_entity_revision);
+  }
 
   /**
    * {@inheritdoc}
@@ -45,24 +54,8 @@ class RevisionController extends ControllerBase {
     return \Drupal::service('language_manager');
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function showRevision($revision_id) {
-  }
-
   protected function dateFormatter() {
     return \Drupal::service('date.formatter');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function revisionPageTitle($revision_id) {
-  }
-
-  protected function hasRevertRevisionPermission(EntityInterface $entity) {
-    return $this->currentUser()->hasPermission("revert all {$entity->id()} revisions");
   }
 
   protected function hasDeleteRevisionPermission(EntityInterface $entity) {
@@ -128,22 +121,45 @@ class RevisionController extends ControllerBase {
     return $column;
   }
 
-  protected function getRevisionTitle(EntityInterface $revision) {
-    return $revision->label();
+  /**
+   * Returns a string providing the title of the revision.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $_entity_revision
+   *   Returns a string to provide the title of the revision.
+   *
+   * @return string
+   *   Revision title.
+   */
+  public function revisionTitle(EntityInterface $_entity_revision) {
+    if ($_entity_revision instanceof TimestampedRevisionInterface) {
+      return $this->t('Revision of %title from %date', array('%title' => $_entity_revision->label(), '%date' => format_date($_entity_revision->getRevisionCreationTime())));
+    }
+    else {
+      return $this->t('Revision of %title', array('%title' => $_entity_revision->label()));
+    }
   }
 
-  protected function getRevisionEntityTypeId() {
-  }
-
-  protected function getEntityViewBuilder(EntityManagerInterface $entity_manager, RendererInterface $renderer) {
-  }
-
+  /**
+   * {@inheritdoc}
+   */
   public function revisionOverviewController(RouteMatchInterface $route_match) {
     $entity_revision = $this->extractEntityFromRouteMatch($route_match);
     return $this->revisionOverview($entity_revision);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function getOperationLinks(EntityInterface $entity, $revision_id) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function hasRevertRevisionPermission(EntityInterface $entity) {
+    return AccessResult::allowedIfHasPermission($this->currentUser(), "revert all {$entity->getEntityTypeId()} revisions")->orIf(
+      AccessResult::allowedIfHasPermission($this->currentUser(), "revert {$entity->bundle()} {$entity->getEntityTypeId()} revisions")
+    );
   }
 
 }
