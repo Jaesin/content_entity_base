@@ -43,8 +43,8 @@ class EntityBaseController extends ControllerBase {
     if (count($types) === 0) {
       return [
         '#markup' => $this->t('You have not created any @entity_label types yet. Go to the <a href="@url">@entity_label type creation page</a> to add a new @entity_label type.', [
-          '@entity_label' => $entity_definition->label(),
-          '@url' => Url::fromRoute($entity_definition->id().'.type_add')->toString(),
+          '@entity_label' => $entity_definition->getLabel(),
+          '@url' => Url::fromRoute('entity.' . $entity_definition->getBundleEntityType() . '.add_form')->toString(),
         ]),
       ];
     }

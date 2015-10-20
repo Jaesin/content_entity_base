@@ -13,6 +13,8 @@ use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\user\EntityOwnerInterface;
+use Drupal\user\UserInterface;
 
 /**
  * Defines a base entity class to be used by custom entities.
@@ -29,6 +31,22 @@ class EntityBase extends ContentEntityBase implements EntityBaseInterface {
     $duplicate->revision_id->value = NULL;
     $duplicate->id->value = NULL;
     return $duplicate;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function urlRouteParameters($rel) {
+    $route_parameters = parent::urlRouteParameters($rel);
+
+    if ($rel == 'revision-revert') {
+      $route_parameters[$this->getEntityTypeId() . '_revision'] = $this->getRevisionId();
+    }
+    elseif ($rel == 'revision-delete') {
+      $route_parameters[$this->getEntityTypeId() . '_revision'] = $this->getRevisionId();
+    }
+
+    return $route_parameters;
   }
 
   /**

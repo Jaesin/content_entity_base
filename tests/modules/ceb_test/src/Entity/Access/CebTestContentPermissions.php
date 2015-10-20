@@ -16,9 +16,10 @@ use Drupal\Core\Entity\ContentEntityTypeInterface;
 class CebTestContentPermissions extends EntityBasePermissions {
 
   /**
-   * @inheritdoc{}
+   * {@inheritdoc}
    */
   public function entityPermissions(ContentEntityTypeInterface $entity = NULL) {
     return parent::entityPermissions(\Drupal::entityManager()->getDefinition('ceb_test_content'));
   }
+
 }
