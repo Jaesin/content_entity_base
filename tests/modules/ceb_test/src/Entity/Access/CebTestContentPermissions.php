@@ -18,7 +18,7 @@ class CebTestContentPermissions extends EntityBasePermissions {
   /**
    * @inheritdoc{}
    */
-  public function entityPermissions(ContentEntityTypeInterface $entity = NULL) {
+  public function entityPermissions(ContentEntityTypeInterface $entity_type = NULL) {
     return parent::entityPermissions(\Drupal::entityManager()->getDefinition('ceb_test_content'));
   }
 }

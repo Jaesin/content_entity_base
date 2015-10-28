@@ -49,22 +49,24 @@ class EntityBasePermissions implements ContainerInjectionInterface {
   /**
    * Gets an array of entity type permissions.
    *
-   * @param ContentEntityTypeInterface $entity
+   * @param ContentEntityTypeInterface $entity_type
    *   The custom entity definition.
+   *
    * @return array
    *   The entity type permissions.
-   *   @see \Drupal\user\PermissionHandlerInterface::getPermissions()
+   *
+   * @see \Drupal\user\PermissionHandlerInterface::getPermissions()
    */
-  public function entityPermissions(ContentEntityTypeInterface $entity = NULL) {
+  public function entityPermissions(ContentEntityTypeInterface $entity_type = NULL) {
     $perms = [];
 
-    if (!empty($entity)) {
+    if (!empty($entity_type)) {
       // Get the entity ID.
-      $entity_id = $entity->id();
+      $entity_id = $entity_type->id();
       // Build replacement data for lables and descriptions.
       $replacements = [
         '!entity_id' => $entity_id,
-        '@entity_label' => $entity->getLabel(),
+        '@entity_label' => $entity_type->getLabel(),
       ];
       // Add the default entity permissions.
       $perms = [
@@ -105,7 +107,7 @@ class EntityBasePermissions implements ContainerInjectionInterface {
         ],
       ];
       // Load bundles if any are defined.
-      if (($entity_type_storage = $this->entityManager->getStorage($entity->getBundleEntityType()))
+      if (($entity_type_storage = $this->entityManager->getStorage($entity_type->getBundleEntityType()))
         && ($entity_types = $entity_type_storage->loadMultiple())) {
         // Generate entity permissions for all types for this entity.
         foreach ($entity_types as $type) {
