@@ -1,6 +1,23 @@
 services:
-  language_converter:
+  param_converter.entity_definition:
     class: Drupal\content_entity_base\ParamConverter\EntityDefinitionConverter
+    arguments: ['@entity.manager']
+    tags:
+      - { name: paramconverter }
+
+  content_entity_base.entity_revision_access_checker:
+    class: \Drupal\content_entity_base\Entity\Routing\EntityRevisionRouteAccessChecker
+    arguments: ['@entity.manager']
+    tags:
+      - { name: access_check, applies_to: _entity_access_revision }
+
+  route_enhancer.entity_revision:
+    class: Drupal\content_entity_base\Entity\Routing\EntityRevisionRouteEnhancer
+    tags:
+      - { name: route_enhancer, priority: 20 }
+
+  param_converter.entity_revision:
+    class:  \Drupal\content_entity_base\ParamConverter\EntityRevisionParamConverter
     arguments: ['@entity.manager']
     tags:
       - { name: paramconverter }

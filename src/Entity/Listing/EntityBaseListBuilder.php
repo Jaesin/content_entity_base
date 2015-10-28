@@ -43,6 +43,13 @@ class EntityBaseListBuilder extends EntityListBuilder {
     if (isset($operations['delete'])) {
       $operations['delete']['query']['destination'] = $entity->url('collection');
     }
+    if ($entity->access('version-history') && $entity->hasLinkTemplate('version-history')) {
+      $operations['version-history'] = [
+        'title' => $this->t('Version history'),
+        'weight' => 10,
+        'url' => $entity->urlInfo('version-history'),
+      ];
+    }
     return $operations;
   }
 
