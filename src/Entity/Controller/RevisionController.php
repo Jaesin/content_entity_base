@@ -139,7 +139,7 @@ class RevisionController extends ControllerBase {
    *   Revision title.
    */
   public function revisionTitle(EntityInterface $_entity_revision) {
-    if ($_entity_revision instanceof TimestampedRevisionInterface) {
+    if ($_entity_revision instanceof TimestampedRevisionInterface | $_entity_revision instanceof ExpandedEntityRevisionInterface) {
       return $this->t('Revision of %title from %date', array('%title' => $_entity_revision->label(), '%date' => format_date($_entity_revision->getRevisionCreationTime())));
     }
     else {

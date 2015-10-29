@@ -148,14 +148,16 @@ trait RevisionControllerTrait {
     $latest_revision = TRUE;
 
     foreach (array_reverse($vids) as $vid) {
+      $is_current_revision = $entity->getRevisionId() == $vid;
       $row = [];
       /** @var \Drupal\Core\Entity\ContentEntityInterface $revision */
       $revision = $entity_revisions[$vid];
       if ($revision->hasTranslation($langcode) && $revision->getTranslation($langcode)
           ->isRevisionTranslationAffected()
       ) {
-        if ($latest_revision) {
-          $row[] = $this->getRevisionDescription($revision, TRUE);
+        $row[] = $this->getRevisionDescription($revision, $entity->getRevisionId() === $revision->getRevisionId());
+        $links = $this->getOperationLinks($revision);
+        if ($is_current_revision) {
           $row[] = [
             'data' => [
               '#prefix' => '<em>',
@@ -166,12 +168,8 @@ trait RevisionControllerTrait {
           foreach ($row as &$current) {
             $current['class'] = ['revision-current'];
           }
-          $latest_revision = FALSE;
         }
         else {
-          $row[] = $this->getRevisionDescription($revision, FALSE);
-          $links = $this->getOperationLinks($revision);
-
           $row[] = [
             'data' => [
               '#type' => 'operations',
