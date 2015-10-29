@@ -1,0 +1,3 @@
+content_entity_base:revisions:
+  class: \Drupal\Core\Menu\LocalTaskDefault
+  deriver: \Drupal\content_entity_base\Plugin\Derivative\EntityRevisionLocalTasks
