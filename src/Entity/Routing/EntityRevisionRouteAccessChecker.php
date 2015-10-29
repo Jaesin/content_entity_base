@@ -97,15 +97,7 @@ class EntityRevisionRouteAccessChecker implements AccessInterface {
         return FALSE;
       }
 
-      // There should be at least two revisions. If the vid of the given node
-      // and the vid of the default revision differ, then we already have two
-      // different revisions so there is no need for a separate database check.
-      // Also, if you try to revert to or delete the default revision, that's
-      // not good.
-      if ($entity->isDefaultRevision() && ($entity_storage->countDefaultLanguageRevisions($entity) == 1 || $operation == 'update' || $operation == 'delete')) {
-        $this->access[$cid] = FALSE;
-      }
-      elseif ($account->hasPermission('administer ' . $entity_type_id)) {
+      if ($account->hasPermission('administer ' . $entity_type_id)) {
         $this->access[$cid] = TRUE;
       }
       else {
