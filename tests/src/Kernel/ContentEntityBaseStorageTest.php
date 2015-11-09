@@ -20,7 +20,7 @@ class ContentEntityBaseStorageTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['content_entity_base', 'ceb_test', 'system'];
+  public static $modules = ['content_entity_base', 'ceb_test', 'system', 'user'];
 
   /**
    * {@inheritdoc}
@@ -29,6 +29,7 @@ class ContentEntityBaseStorageTest extends KernelTestBase {
     parent::setUp();
 
     $this->installEntitySchema('ceb_test_content');
+    $this->installEntitySchema('user');
     $this->installSchema('system', ['sequences']);
   }
 

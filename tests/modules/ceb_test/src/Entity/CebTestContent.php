@@ -35,7 +35,7 @@ use Drupal\content_entity_base\Entity\EntityBase;
  *     "view_builder" = "\Drupal\Core\Entity\EntityViewBuilder",
  *     "views_data"   = "\Drupal\ceb_test\Entity\Views\DCContentViewsData",
  *     "route_provider" = {
- *       "html" = "\Drupal\content_entity_base\Entity\Routing\DefaultHtmlRouteProvider",
+ *       "html" = "\Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider",
  *       "crud" = "\Drupal\content_entity_base\Entity\Routing\CrudUiRouteProvider",
  *       "revision" = "\Drupal\content_entity_base\Entity\Routing\RevisionHtmlRouteProvider"
  *     },
