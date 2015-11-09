@@ -146,6 +146,7 @@ class RevisionUiTest extends KernelTestBase {
     $entity->save();
 
     $entity->setNewRevision(TRUE);
+    $entity->revision_translation_affected->value = TRUE;
     $entity->save();
 
     $user = $this->drupalCreateUser(['access ceb_test_content']);
