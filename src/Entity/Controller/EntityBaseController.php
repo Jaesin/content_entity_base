@@ -11,6 +11,7 @@ use Drupal\content_entity_base\Entity\EntityBaseInterface;
 use Drupal\content_entity_base\Entity\EntityTypeBaseInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -102,13 +103,13 @@ class EntityBaseController extends ControllerBase {
    *
    * @param \Drupal\Core\Entity\ContentEntityTypeInterface $entity_definition
    *   The custom entity definition.
-   * @param \Drupal\content_entity_base\Entity\EntityTypeBaseInterface $entity_bundle
+   * @param \Drupal\Core\Entity\EntityInterface $entity_bundle
    *   The custom entity type bundle to use.
    *
    * @return array
    *   A form array as expected by drupal_render().
    */
-  public function addForm(ContentEntityTypeInterface $entity_definition = NULL, EntityTypeBaseInterface $entity_bundle = NULL) {
+  public function addForm(ContentEntityTypeInterface $entity_definition = NULL, EntityInterface $entity_bundle = NULL) {
     // Validate the bundle.
     if (!$entity_bundle || !$entity_definition) {
       // @todo Replace it with https://www.drupal.org/node/2571521.
@@ -131,13 +132,13 @@ class EntityBaseController extends ControllerBase {
    *
    * @param \Drupal\Core\Entity\ContentEntityTypeInterface $entity_definition
    *   The custom entity definition.
-   * @param \Drupal\content_entity_base\Entity\EntityTypeBaseInterface $entity_bundle
+   * @param \Drupal\Core\Entity\EntityInterface $entity_bundle
    *   The custom entity type bundle to use.
    *
    * @return string
    *   The page title.
    */
-  public function getAddFormTitle(ContentEntityTypeInterface $entity_definition = NULL, EntityTypeBaseInterface $entity_bundle = NULL) {
+  public function getAddFormTitle(ContentEntityTypeInterface $entity_definition = NULL, EntityInterface $entity_bundle = NULL) {
     // Build the form page title using the type.
     return $this->t('Add %type @entity_label', [
       '@entity_label' => $entity_definition->getLabel(),
@@ -148,7 +149,7 @@ class EntityBaseController extends ControllerBase {
   /**
    * Provides the page title for this controller.
    *
-   * @param \Drupal\content_entity_base\Entity\EntityBaseInterface $entity_definition
+   * @param \Drupal\Core\Entity\EntityInterface $entity_definition
    *   The custom entity type to add.
    * @param string $action
    *   The action being performed.
@@ -156,7 +157,7 @@ class EntityBaseController extends ControllerBase {
    * @return string
    *   The page title.
    */
-  public function getEntityFormTitle(EntityBaseInterface $entity_definition, $action = 'default') {
+  public function getEntityFormTitle(EntityInterface $entity_definition, $action = 'default') {
     return $this->t('@action %type @entity_label', [
       '@action' => ucwords(strtolower($action)),
       '@entity_label' => $entity_definition->label(),
