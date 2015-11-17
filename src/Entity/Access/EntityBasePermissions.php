@@ -62,46 +62,46 @@ class EntityBasePermissions implements ContainerInjectionInterface {
 
     if (!empty($entity_type)) {
       // Get the entity ID.
-      $entity_id = $entity_type->id();
+      $entity_type_id = $entity_type->id();
       // Build replacement data for lables and descriptions.
       $replacements = [
-        '!entity_id' => $entity_id,
+        '@entity_type_id' => $entity_type_id,
         '@entity_label' => $entity_type->getLabel(),
       ];
       // Add the default entity permissions.
       $perms = [
-        "bypass $entity_id access" => [
+        "bypass $entity_type_id access" => [
           'title' => $this->t('Bypass @entity_label access control', $replacements),
           'description' => $this->t('View, edit and delete all @entity_label regardless of permission restrictions.', $replacements),
           'restrict access' => TRUE,
         ],
-        "administer $entity_id types" => [
+        "administer $entity_type_id types" => [
           'title' => $this->t('Administer @entity_label types', $replacements),
           'description' => $this->t('Promote, change ownership, edit revisions, and perform other tasks across all @entity_label types.', $replacements),
           'restrict access' => TRUE,
         ],
-        "administer $entity_id" => [
+        "administer $entity_type_id" => [
           'title' => $this->t('Administer @entity_label', $replacements),
           'restrict access' => TRUE,
         ],
-        "access $entity_id overview" => [
+        "access $entity_type_id overview" => [
           'title' => $this->t('Access the @entity_label overview page', $replacements),
           'description' => $this->t('Get an overview of all @entity_label.', $replacements),
         ],
-        "access $entity_id" => [
+        "access $entity_type_id" => [
           'title' => $this->t('View published @entity_label', $replacements),
         ],
-        "view own unpublished $entity_id" => [
+        "view own unpublished $entity_type_id" => [
           'title' => $this->t('View own unpublished @entity_label', $replacements),
         ],
-        "view all $entity_id revisions" => [
+        "view all $entity_type_id revisions" => [
           'title' => $this->t('View all @entity_label revisions', $replacements),
         ],
-        "revert all $entity_id revisions" => [
+        "revert all $entity_type_id revisions" => [
           'title' => $this->t('Revert all @entity_label revisions', $replacements),
           'description' => $this->t('Role requires permission <em>View all @entity_label revisions</em> and <em>edit rights</em> for @entity_label in question or <em>Administer @entity_label</em>.', $replacements),
         ],
-        "delete all $entity_id revisions" => [
+        "delete all $entity_type_id revisions" => [
           'title' => $this->t('Delete all @entity_label revisions', $replacements),
           'description' => $this->t('Role requires permission to <em>View all @entity_label revisions</em> and <em>delete rights</em> for @entity_label in question or <em>Administer @entity_label</em>.', $replacements),
         ],
