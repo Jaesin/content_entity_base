@@ -140,6 +140,12 @@ class EntityTypeBaseForm extends EntityForm {
   protected function contentAddBodyField($entity_type_id, $label = 'Body') {
     // Get the content entity type.
     $content_entity_type = $this->getContentEntityTypeID();
+    
+    // Make the creation of a default body field optional. Do not create if
+    // there is no field storage configuration.
+    if (!FieldStorageConfig::loadByName($content_entity_type, 'body')) {
+      return;
+    }
 
     // Add or remove the body field, as needed.
     $field = FieldConfig::loadByName($content_entity_type, $entity_type_id, 'body');
