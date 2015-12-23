@@ -26,14 +26,10 @@ class EntityBaseViewsData extends EntityViewsData {
 
     if ($entity) {
       // Get some info to work off.
-      /** @var string $entity_table */
-      $entity_table = $entity->get('base_table');
-      /** @var string $entity_data_table */
-      $entity_data_table = $entity->get('data_table');
-      /** @var string $entity_revision_table */
-      $entity_revision_table = $entity->get('revision_table');
-      /** @var string $entity_revision_data_table */
-      $entity_revision_data_table = $entity->get('revision_data_table');
+      $entity_table = $entity->getBaseTable();
+      $entity_data_table = $entity->getDataTable();
+      $entity_revision_table = $entity->getRevisionTable();
+      $entity_revision_data_table = $entity->getRevisionDataTable();
       // Replacements for all strings.
       $replacements = [
         '@entity_label' => $entity->getLabel(),
