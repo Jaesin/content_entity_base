@@ -265,4 +265,28 @@ class EntityBase extends ContentEntityBase implements EntityBaseInterface {
   public static function getCurrentUserId() {
     return array(\Drupal::currentUser()->id());
   }
+  
+  /**
+   * {@inheritdoc}
+   * 
+   * Allow for an optional label property by optionally inserting a dynamic label fabricated from bundle and ID.
+   */
+ public function label() {
+   $label = parent::label();
+
+   if (!$label) {
+     $class = $this->entityTypeManager()->getDefinition($this->getEntityType()->getBundleEntityType())->getClass();
+     if (is_callable([$class, 'load'])) {
+       $entity_type = $class::load($this->bundle());
+       if ($entity_type) {
+         $label = $entity_type->label() . ' ';
+       }
+     }
+
+     $label .= $this->id();
+   }
+
+   return $label;
+ }
+
 }
