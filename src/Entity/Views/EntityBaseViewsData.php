@@ -35,7 +35,7 @@ class EntityBaseViewsData extends EntityViewsData {
       // Replacements for all strings.
       $replacements = [
         '@entity_label' => $entity->getLabel(),
-        '!entity_id' => $entity->id(),
+        '@entity_id' => $entity->id(),
       ];
 
       if (!empty($entity_data_table)) {
@@ -51,7 +51,7 @@ class EntityBaseViewsData extends EntityViewsData {
       if (!empty($entity_table) && !empty($entity_revision_table)) {
 
           // Advertise this table as a possible base table.
-        $data[$entity_revision_table]['table']['base']['help'] = $this->t('@entity_label revision is a history of changes to a "!entity_id" entity.', $replacements);
+        $data[$entity_revision_table]['table']['base']['help'] = $this->t('@entity_label revision is a history of changes to a "@entity_id" entity.', $replacements);
         $data[$entity_revision_table]['table']['base']['defaults']['title'] = 'info';
 
         // @todo EntityViewsData should add these relationships by default.
