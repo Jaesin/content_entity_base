@@ -55,7 +55,7 @@ class EntityBaseViewsData extends EntityViewsData {
         $data[$entity_revision_table]['table']['base']['defaults']['title'] = 'info';
 
         // @todo EntityViewsData should add these relationships by default.
-        //   https://www.drupal.org/node/2410275
+        //   https://www.drupal.org/node/2652652
         $data[$entity_revision_table]['id']['relationship']['id'] = 'standard';
         $data[$entity_revision_table]['id']['relationship']['base'] = $entity_table;
         $data[$entity_revision_table]['id']['relationship']['base field'] = 'id';
