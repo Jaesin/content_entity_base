@@ -33,7 +33,7 @@ use Drupal\content_entity_base\Entity\EntityBase;
  *     "translation"  = "\Drupal\content_translation\ContentTranslationHandler",
  *     "list_builder" = "\Drupal\content_entity_base\Entity\Listing\EntityBaseListBuilder",
  *     "view_builder" = "\Drupal\Core\Entity\EntityViewBuilder",
- *     "views_data"   = "\Drupal\ceb_test\Entity\Views\DCContentViewsData",
+ *     "views_data"   = "\Drupal\content_entity_base\Entity\Views\EntityBaseViewsData",
  *     "route_provider" = {
  *       "html" = "\Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider",
  *       "crud" = "\Drupal\content_entity_base\Entity\Routing\CrudUiRouteProvider",
