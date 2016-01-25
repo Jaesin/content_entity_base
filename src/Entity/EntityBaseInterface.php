@@ -7,6 +7,7 @@
 
 namespace Drupal\content_entity_base\Entity;
 
+use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\user\EntityOwnerInterface;
@@ -47,5 +48,12 @@ interface EntityBaseInterface extends ContentEntityInterface, EntityChangedInter
    *   The called node entity.
    */
   public function setPublished($published);
+
+  /**
+   * Gets the config entity that serves as the content entities' bundle.
+   *
+   * @return ConfigEntityInterface|false
+   */
+  public function getBundleEntity();
 
 }
