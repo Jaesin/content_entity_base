@@ -28,7 +28,7 @@ class EntityBaseForm extends ContentEntityForm {
     parent::prepareEntity();
 
     /** @var EntityTypeBaseInterface $entity_type */
-    $entity_type = $this->entity->type->referencedEntities()[0];
+    $entity_type = $this->entity->bundle();
 
     // Set up default values, if required.
     if (!$this->entity->isNew()) {
@@ -110,8 +110,7 @@ class EntityBaseForm extends ContentEntityForm {
    */
   public function save(array $form, FormStateInterface $form_state) {
     /** @var EntityTypeBaseInterface $entity_type */
-    $entities = $this->entity->type->referencedEntities();
-    $entity_type = reset($entities);
+    $entity_type = $this->entity->bundle();
 
     // Save as a new revision if requested to do so.
     if (!$form_state->isValueEmpty('revision')) {
