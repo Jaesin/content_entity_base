@@ -1,0 +1,5 @@
+command:
+  console_ceb:
+    generate:
+      'entity:ceb':
+          description: 'Generate a new (Content Entity Base) content entity'
