@@ -265,4 +265,16 @@ class EntityBase extends ContentEntityBase implements EntityBaseInterface {
   public static function getCurrentUserId() {
     return array(\Drupal::currentUser()->id());
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getBundleEntity() {
+    // Get the bundle key;
+    $bundle_key = $this->getEntityType()->getKey('bundle');
+    // Return the bundle entity if it exists.
+    return (!empty($bundle_key) && isset($this->{$bundle_key}->entity))
+      ? $this->{$this->getEntityType()->getKey('bundle')}->entity
+      : FALSE;
+  }
 }
