@@ -10,9 +10,3 @@ services:
     arguments: ['@entity.manager']
     tags:
       - { name: access_check, applies_to: _entity_access_revision }
-
-  param_converter.entity_revision:
-    class:  \Drupal\content_entity_base\ParamConverter\EntityRevisionParamConverter
-    arguments: ['@entity.manager']
-    tags:
-      - { name: paramconverter }
