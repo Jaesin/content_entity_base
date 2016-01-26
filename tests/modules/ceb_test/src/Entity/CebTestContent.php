@@ -43,7 +43,7 @@ use Drupal\content_entity_base\Entity\EntityBase;
  *       "add"        = "\Drupal\content_entity_base\Entity\Form\EntityBaseForm",
  *       "edit"       = "\Drupal\content_entity_base\Entity\Form\EntityBaseForm",
  *       "default"    = "\Drupal\content_entity_base\Entity\Form\EntityBaseForm",
- *       "delete"     = "\Drupal\content_entity_base\Entity\Form\EntityBaseDeleteForm",
+ *       "delete"     = "\Drupal\Core\Entity\ContentEntityDeleteForm",
  *     },
  *   },
  *   entity_keys = {
