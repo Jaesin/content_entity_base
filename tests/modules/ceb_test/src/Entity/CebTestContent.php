@@ -58,7 +58,7 @@ use Drupal\content_entity_base\Entity\EntityBase;
  *     "collection"   = "/admin/content/ceb_test_content",
  *     "canonical"    = "/admin/ceb_test_content/{ceb_test_content}",
  *     "add-page"    = "/admin/ceb_test_content/add",
- *     "add-form"    = "/admin/ceb_test_content/add/{entity_bundle_id}",
+ *     "add-form"    = "/admin/ceb_test_content/add/{type}",
  *     "delete-form"  = "/admin/ceb_test_content/{ceb_test_content}/delete",
  *     "edit-form"    = "/admin/ceb_test_content/{ceb_test_content}/edit",
  *     "version-history" = "/admin/ceb_test_content/{ceb_test_content}/revisions",
