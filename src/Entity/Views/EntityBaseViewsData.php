@@ -63,7 +63,6 @@ class EntityBaseViewsData extends EntityViewsData {
       $data[$revision_base_table]['revision_id']['relationship']['base field'] = 'revision_id';
       $data[$revision_base_table]['revision_id']['relationship']['title'] = $this->t('@entity_label', $replacements);
       $data[$revision_base_table]['revision_id']['relationship']['label'] = $this->t('Get the actual @entity_label from a @entity_label revision.', $replacements);
-      }
     }
 
     return $data;
