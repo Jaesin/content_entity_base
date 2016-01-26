@@ -1,0 +1,20 @@
+{
+    "name": "drupal/content_entity_base",
+    "description": "Provides base classes for bundle-able custom entities.",
+    "type": "drupal-module",
+    "homepage": "https://github.com/Jaesin/content_entity_base",
+    "support": {
+        "issues": "https://github.com/Jaesin/content_entity_base/issues",
+        "source": "https://github.com/Jaesin/content_entity_base"
+    },
+    "license": "GPL-2.0+",
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://packagist.drupal-composer.org"
+        }
+    ],
+    "require": {
+        "drupal/enity": "8.1.x-dev"
+    }
+}

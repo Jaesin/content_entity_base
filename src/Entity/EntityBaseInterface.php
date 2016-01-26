@@ -48,4 +48,11 @@ interface EntityBaseInterface extends ContentEntityInterface, EntityChangedInter
    */
   public function setPublished($published);
 
+  /**
+   * Gets the config entity that serves as the content entities' bundle.
+   *
+   * @return \Drupal\Core\Config\Entity\ConfigEntityInterface|false
+   */
+  public function getBundleEntity();
+
 }

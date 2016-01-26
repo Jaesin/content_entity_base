@@ -27,15 +27,14 @@ class EntityBaseForm extends ContentEntityForm {
   protected function prepareEntity() {
     parent::prepareEntity();
 
-    /** @var EntityTypeBaseInterface $entity_type */
-    $entity_type = $this->entity->type->referencedEntities()[0];
+    $bundle = $this->entity->getBundleEntity();
 
     // Set up default values, if required.
     if (!$this->entity->isNew()) {
       $this->entity->setRevisionLog(NULL);
     }
     // Always use the default revision setting.
-    $this->entity->setNewRevision($entity_type->shouldCreateNewRevision());
+    $this->entity->setNewRevision($bundle && $bundle->shouldCreateNewRevision());
   }
 
   /**
@@ -44,15 +43,14 @@ class EntityBaseForm extends ContentEntityForm {
   public function form(array $form, FormStateInterface $form_state) {
 
     $entity_type = $this->entity->getEntityType();
-    $bundle = $this->entityManager
-      ->getStorage($entity_type->getBundleEntityType())
-      ->load($this->entity->bundle());
+
+    $bundle = $this->entity->getBundleEntity();
 
     $account = $this->currentUser();
 
     if ($this->operation == 'edit') {
       $form['#title'] = $this->t('Edit %bundle_label @label', [
-        '%bundle_label' => $bundle->label(),
+        '%bundle_label' => $bundle ? $bundle->label() : '',
         '@label' => $this->entity->label(),
       ]);
     }
@@ -109,9 +107,6 @@ class EntityBaseForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
-    /** @var EntityTypeBaseInterface $entity_type */
-    $entities = $this->entity->type->referencedEntities();
-    $entity_type = reset($entities);
 
     // Save as a new revision if requested to do so.
     if (!$form_state->isValueEmpty('revision')) {
@@ -122,7 +117,8 @@ class EntityBaseForm extends ContentEntityForm {
     $this->entity->save();
     $context = ['@type' => $this->entity->bundle(), '%info' => $this->entity->label()];
     $logger = $this->logger($this->entity->id());
-    $t_args = ['@type' => $entity_type->label(), '%info' => $this->entity->label()];
+    $bundle = $this->entity->getBundleEntity();
+    $t_args = ['@type' => $bundle ? $bundle->label() : 'None', '%info' => $this->entity->label()];
 
     if ($insert) {
       $logger->notice('@type: added %info.', $context);
@@ -145,22 +141,4 @@ class EntityBaseForm extends ContentEntityForm {
       $form_state->setRebuild();
     }
   }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function validateForm(array &$form, FormStateInterface $form_state) {
-    $entity = parent::validateForm($form, $form_state);
-    if ($entity->isNew()) {
-//      $exists = $this->entityStorage->loadByProperties(array('info' => $form_state->getValue(['info', 0, 'value'])));
-      if (!empty($exists)) {
-        $form_state->setErrorByName('info', $this->t('A @entity_label with description %name already exists.', [
-          '@entity_label' => $this->entity->label(),
-          '%name' => $form_state->getValue(['info', 0, 'value']),
-        ]));
-      }
-    }
-    return $entity;
-  }
-
 }
