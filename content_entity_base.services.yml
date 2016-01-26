@@ -10,3 +10,7 @@ services:
     arguments: ['@entity.manager']
     tags:
       - { name: access_check, applies_to: _entity_access_revision }
+
+  content_entity_base.permission_handler:
+    class: \Drupal\content_entity_base\Entity\Access\EntityBasePermissions
+    arguments: ['@entity_type.manager']
