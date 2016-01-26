@@ -26,15 +26,19 @@ use Drupal\content_entity_base\Entity\EntityTypeBase;
  *       "delete"  = "Drupal\content_entity_base\Entity\Form\EntityTypeBaseDeleteForm",
  *     },
  *     "list_builder" = "Drupal\content_entity_base\Entity\Listing\EntityTypeBaseListBuilder",
+ *     "route_provider" = {
+ *       "html" = "\Drupal\content_entity_base\Entity\Routing\EntityTypeHtmlRouteProvider",
+ *     },
  *   },
  *   entity_keys = {
  *     "id"           = "id",
  *     "label"        = "label",
  *   },
  *   links = {
+ *     "collection"   = "/admin/structure/ceb_test_content",
+ *     "add-form"     = "/admin/structure/ceb_test_content/manage/add",
  *     "edit-form"    = "/admin/structure/ceb_test_content/manage/{ceb_test_content_type}",
  *     "delete-form"  = "/admin/structure/ceb_test_content/manage/{ceb_test_content_type}/delete",
- *     "collection"   = "/admin/structure/ceb_test_content",
  *   },
  *   config_export = {
  *     "id",
