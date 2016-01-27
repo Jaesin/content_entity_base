@@ -1,15 +1,31 @@
 <?php
 /**
  * @file
- *   Contains \Drupal\console_ceb\Generator\EntityContentBaseGenerator.
+ *   Contains \Drupal\console_ceb\Generator\EntityGenerator.
  */
 
 namespace Drupal\console_ceb\Generator;
 
-
 use Drupal\Console\Generator\EntityContentGenerator;
 
-class EntityContentBaseGenerator extends EntityContentGenerator {
+/**
+ * Handles generating the files required for a Content Entity Base entity.
+ *
+ * Generates:
+ *
+ *  1. module.permissions.yml
+ *  2. module.links.menu.yml
+ *  3. module.links.action.yml
+ *  4. module.links.task.yml
+ *  5. module.page.inc
+ *  6. templates/entity.html.twig
+ *  7. templates/entity-content-add-list.html.twig
+ *  8. src/Entity/EntityClass.php
+ *  9. src/Entity/Access/EntityClassPermissions.php
+ *
+ * @package Drupal\console_ceb\Generator
+ */
+class EntityGenerator extends EntityContentGenerator {
   /**
    * Generator Entity.
    *

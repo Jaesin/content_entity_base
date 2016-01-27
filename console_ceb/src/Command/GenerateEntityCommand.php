@@ -1,14 +1,13 @@
 <?php
-
 /**
  * @file
- * Contains \Drupal\content_entity_base\Command\GenerateEntityCommand.
+ *   Contains \Drupal\console_ceb\Command\GenerateEntityCommand.
  */
 
 namespace Drupal\console_ceb\Command;
 
 use Drupal\Console\Command\Generate\EntityCommand;
-use Drupal\console_ceb\Generator\EntityContentBaseGenerator;
+use Drupal\console_ceb\Generator\EntityGenerator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -17,7 +16,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Class GenerateEntityCommand.
  *
- * @package Drupal\content_entity_base
+ * @package Drupal\console_ceb
  */
 class GenerateEntityCommand extends EntityCommand  {
 
@@ -47,7 +46,7 @@ class GenerateEntityCommand extends EntityCommand  {
       ->generate($module, $entity_name, $entity_class, $label, $bundle_entity_name);
 
     $this->getChain()->addCommand(
-      'generate:entity:config', [
+      'generate:entity:ceb_type', [
         '--module' => $module,
         '--entity-class' => $entity_class . 'Type',
         '--entity-name' => $bundle_entity_name,
@@ -58,6 +57,6 @@ class GenerateEntityCommand extends EntityCommand  {
   }
 
   protected function createGenerator() {
-    return new EntityContentBaseGenerator();
+    return new EntityGenerator();
   }
 }
