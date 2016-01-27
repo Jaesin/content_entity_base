@@ -8,7 +8,6 @@
 
 namespace Drupal\content_entity_base\Entity\Controller;
 
-use Drupal\content_entity_base\Entity\TimestampedRevisionInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Language\LanguageInterface;
