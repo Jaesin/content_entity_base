@@ -28,100 +28,60 @@ class EntityContentBaseGenerator extends EntityContentGenerator {
       'bundle_entity_type' => $bundle_entity_type,
     ];
 
-    if ($bundle_entity_type) {
-      $controller_class = $entity_class . 'AddController';
-      $this->renderFile(
-        'module/src/Controller/controller-add-page.php.twig',
-        $this->getSite()->getControllerPath($module).'/'.$controller_class .'.php',
-        $parameters + array(
-          'class_name' => $controller_class,
-          'services' => [],
-        )
-      );
-    }
-
+    /**
+     * Create the yml files.
+     */
     $this->renderFile(
-      'module/permissions-entity-content.yml.twig',
+      'module/permissions-entity-ceb.yml.twig',
       $this->getSite()->getModulePath($module).'/'.$module.'.permissions.yml',
       $parameters,
       FILE_APPEND
     );
 
     $this->renderFile(
-      'module/links.menu-entity-content.yml.twig',
+      'module/links.menu-entity-ceb.yml.twig',
       $this->getSite()->getModulePath($module).'/'.$module.'.links.menu.yml',
       $parameters,
       FILE_APPEND
     );
 
     $this->renderFile(
-      'module/links.task-entity-content.yml.twig',
+      'module/links.task-entity-ceb.yml.twig',
       $this->getSite()->getModulePath($module).'/'.$module.'.links.task.yml',
       $parameters,
       FILE_APPEND
     );
 
     $this->renderFile(
-      'module/links.action-entity-content.yml.twig',
+      'module/links.action-entity-ceb.yml.twig',
       $this->getSite()->getModulePath($module).'/'.$module.'.links.action.yml',
       $parameters,
       FILE_APPEND
     );
 
+    /**
+     * Create the permissions class.
+     */
     $this->renderFile(
-      'module/src/interface-entity-content.php.twig',
-      $this->getSite()->getSourcePath($module).'/'.$entity_class.'Interface.php',
-      $parameters
+      'module/src/Entity/Access/permissions.php.twig',
+      $this->getSite()->getEntityPath($module).'/Access/'.$entity_class.'Permissions.php',
+      $parameters + [
+        'class_name' => $entity_class.'Permissions',
+      ]
     );
 
+    /**
+     * Create the content entity plugin.
+     */
     $this->renderFile(
-      'module/src/accesscontrolhandler-entity-content.php.twig',
-      $this->getSite()->getSourcePath($module).'/'.$entity_class.'AccessControlHandler.php',
-      $parameters
-    );
-
-    $this->renderFile(
-      'module/src/Entity/entity-content.php.twig',
+      'module/src/Entity/entity-ceb-content.php.twig',
       $this->getSite()->getEntityPath($module).'/'.$entity_class.'.php',
       $parameters
     );
 
-    $this->renderFile(
-      'module/src/entity-content-route-provider.php.twig',
-      $this->getSite()->getSourcePath($module).'/'.$entity_class.'HtmlRouteProvider.php',
-      $parameters
-    );
-
-    $this->renderFile(
-      'module/src/Entity/entity-content-views-data.php.twig',
-      $this->getSite()->getEntityPath($module).'/'.$entity_class.'ViewsData.php',
-      $parameters
-    );
-
-    $this->renderFile(
-      'module/src/listbuilder-entity-content.php.twig',
-      $this->getSite()->getSourcePath($module).'/'.$entity_class.'ListBuilder.php',
-      $parameters
-    );
-
-    $this->renderFile(
-      'module/src/Entity/Form/entity-settings.php.twig',
-      $this->getSite()->getFormPath($module).'/'.$entity_class.'SettingsForm.php',
-      $parameters
-    );
-
-    $this->renderFile(
-      'module/src/Entity/Form/entity-content.php.twig',
-      $this->getSite()->getFormPath($module).'/'.$entity_class.'Form.php',
-      $parameters
-    );
-
-    $this->renderFile(
-      'module/src/Entity/Form/entity-content-delete.php.twig',
-      $this->getSite()->getFormPath($module).'/'.$entity_class.'DeleteForm.php',
-      $parameters
-    );
-
+    /**
+     * The rest of this file is from drupal console's default content entity.
+     */
     $this->renderFile(
       'module/entity-content-page.php.twig',
       $this->getSite()->getModulePath($module).'/'.$entity_name.'.page.inc',

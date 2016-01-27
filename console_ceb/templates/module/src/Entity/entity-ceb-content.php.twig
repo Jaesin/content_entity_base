@@ -1,0 +1,79 @@
+{% extends "base/class.php.twig" %}
+
+{% block file_path %}
+\Drupal\{{ module }}\Entity\{{ entity_class }}.
+{% endblock %}
+
+{% block namespace_class %}
+namespace Drupal\{{ module }}\Entity;
+{% endblock %}
+
+{% block use_class %}
+use Drupal\content_entity_base\Entity\EntityBase;
+{% endblock %}
+
+{% block class_declaration %}
+/**
+ * Defines the {{ label }} entity.
+ *
+ * @ingroup {{ module }}
+ *
+ * @ContentEntityType(
+ *   id                      = "{{ entity_name }}",
+ *   label                   = @Translation("{{ label }}"),
+ *   bundle_label            = @Translation("{{ label }} type"),
+ *   base_table              = "{{ entity_name }}",
+ *   revision_table          = "{{ entity_name }}_revision",
+ *   data_table              = "{{ entity_name }}_field_data",
+ *   revision_data_table     = "{{ entity_name }}_field_revision",
+ *   translatable            = TRUE,
+ *   admin_permission        = "administer {{ entity_name }}",
+ *   bundle_entity_type      = "{{ bundle_entity_type }}",
+ *   field_ui_base_route     = "entity.{{ bundle_entity_type }}.edit_form",
+ *   common_reference_target = TRUE,
+ *   permission_granularity  = "bundle",
+ *   render_cache            = TRUE,
+ *   handlers = {
+ *     "storage"      = "\Drupal\content_entity_base\Entity\Storage\ContentEntityBaseStorage",
+ *     "access"       = "\Drupal\content_entity_base\Entity\Access\EntityBaseAccessControlHandler",
+ *     "translation"  = "\Drupal\content_translation\ContentTranslationHandler",
+ *     "list_builder" = "\Drupal\content_entity_base\Entity\Listing\EntityBaseListBuilder",
+ *     "view_builder" = "\Drupal\Core\Entity\EntityViewBuilder",
+ *     "views_data"   = "\Drupal\content_entity_base\Entity\Views\EntityBaseViewsData",
+ *     "route_provider" = {
+ *       "html"     = "\Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider",
+ *       "crud"     = "\Drupal\content_entity_base\Entity\Routing\CrudUiRouteProvider",
+ *       "revision" = "\Drupal\content_entity_base\Entity\Routing\RevisionHtmlRouteProvider"
+ *     },
+ *     "form" = {
+ *       "add"        = "\Drupal\content_entity_base\Entity\Form\EntityBaseForm",
+ *       "edit"       = "\Drupal\content_entity_base\Entity\Form\EntityBaseForm",
+ *       "default"    = "\Drupal\content_entity_base\Entity\Form\EntityBaseForm",
+ *       "delete"     = "\Drupal\Core\Entity\ContentEntityDeleteForm",
+ *     },
+ *   },
+ *   entity_keys = {
+ *     "id"           = "id",
+ *     "bundle"       = "type",
+ *     "label"        = "name",
+ *     "langcode"     = "langcode",
+ *     "uuid"         = "uuid",
+ *     "revision"     = "revision_id",
+ *   },
+ *   links = {
+ *     "collection"      = "/admin/content/{{ entity_name }}",
+ *     "canonical"       = "/admin/content/{{ entity_name }}/{{ '{'~entity_name~'}' }}",
+ *     "add-page"        = "/admin/content/{{ entity_name }}/add",
+ *     "add-form"        = "/admin/content/{{ entity_name }}/add/{type}",
+ *     "delete-form"     = "/admin/content/{{ entity_name }}/{{ '{'~entity_name~'}' }}/delete",
+ *     "edit-form"       = "/admin/content/{{ entity_name }}/{{ '{'~entity_name~'}' }}/edit",
+ *     "version-history" = "/admin/content/{{ entity_name }}/{{ '{'~entity_name~'}' }}/revisions",
+ *     "revision"        = "/admin/content/{{ entity_name }}/{{ '{'~entity_name~'}' }}/revisions/{{ '{'~entity_name~'_revision}' }}/view",
+ *     "revision-revert" = "/admin/content/{{ entity_name }}/{{ '{'~entity_name~'}' }}/revisions/{{ '{'~entity_name~'_revision}' }}/revert",
+ *     "revision-delete" = "/admin/content/{{ entity_name }}/{{ '{'~entity_name~'}' }}/revisions/{{ '{'~entity_name~'_revision}' }}/delete",
+ *   },
+ * )
+ */
+class {{ entity_class }} extends EntityBase {% endblock %}
+{% block class_methods %}
+{% endblock %}

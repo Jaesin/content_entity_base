@@ -1,0 +1,59 @@
+{% extends "base/class.php.twig" %}
+
+{% block file_path %}
+\Drupal\{{ module }}\Entity\{{ entity_class }}.
+{% endblock %}
+
+{% block namespace_class %}
+namespace Drupal\{{ module }}\Entity;
+{% endblock %}
+
+{% block use_class %}
+use Drupal\content_entity_base\Entity\EntityTypeBase;
+{% endblock %}
+
+{% block class_declaration %}
+/**
+ * Defines the {{ label }} configuration entity.
+ *
+ * @ConfigEntityType(
+ *   id = "{{ entity_name }}",
+ *   label = @Translation("{{ label }}"),
+ *   admin_permission = "administer {{ bundle_of }}",
+ *   config_prefix = "{{ entity_name }}",
+ *   bundle_of = "{{ bundle_of }}",
+ *   handlers = {
+ *     "form" = {
+ *       "default" = "Drupal\content_entity_base\Entity\Form\EntityTypeBaseForm",
+ *       "add"     = "Drupal\content_entity_base\Entity\Form\EntityTypeBaseForm",
+ *       "edit"    = "Drupal\content_entity_base\Entity\Form\EntityTypeBaseForm",
+ *       "delete"  = "Drupal\content_entity_base\Entity\Form\EntityTypeBaseDeleteForm",
+ *     },
+ *     "list_builder" = "Drupal\content_entity_base\Entity\Listing\EntityTypeBaseListBuilder",
+ *     "route_provider" = {
+ *       "html" = "\Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider",
+ *       "crud" = "\Drupal\content_entity_base\Entity\Routing\CrudUiRouteProvider",
+ *     },
+ *   },
+ *   entity_keys = {
+ *     "id"           = "id",
+ *     "label"        = "label",
+ *     "uuid" = "uuid"
+ *   },
+ *   links = {
+ *     "collection"   = "/admin/structure/{{ entity_name }}",
+ *     "add-form"     = "/admin/structure/{{ entity_name }}/manage/add",
+ *     "edit-form"    = "/admin/structure/{{ entity_name }}/manage/{{ '{'~entity_name~'}' }}",
+ *     "delete-form"  = "/admin/structure/{{ entity_name }}/manage/{{ '{'~entity_name~'}' }}/delete",
+ *   },
+ *   config_export = {
+ *     "id",
+ *     "label",
+ *     "revision",
+ *     "description",
+ *   }
+ * )
+ */
+class {{ entity_class }} extends EntityTypeBase {% endblock %}
+{% block class_methods %}
+{% endblock %}
