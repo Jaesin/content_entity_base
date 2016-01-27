@@ -21,6 +21,12 @@ use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\user\EntityOwnerInterface;
 
+/**
+ * @todo Get rid of this class as part of
+ * - https://github.com/fago/entity/pull/13
+ * - https://github.com/fago/entity/pull/17
+ * - https://github.com/fago/entity/pull/18
+ */
 class RevisionController extends ControllerBase {
 
   use RevisionControllerTrait;
