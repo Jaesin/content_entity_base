@@ -56,7 +56,7 @@ use Drupal\content_entity_base\Entity\EntityBase;
  *   },
  *   links = {
  *     "collection"   = "/admin/content/ceb_test_content",
- *     "canonical"    = "/admin/ceb_test_content/{ceb_test_content}",
+ *     "canonical"    = "/ceb_test_content/{ceb_test_content}",
  *     "add-page"    = "/admin/ceb_test_content/add",
  *     "add-form"    = "/admin/ceb_test_content/add/{type}",
  *     "delete-form"  = "/admin/ceb_test_content/{ceb_test_content}/delete",
