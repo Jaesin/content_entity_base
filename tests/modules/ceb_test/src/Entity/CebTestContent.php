@@ -57,14 +57,14 @@ use Drupal\content_entity_base\Entity\EntityBase;
  *   links = {
  *     "collection"   = "/admin/content/ceb_test_content",
  *     "canonical"    = "/ceb_test_content/{ceb_test_content}",
- *     "add-page"    = "/admin/ceb_test_content/add",
- *     "add-form"    = "/admin/ceb_test_content/add/{type}",
- *     "delete-form"  = "/admin/ceb_test_content/{ceb_test_content}/delete",
- *     "edit-form"    = "/admin/ceb_test_content/{ceb_test_content}/edit",
- *     "version-history" = "/admin/ceb_test_content/{ceb_test_content}/revisions",
- *     "revision" = "/admin/ceb_test_content/{ceb_test_content}/revisions/{ceb_test_content_revision}/view",
- *     "revision-revert" = "/admin/ceb_test_content/{ceb_test_content}/revisions/{ceb_test_content_revision}/revert",
- *     "revision-delete" = "/admin/ceb_test_content/{ceb_test_content}/revisions/{ceb_test_content_revision}/delete",
+ *     "add-page"    = "/ceb_test_content/add",
+ *     "add-form"    = "/ceb_test_content/add/{type}",
+ *     "delete-form"  = "/ceb_test_content/{ceb_test_content}/delete",
+ *     "edit-form"    = "/ceb_test_content/{ceb_test_content}/edit",
+ *     "version-history" = "/ceb_test_content/{ceb_test_content}/revisions",
+ *     "revision" = "/ceb_test_content/{ceb_test_content}/revisions/{ceb_test_content_revision}/view",
+ *     "revision-revert" = "/ceb_test_content/{ceb_test_content}/revisions/{ceb_test_content_revision}/revert",
+ *     "revision-delete" = "/ceb_test_content/{ceb_test_content}/revisions/{ceb_test_content_revision}/delete",
  *   },
  * )
  */
