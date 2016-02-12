@@ -41,6 +41,7 @@ class RevisionHtmlRouteProvider implements EntityRouteProviderInterface {
         'type' => 'entity:' . $entity_type->id(),
       ],
     ]);
+    $route->setOption('_admin_route', TRUE);
     return $route;
   }
 
@@ -58,6 +59,7 @@ class RevisionHtmlRouteProvider implements EntityRouteProviderInterface {
         'type' => 'entity_revision:' . $entity_type->id(),
       ],
     ]);
+    $route->setOption('_admin_route', TRUE);
     return $route;
   }
 
@@ -74,6 +76,7 @@ class RevisionHtmlRouteProvider implements EntityRouteProviderInterface {
         'type' => 'entity_revision:' . $entity_type->id(),
       ],
     ]);
+    $route->setOption('_admin_route', TRUE);
     return $route;
   }
 
@@ -90,6 +93,7 @@ class RevisionHtmlRouteProvider implements EntityRouteProviderInterface {
         'type' => 'entity_revision:' . $entity_type->id(),
       ],
     ]);
+    $route->setOption('_admin_route', TRUE);
     return $route;
   }
 
