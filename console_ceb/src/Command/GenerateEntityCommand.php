@@ -41,19 +41,10 @@ class GenerateEntityCommand extends EntityCommand  {
 
     $bundle_entity_name = $entity_name . '_type';
 
+    // Use the generator to create the entity files from the template files.
     $this
       ->getGenerator()
       ->generate($module, $entity_name, $entity_class, $label, $bundle_entity_name);
-
-    $this->getChain()->addCommand(
-      'generate:entity:ceb_type', [
-        '--module' => $module,
-        '--entity-class' => $entity_class . 'Type',
-        '--entity-name' => $bundle_entity_name,
-        '--label' => $label . ' type',
-        '--bundle-of' => $entity_name
-      ]
-    );
   }
 
   protected function createGenerator() {

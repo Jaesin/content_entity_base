@@ -36,6 +36,15 @@ class EntityGenerator extends EntityContentGenerator {
    * @param string $bundle_entity_type (Config) entity type acting as bundle
    */
   public function generate($module, $entity_name, $entity_class, $label, $bundle_entity_type = null) {
+
+    // Get the module, entity and template paths.
+    $module_path = $this->getSite()->getModulePath($module);
+    $entity_path = $this->getSite()->getEntityPath($module);
+    $template_path = $this->getSite()->getTemplatePath($module);
+    $module_filename = "{$module_path}/{$module}.module";
+
+
+    // Use these parameters for content entity creation.
     $parameters = [
       'module' => $module,
       'entity_name' => $entity_name,
@@ -49,28 +58,28 @@ class EntityGenerator extends EntityContentGenerator {
      */
     $this->renderFile(
       'module/permissions-entity-ceb.yml.twig',
-      $this->getSite()->getModulePath($module).'/'.$module.'.permissions.yml',
+      "{$module_path}/{$module}.permissions.yml",
       $parameters,
       FILE_APPEND
     );
 
     $this->renderFile(
       'module/links.menu-entity-ceb.yml.twig',
-      $this->getSite()->getModulePath($module).'/'.$module.'.links.menu.yml',
+      "{$module_path}/{$module}.links.menu.yml",
       $parameters,
       FILE_APPEND
     );
 
     $this->renderFile(
       'module/links.task-entity-ceb.yml.twig',
-      $this->getSite()->getModulePath($module).'/'.$module.'.links.task.yml',
+      "{$module_path}/{$module}.links.task.yml",
       $parameters,
       FILE_APPEND
     );
 
     $this->renderFile(
       'module/links.action-entity-ceb.yml.twig',
-      $this->getSite()->getModulePath($module).'/'.$module.'.links.action.yml',
+      "{$module_path}/{$module}.links.action.yml",
       $parameters,
       FILE_APPEND
     );
@@ -80,7 +89,7 @@ class EntityGenerator extends EntityContentGenerator {
      */
     $this->renderFile(
       'module/src/Entity/Access/permissions.php.twig',
-      $this->getSite()->getEntityPath($module).'/Access/'.$entity_class.'Permissions.php',
+      "{$entity_path}/Access/{$entity_class}Permissions.php",
       $parameters + [
         'class_name' => $entity_class.'Permissions',
       ]
@@ -91,46 +100,91 @@ class EntityGenerator extends EntityContentGenerator {
      */
     $this->renderFile(
       'module/src/Entity/entity-ceb-content.php.twig',
-      $this->getSite()->getEntityPath($module).'/'.$entity_class.'.php',
+      "{$entity_path}/{$entity_class}.php",
       $parameters
     );
 
     /**
-     * The rest of this file is from drupal console's default content entity.
+     * Create the content entity's template files.
      */
     $this->renderFile(
       'module/entity-content-page.php.twig',
-      $this->getSite()->getModulePath($module).'/'.$entity_name.'.page.inc',
+      "{$module_path}/{$entity_name}.page.inc",
       $parameters
     );
 
     $this->renderFile(
       'module/templates/entity-html.twig',
-      $this->getSite()->getTemplatePath($module).'/'.$entity_name.'.html.twig',
+      "{$template_path}/{$entity_name}.html.twig",
       $parameters
     );
 
     if ($bundle_entity_type) {
+      $entity_hyphenated = str_replace('_', '-', $entity_name);
       $this->renderFile(
         'module/templates/entity-with-bundle-content-add-list-html.twig',
-        $this->getSite()->getTemplatePath($module).'/'.str_replace('_', '-', $entity_name).'-content-add-list.html.twig',
+        "{$template_path}/{$entity_hyphenated}-content-add-list.html.twig",
         $parameters
       );
 
       // Check for hook_theme() in module file and warn ...
-      $module_filename = $this->getSite()->getModulePath($module).'/'.$module.'.module';
-      $module_file_contents = file_get_contents($module_filename);
-      if (strpos($module_file_contents, 'function ' . $module . '_theme') !== false) {
-        echo "================\nWarning:\n================\n" .
-          "It looks like you have a hook_theme already declared!\n".
-          "Please manually merge the two hook_theme() implementations in $module_filename!\n";
+      if (file_exists($module_filename) && preg_match("/function\\s+{$module}_theme/", file_get_contents($module_filename)) !== 0) {
+        echo "================
+Warning:
+================
+It looks like you have a hook_theme already declared!
+Please manually merge the two hook_theme() implementations in {$module_filename}!
+        ";
+      } else {
+
+        $this->renderFile(
+          'module/src/Entity/entity-content-with-bundle.theme.php.twig',
+          $module_filename,
+          $parameters,
+          FILE_APPEND
+        );
       }
 
+      /**
+       * Compose the bundle parameters.
+       */
+      $bundle_entity_class = "{$entity_class}Type";
+      $bundle_label = "{$label} type";
+      $bundle_parameters = [
+        'module' => $module,
+        'entity_name' => $bundle_entity_type,
+        'entity_class' => $bundle_entity_class,
+        'label' => $bundle_label,
+        'bundle_of' => $entity_name,
+      ];
+
+      /**
+       * Render the bundle entity files.
+       */
       $this->renderFile(
-        'module/src/Entity/entity-content-with-bundle.theme.php.twig',
-        $this->getSite()->getModulePath($module).'/'.$module.'.module',
-        $parameters,
+        'module/config/schema/entity.schema.yml.twig',
+        "{$module_path}" . "/config/schema/{$bundle_entity_type}.schema.yml",
+        $bundle_parameters
+      );
+
+      $this->renderFile(
+        'module/links.menu-entity-config.yml.twig',
+        "{$module_path}" . "/{$module}.links.menu.yml",
+        $bundle_parameters,
         FILE_APPEND
+      );
+
+      $this->renderFile(
+        'module/links.action-entity.yml.twig',
+        "{$module_path}/{$module}.links.action.yml",
+        $bundle_parameters,
+        FILE_APPEND
+      );
+
+      $this->renderFile(
+        'module/src/Entity/entity-ceb-bundle.php.twig',
+        "{$entity_path}/{$bundle_entity_class}.php",
+        $bundle_parameters
       );
     }
 
