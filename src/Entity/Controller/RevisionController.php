@@ -8,10 +8,7 @@
 namespace Drupal\content_entity_base\Entity\Controller;
 
 use Drupal\Component\Utility\Xss;
-use Drupal\content_entity_base\Entity\EntityRevisionLogInterface;
-use Drupal\content_entity_base\Entity\ExpandedEntityRevisionInterface;
 use Drupal\content_entity_base\Entity\Routing\RevisionObjectExtractionTrait;
-use Drupal\content_entity_base\Entity\TimestampedRevisionInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\ContentEntityInterface;
@@ -19,6 +16,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\entity\Revision\EntityRevisionLogInterface;
 use Drupal\user\EntityOwnerInterface;
 
 /**
@@ -95,7 +93,7 @@ class RevisionController extends ControllerBase {
       $username = '';
     }
 
-    if ($revision instanceof ExpandedEntityRevisionInterface) {
+    if ($revision instanceof EntityRevisionLogInterface) {
       // Use revision link to link to revisions that are not active.
       $date = $this->dateFormatter()->format($revision->getRevisionCreationTime(), 'short');
       if (!$is_current) {
@@ -111,7 +109,7 @@ class RevisionController extends ControllerBase {
 
     $markup = '';
     if ($revision instanceof EntityRevisionLogInterface) {
-      $markup = $revision->getRevisionLog();
+      $markup = $revision->getRevisionLogMessage();
     }
 
     if ($username) {
@@ -145,7 +143,7 @@ class RevisionController extends ControllerBase {
    *   Revision title.
    */
   public function revisionTitle(EntityInterface $_entity_revision) {
-    if ($_entity_revision instanceof TimestampedRevisionInterface) {
+    if ($_entity_revision instanceof EntityRevisionLogInterface) {
       return $this->t('Revision of %title from %date', array('%title' => $_entity_revision->label(), '%date' => format_date($_entity_revision->getRevisionCreationTime())));
     }
     else {

@@ -31,7 +31,7 @@ class EntityBaseForm extends ContentEntityForm {
 
     // Set up default values, if required.
     if (!$this->entity->isNew()) {
-      $this->entity->setRevisionLog(NULL);
+      $this->entity->setRevisionLogMessage(NULL);
     }
     // Always use the default revision setting.
     $this->entity->setNewRevision($bundle && $bundle->shouldCreateNewRevision());
@@ -96,7 +96,7 @@ class EntityBaseForm extends ContentEntityForm {
       '#type' => 'textarea',
       '#title' => $this->t('Revision log message'),
       '#rows' => 4,
-      '#default_value' => $this->entity->getRevisionLog(),
+      '#default_value' => $this->entity->getRevisionLogMessage(),
       '#description' => $this->t('Briefly describe the changes you have made.'),
     ];
 

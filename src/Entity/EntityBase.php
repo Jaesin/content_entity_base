@@ -13,6 +13,7 @@ use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\entity\Revision\EntityRevisionLogTrait;
 use Drupal\entity\EntityKeysFieldsTrait;
 use Drupal\user\EntityOwnerInterface;
 use Drupal\user\UserInterface;
@@ -23,6 +24,7 @@ use Drupal\user\UserInterface;
 class EntityBase extends ContentEntityBase implements EntityBaseInterface {
 
   use EntityChangedTrait;
+  use EntityRevisionLogTrait;
   use EntityKeysFieldsTrait;
 
   /**
@@ -61,7 +63,7 @@ class EntityBase extends ContentEntityBase implements EntityBaseInterface {
       // If we are updating an existing entity without adding a new
       // revision and the user did not supply a revision log, keep the existing
       // one.
-      $record->revision_log = $this->original->getRevisionLog();
+      $record->revision_log = $this->original->getRevisionLogMessage();
     }
   }
 
@@ -200,30 +202,8 @@ class EntityBase extends ContentEntityBase implements EntityBaseInterface {
   /**
    * {@inheritdoc}
    */
-  public function getChangedTime() {
-    return $this->get('changed')->value;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getRevisionLog() {
-    return $this->get('revision_log')->value;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function setInfo($info) {
     $this->set('info', $info);
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setRevisionLog($revision_log) {
-    $this->set('revision_log', $revision_log);
     return $this;
   }
 
