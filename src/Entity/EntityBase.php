@@ -115,11 +115,6 @@ class EntityBase extends ContentEntityBase implements EntityBaseInterface {
       ->setTranslatable(TRUE)
       ->setDefaultValue(TRUE);
 
-    $fields['type'] = BaseFieldDefinition::create('entity_reference')
-      ->setLabel(t('Entity type (Bundle)'))
-      ->setDescription(t('The entity type.'))
-      ->setSetting('target_type', $entity_type->getBundleEntityType());
-
     $fields['revision_log'] = BaseFieldDefinition::create('string_long')
       ->setLabel(t('Revision log message'))
       ->setDescription(t('The log entry explaining the changes in this revision.'))
