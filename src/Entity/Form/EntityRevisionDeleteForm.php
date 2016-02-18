@@ -6,11 +6,12 @@
  */
 
 namespace Drupal\content_entity_base\Entity\Form;
-use Drupal\content_entity_base\Entity\TimestampedRevisionInterface;
+
 use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\entity\Revision\EntityRevisionLogInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -71,7 +72,7 @@ class EntityRevisionDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    if ($this->entityRevision instanceof TimestampedRevisionInterface) {
+    if ($this->entityRevision instanceof EntityRevisionLogInterface) {
       return t('Are you sure you want to delete the revision from %revision-date?', ['%revision-date' => $this->dateFormatter->format($this->entityRevision->getRevisionCreationTime())]);
     }
     else {
