@@ -11,6 +11,7 @@ use Drupal\content_entity_base\Entity\EntityTypeBaseInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\UrlGeneratorTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -18,23 +19,23 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Defines a class containing permission callbacks.
  */
-class EntityBasePermissions implements ContainerInjectionInterface {
+class EntityBasePermissions implements EntityBasePermissionsInterface, ContainerInjectionInterface {
 
   use StringTranslationTrait;
   use UrlGeneratorTrait;
 
   /**
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityManager;
+  protected $entity_type_manager;
 
   /**
    * Creates Drupal\content_entity_base\Entity\Access\EntityBasePermissions.
    *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    */
-  public function __construct(EntityManagerInterface $entity_manager) {
-    $this->entityManager = $entity_manager;
+  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
+    $this->entity_type_manager = $entity_type_manager;
   }
 
   /**
@@ -42,20 +43,12 @@ class EntityBasePermissions implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.manager')
+      $container->get('entity_type.manager')
     );
   }
 
   /**
-   * Gets an array of entity type permissions.
-   *
-   * @param ContentEntityTypeInterface $entity_type
-   *   The custom entity definition.
-   *
-   * @return array
-   *   The entity type permissions.
-   *
-   * @see \Drupal\user\PermissionHandlerInterface::getPermissions()
+   * {@inheritdoc}
    */
   public function entityPermissions(ContentEntityTypeInterface $entity_type = NULL) {
     $perms = [];
@@ -107,7 +100,7 @@ class EntityBasePermissions implements ContainerInjectionInterface {
         ],
       ];
       // Load bundles if any are defined.
-      if (($entity_type_storage = $this->entityManager->getStorage($entity_type->getBundleEntityType()))
+      if (($entity_type_storage = $this->entity_type_manager->getStorage($entity_type->getBundleEntityType()))
         && ($entity_types = $entity_type_storage->loadMultiple())) {
         // Generate entity permissions for all types for this entity.
         foreach ($entity_types as $type) {
@@ -132,7 +125,7 @@ class EntityBasePermissions implements ContainerInjectionInterface {
 
     $entity_id = $type->bundleOf();
     // Get the referring entity definition.
-    $entity_definition = $this->entityManager->getDefinition($entity_id);
+    $entity_definition = $this->entity_type_manager->getDefinition($entity_id);
     $type_id = $type->id();
     $type_params = [
       '%entity_label' => $entity_definition->getLabel(),

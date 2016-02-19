@@ -1,2 +1,2 @@
 permission_callbacks:
-  - \Drupal\ceb_test\Entity\Access\CebTestContentPermissions::entityPermissions
+  - \Drupal\ceb_test\CallbackProxy::entityPermissions
