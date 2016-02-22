@@ -24,12 +24,12 @@ use Drupal\content_entity_base\Entity\EntityTypeBase;
  *   bundle_of = "{{ bundle_of }}",
  *   handlers = {
  *     "form" = {
- *       "default" = "Drupal\content_entity_base\Entity\Form\EntityTypeBaseForm",
- *       "add"     = "Drupal\content_entity_base\Entity\Form\EntityTypeBaseForm",
- *       "edit"    = "Drupal\content_entity_base\Entity\Form\EntityTypeBaseForm",
- *       "delete"  = "Drupal\content_entity_base\Entity\Form\EntityTypeBaseDeleteForm",
+ *       "default" = "\Drupal\content_entity_base\Entity\Form\EntityTypeBaseForm",
+ *       "add"     = "\Drupal\content_entity_base\Entity\Form\EntityTypeBaseForm",
+ *       "edit"    = "\Drupal\content_entity_base\Entity\Form\EntityTypeBaseForm",
+ *       "delete"  = "\Drupal\content_entity_base\Entity\Form\EntityTypeBaseDeleteForm",
  *     },
- *     "list_builder" = "Drupal\content_entity_base\Entity\Listing\EntityTypeBaseListBuilder",
+ *     "list_builder" = "\Drupal\content_entity_base\Entity\Listing\EntityTypeBaseListBuilder",
  *     "route_provider" = {
  *       "html" = "\Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider",
  *       "crud" = "\Drupal\content_entity_base\Entity\Routing\CrudUiRouteProvider",
@@ -41,10 +41,10 @@ use Drupal\content_entity_base\Entity\EntityTypeBase;
  *     "uuid" = "uuid"
  *   },
  *   links = {
- *     "collection"   = "/admin/structure/{{ entity_name }}",
- *     "add-form"     = "/admin/structure/{{ entity_name }}/manage/add",
- *     "edit-form"    = "/admin/structure/{{ entity_name }}/manage/{{ '{'~entity_name~'}' }}",
- *     "delete-form"  = "/admin/structure/{{ entity_name }}/manage/{{ '{'~entity_name~'}' }}/delete",
+ *     "collection"   = "/admin/structure/{{ entity_hyphenated }}",
+ *     "add-form"     = "/admin/structure/{{ entity_hyphenated }}/manage/add",
+ *     "edit-form"    = "/admin/structure/{{ entity_hyphenated }}/manage/{{ '{'~entity_name~'}' }}",
+ *     "delete-form"  = "/admin/structure/{{ entity_hyphenated }}/manage/{{ '{'~entity_name~'}' }}/delete",
  *   },
  *   config_export = {
  *     "id",

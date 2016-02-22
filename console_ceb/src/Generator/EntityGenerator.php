@@ -42,12 +42,14 @@ class EntityGenerator extends EntityContentGenerator {
     $entity_path = $this->getSite()->getEntityPath($module);
     $template_path = $this->getSite()->getTemplatePath($module);
     $module_filename = "{$module_path}/{$module}.module";
+    $entity_hyphenated = str_replace('_', '-', $entity_name);
 
 
     // Use these parameters for content entity creation.
     $parameters = [
       'module' => $module,
       'entity_name' => $entity_name,
+      'entity_hyphenated' => $entity_hyphenated,
       'entity_class' => $entity_class,
       'label' => $label,
       'bundle_entity_type' => $bundle_entity_type,
@@ -120,10 +122,10 @@ class EntityGenerator extends EntityContentGenerator {
     );
 
     if ($bundle_entity_type) {
-      $entity_hyphenated = str_replace('_', '-', $entity_name);
+      $bundle_entity_hyphenated = str_replace('_', '-', $entity_name);
       $this->renderFile(
         'module/templates/entity-with-bundle-content-add-list-html.twig',
-        "{$template_path}/{$entity_hyphenated}-content-add-list.html.twig",
+        "{$template_path}/{$bundle_entity_hyphenated}-content-add-list.html.twig",
         $parameters
       );
 
@@ -153,6 +155,7 @@ Please manually merge the two hook_theme() implementations in {$module_filename}
       $bundle_parameters = [
         'module' => $module,
         'entity_name' => $bundle_entity_type,
+        'entity_hyphenated' => $bundle_entity_hyphenated,
         'entity_class' => $bundle_entity_class,
         'label' => $bundle_label,
         'bundle_of' => $entity_name,
