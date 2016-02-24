@@ -20,6 +20,16 @@ mysql:
   username: root
   encoding: utf8
 
+install:
+  # Add composer's global bin directory to the path
+  # See: https://github.com/drush-ops/drush#install---composer
+  - export PATH="$HOME/.composer/vendor/bin:$PATH"
+
+  # Install drush globally
+  - composer global require drush/drush:6.*
+  # Install composer globally
+  - composer global require drupal/console:@stable
+
 before_script:
   # Remove Xdebug as we don't need it and it causes
   # PHP Fatal error:  Maximum function nesting level of '256' reached.
@@ -43,6 +53,10 @@ before_script:
 
   # Reference ceb in build site.
   - ln -s $TESTDIR modules/content_entity_base
+
+  # Download and enable the entity module.
+  - drush -y dl entity
+  - drush -y en entity
 
   # Start a web server on port 8888, run in the background; wait for
   # initialization.
