@@ -27,8 +27,6 @@ install:
 
   # Install drush globally
   - composer global require drush/drush
-  # Install composer globally
-  - composer global require drupal/console:@stable
 
 before_script:
   # Remove Xdebug as we don't need it and it causes
