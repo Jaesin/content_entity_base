@@ -52,9 +52,8 @@ before_script:
   # Reference ceb in build site.
   - ln -s $TESTDIR modules/content_entity_base
 
-  # Download and enable the entity module.
+  # Download the entity module.
   - drush -y dl entity
-  - drush -y en entity
 
   # Start a web server on port 8888, run in the background; wait for
   # initialization.
