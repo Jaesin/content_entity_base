@@ -1,3 +1,5 @@
+[![Travis CI](https://travis-ci.org/Jaesin/content_entity_base.svg?branch=master)](https://travis-ci.org/Jaesin/content_entity_base)
+
 Content Entity Base
 ===================
 
