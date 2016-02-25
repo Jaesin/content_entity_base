@@ -1,4 +1,4 @@
-[![Travis CI](https://travis-ci.org/Jaesin/content_entity_base.svg?branch=master)](https://travis-ci.org/Jaesin/content_entity_base)
+[![Branch 8.x-1.x](https://travis-ci.org/Jaesin/content_entity_base.svg?branch=8.x-1.x)](https://travis-ci.org/Jaesin/content_entity_base)
 
 Content Entity Base
 ===================
