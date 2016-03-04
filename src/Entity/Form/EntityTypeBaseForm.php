@@ -26,12 +26,19 @@ class EntityTypeBaseForm extends EntityForm {
     $form = parent::form($form, $form_state);
 
     // Get the content entity type.
-    $content_entity_type = $this->getContentEntityTypeID();
+    $content_entity_id = $this->getContentEntityTypeID();
     // Get the content entity type.
     $content_entity_label = $this->getContentEntityTypeLabel();
 
     /* @var \Drupal\content_entity_base\Entity\EntityTypeBaseInterface $entity_type */
     $entity_type = $this->entity;
+    // Get the default field definitions or the overridden settings if editing.
+    if ($this->operation == 'add') {
+      $fields = $this->entityManager->getBaseFieldDefinitions($content_entity_id);
+    }
+    else {
+      $fields = $this->entityManager->getFieldDefinitions($content_entity_id, $entity_type->id());
+    }
 
     $form['label'] = array(
       '#type' => 'textfield',
@@ -58,11 +65,38 @@ class EntityTypeBaseForm extends EntityForm {
       '#title' => t('Description'),
     );
 
+    $form['additional_settings'] = array(
+      '#type' => 'vertical_tabs',
+      '#attached' => array(
+        'library' => array('node/drupal.content_types'),
+      ),
+    );
+
+    $form['submission'] = array(
+      '#type' => 'details',
+      '#title' => t('Submission form settings'),
+      '#group' => 'additional_settings',
+      '#open' => TRUE,
+    );
+    $form['submission']['name_label'] = array(
+      '#title' => t('Name field label'),
+      '#type' => 'textfield',
+      '#default_value' => $fields['name']->getLabel(),
+      '#required' => TRUE,
+    );
+
+    $form['workflow'] = array(
+      '#type' => 'details',
+      '#title' => t('Publishing options'),
+      '#group' => 'additional_settings',
+    );
+
     $form['revision'] = array(
       '#type' => 'checkbox',
       '#title' => t('Create new revision'),
       '#default_value' => $entity_type->shouldCreateNewRevision(),
-      '#description' => t('Create a new revision by default for this "%content_label" type.', ['%content_label' => $content_entity_label])
+      '#group' => 'workflow',
+      '#description' => t('Create a new revision by default for this %content_label type.', ['%content_label' => $content_entity_label])
     );
 
     if ($this->moduleHandler->moduleExists('language')) {
@@ -72,11 +106,11 @@ class EntityTypeBaseForm extends EntityForm {
         '#group' => 'additional_settings',
       );
 
-      $language_configuration = ContentLanguageSettings::loadByEntityTypeBundle($content_entity_type, $entity_type->id());
+      $language_configuration = ContentLanguageSettings::loadByEntityTypeBundle($content_entity_id, $entity_type->id());
       $form['language']['language_configuration'] = array(
         '#type' => 'language_configuration',
         '#entity_information' => array(
-          'entity_type' => $content_entity_type,
+          'entity_type' => $content_entity_id,
           'bundle' => $entity_type->id(),
         ),
         '#default_value' => $language_configuration,
@@ -113,6 +147,16 @@ class EntityTypeBaseForm extends EntityForm {
     if ($status != SAVED_UPDATED) {
       $this->contentAddBodyField($entity_type->id());
       $update_verb = 'added';
+    }
+
+    // Get any overriden field settings for this bundle.
+    $fields = $this->entityManager->getFieldDefinitions($content_entity_type, $entity_type->id());
+    // Update title field definition.
+    $name_field = $fields['name'];
+    $name_label = $form_state->getValue('name_label');
+    // Set the name label if it hsa been updated.
+    if ($name_field->getLabel() != $name_label) {
+      $name_field->getConfig($entity_type->id())->setLabel($name_label)->save();
     }
 
     drupal_set_message(t('%content_label entity type %label has been @verb.', [

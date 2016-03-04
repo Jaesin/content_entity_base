@@ -44,6 +44,7 @@ use Drupal\content_entity_base\Entity\EntityTypeBase;
  *   config_export = {
  *     "id",
  *     "label",
+ *     "name_label",
  *     "revision",
  *     "description",
  *   }
