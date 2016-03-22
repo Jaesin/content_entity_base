@@ -107,7 +107,7 @@ class EntityBasePermissions implements ContainerInjectionInterface {
         ],
       ];
       // Load bundles if any are defined.
-      if (($entity_type_storage = $this->entityManager->getStorage($entity_type->getBundleEntityType()))
+      if (!empty($entity_type->getBundleEntityType()) && ($entity_type_storage = $this->entityManager->getStorage($entity_type->getBundleEntityType()))
         && ($entity_types = $entity_type_storage->loadMultiple())) {
         // Generate entity permissions for all types for this entity.
         foreach ($entity_types as $type) {
