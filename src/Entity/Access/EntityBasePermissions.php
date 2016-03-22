@@ -75,11 +75,14 @@ class EntityBasePermissions implements ContainerInjectionInterface {
           'description' => $this->t('View, edit and delete all @entity_label regardless of permission restrictions.', $replacements),
           'restrict access' => TRUE,
         ],
+        // TODO: add logic to use this permission.
+        // See https://github.com/Jaesin/content_entity_base/issues/56.
         "administer $entity_type_id types" => [
           'title' => $this->t('Administer @entity_label types', $replacements),
           'description' => $this->t('Promote, change ownership, edit revisions, and perform other tasks across all @entity_label types.', $replacements),
           'restrict access' => TRUE,
         ],
+        // TODO: add logic to use this permission.
         "administer $entity_type_id" => [
           'title' => $this->t('Administer @entity_label', $replacements),
           'restrict access' => TRUE,
@@ -94,13 +97,16 @@ class EntityBasePermissions implements ContainerInjectionInterface {
         "view own unpublished $entity_type_id" => [
           'title' => $this->t('View own unpublished @entity_label', $replacements),
         ],
+        // TODO: add logic to use this permission.
         "view all $entity_type_id revisions" => [
           'title' => $this->t('View all @entity_label revisions', $replacements),
         ],
+        // TODO: add logic to use this permission.
         "revert all $entity_type_id revisions" => [
           'title' => $this->t('Revert all @entity_label revisions', $replacements),
           'description' => $this->t('Role requires permission <em>View all @entity_label revisions</em> and <em>edit rights</em> for @entity_label in question or <em>Administer @entity_label</em>.', $replacements),
         ],
+        // TODO: add logic to use this permission.
         "delete all $entity_type_id revisions" => [
           'title' => $this->t('Delete all @entity_label revisions', $replacements),
           'description' => $this->t('Role requires permission to <em>View all @entity_label revisions</em> and <em>delete rights</em> for @entity_label in question or <em>Administer @entity_label</em>.', $replacements),
@@ -130,39 +136,43 @@ class EntityBasePermissions implements ContainerInjectionInterface {
    */
   protected function buildPermissions(EntityTypeBaseInterface $type) {
 
-    $entity_id = $type->bundleOf();
+    $entity_type_id = $type->bundleOf();
     // Get the referring entity definition.
-    $entity_definition = $this->entityManager->getDefinition($entity_id);
-    $type_id = $type->id();
+    $entity_definition = $this->entityManager->getDefinition($entity_type_id);
+    $bundle = $type->id();
     $type_params = [
       '%entity_label' => $entity_definition->getLabel(),
       '%type_name' => $type->label(),
     ];
 
     return [
-      "create $type_id $entity_id" => [
+      "create $entity_type_id $bundle" => [
         'title' => $this->t('%type_name: Create new %entity_label', $type_params),
       ],
-      "edit own $type_id $entity_id" => [
+      "edit own $entity_type_id $bundle" => [
         'title' => $this->t('%type_name: Edit own %entity_label', $type_params),
       ],
-      "edit any $type_id $entity_id" => [
+      "edit any $entity_type_id $bundle" => [
         'title' => $this->t('%type_name: Edit any %entity_label', $type_params),
       ],
-      "delete own $type_id $entity_id" => [
+      "delete own $entity_type_id $bundle" => [
         'title' => $this->t('%type_name: Delete own %entity_label', $type_params),
       ],
-      "delete any $type_id $entity_id" => [
+      "delete any $entity_type_id $bundle" => [
         'title' => $this->t('%type_name: Delete any %entity_label', $type_params),
       ],
-      "view $type_id $entity_id revisions" => [
+      // TODO: add logic to use this permission.
+      // See https://github.com/Jaesin/content_entity_base/issues/56.
+      "view $entity_type_id $bundle revisions" => [
         'title' => $this->t('%type_name: View %entity_label revisions', $type_params),
       ],
-      "revert $type_id $entity_id revisions" => [
+      // TODO: add logic to use this permission.
+      "revert $entity_type_id $bundle revisions" => [
         'title' => $this->t('%type_name: Revert %entity_label revisions', $type_params),
         'description' => t('Role requires permission <em>view revisions</em> and <em>edit rights</em> for %entity_label in question, or <em>Administer %entity_label</em>.', $type_params),
       ],
-      "delete $type_id $entity_id revisions" => [
+      // TODO: add logic to use this permission.
+      "delete $entity_type_id $bundle revisions" => [
         'title' => $this->t('%type_name: Delete %entity_label revisions', $type_params),
         'description' => $this->t('Role requires permission to <em>view revisions</em> and <em>delete rights</em> for %entity_label in question, or <em>Administer %entity_label</em>.', $type_params),
       ],
