@@ -139,6 +139,8 @@ class EntityBase extends ContentEntityBase implements EntityBaseInterface {
       ->setRevisionable(TRUE)
       ->setTranslatable(TRUE);
 
+    $fields += static::entityRevisionLogBaseFieldDefinitions();
+
     return $fields;
   }
 
