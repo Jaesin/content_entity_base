@@ -12,3 +12,11 @@ You can get started with this module by copying the tests/modules/ceb_test modul
 @todo Add Drupal console support to this module.
 
 This is currently a pre-release version but has been moderately tested with Drupal 8.0.3.
+
+## Branches
+
+* There is a 8.x-0.x branch which is compatible with Drupal 8.0.x and entity 8.x-0.x
+* There is a 8.x-1.x branch which is compatible with Drupal 8.1.x and entity 8.x-1.x
+* There is a 8.x-2.x branch which is compatible with Drupal 8.2.x and entity 8.x-2.x
+
+
