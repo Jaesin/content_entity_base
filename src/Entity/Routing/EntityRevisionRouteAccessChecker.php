@@ -69,12 +69,14 @@ class EntityRevisionRouteAccessChecker implements AccessInterface {
 
     $map = [
       'view' => "view all $entity_type_id revisions",
+      'list' => "view all $entity_type_id revisions",
       'update' => "revert all $entity_type_id revisions",
       'delete' => "delete all $entity_type_id revisions",
     ];
     $bundle = $entity->bundle();
     $type_map = [
       'view' => "view $entity_type_id $bundle revisions",
+      'list' => "view $entity_type_id $bundle revisions",
       'update' => "revert $entity_type_id $bundle revisions",
       'delete' => "delete $entity_type_id $bundle revisions",
     ];

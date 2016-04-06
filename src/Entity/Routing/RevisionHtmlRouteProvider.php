@@ -35,10 +35,11 @@ class RevisionHtmlRouteProvider implements EntityRouteProviderInterface {
     $route = new Route($entity_type->getLinkTemplate('version-history'));
     $route->setDefault('_title', 'Revisions');
     $route->setDefault('_controller', '\Drupal\content_entity_base\Entity\Controller\RevisionController::revisionOverviewController');
-    $route->setRequirement('_entity_access_revision', $entity_type->id() . '.view');
+    $route->setRequirement('_entity_access_revision', $entity_type->id() . '.list');
     $route->setOption('parameters', [
       $entity_type->id() => [
         'type' => 'entity:' . $entity_type->id(),
+        'force_entity_enhancing' => TRUE,
       ],
     ]);
     return $route;
