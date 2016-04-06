@@ -14,6 +14,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\entity\Revision\EntityRevisionLogTrait;
+use Drupal\entity\EntityKeysFieldsTrait;
 use Drupal\user\EntityOwnerInterface;
 use Drupal\user\UserInterface;
 
@@ -24,6 +25,7 @@ class EntityBase extends ContentEntityBase implements EntityBaseInterface {
 
   use EntityChangedTrait;
   use EntityRevisionLogTrait;
+  use EntityKeysFieldsTrait;
 
   /**
    * {@inheritdoc}
@@ -69,36 +71,7 @@ class EntityBase extends ContentEntityBase implements EntityBaseInterface {
    * {@inheritdoc}
    */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
-
-    $fields['id'] = BaseFieldDefinition::create('integer')
-      ->setLabel(t('Custom entity ID'))
-      ->setDescription(t('The custom entity ID.'))
-      ->setReadOnly(TRUE)
-      ->setSetting('unsigned', TRUE);
-
-    $fields['uuid'] = BaseFieldDefinition::create('uuid')
-      ->setLabel(t('UUID'))
-      ->setDescription(t('The custom entity UUID.'))
-      ->setReadOnly(TRUE);
-
-    $fields['revision_id'] = BaseFieldDefinition::create('integer')
-      ->setLabel(t('Revision ID'))
-      ->setDescription(t('The revision ID.'))
-      ->setReadOnly(TRUE)
-      ->setSetting('unsigned', TRUE);
-
-    $fields['langcode'] = BaseFieldDefinition::create('language')
-      ->setLabel(t('Language'))
-      ->setDescription(t('The custom entity language code.'))
-      ->setTranslatable(TRUE)
-      ->setRevisionable(TRUE)
-      ->setDisplayOptions('view', array(
-        'type' => 'hidden',
-      ))
-      ->setDisplayOptions('form', array(
-        'type' => 'language_select',
-        'weight' => 2,
-      ));
+    $fields = static::entityKeysBaseFieldDefinitions($entity_type);
 
     $fields['name'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Administrative Title'))
