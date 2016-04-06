@@ -15,6 +15,6 @@
         }
     ],
     "require": {
-        "drupal/enity": "8.1.x-dev"
+        "drupal/entity": "8.x-0.x-dev"
     }
 }

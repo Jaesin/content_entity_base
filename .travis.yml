@@ -57,7 +57,7 @@ before_script:
   - ln -s $TESTDIR modules/content_entity_base
 
   # Download the entity module.
-  - drush -y dl entity
+  - drush -y dl entity-8.x-0.x
 
   # Start a web server on port 8888, run in the background; wait for
   # initialization.
