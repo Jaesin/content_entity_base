@@ -1,0 +1,5 @@
+name: Console CEB
+type: module
+description: Provides Drupal Console integration for the CEB module.
+core: 8.x
+package: Drupal console

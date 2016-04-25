@@ -1,0 +1,33 @@
+{% extends "base/class.php.twig" %}
+
+{% block file_path %}
+Drupal\{{module}}\Entity\Access\{{ class_name }}.
+{% endblock %}
+
+{% block namespace_class %}
+namespace Drupal\{{module}}\Entity\Access;
+{% endblock %}
+
+{% block use_class %}
+use Drupal\content_entity_base\Entity\Access\EntityBasePermissions;
+use Drupal\Core\Entity\ContentEntityTypeInterface;
+{% endblock %}
+
+{% block class_declaration %}
+/**
+ * Class {{ class_name }}.
+ *   Defines a class containing permission callbacks.
+ * @package Drupal\{{ module }}\Entity\Access
+ */
+class {{ class_name }} extends EntityBasePermissions {% endblock %}
+{% block class_methods %}
+
+    /**
+    * {@inheritdoc}
+    *
+    * @todo Leverage https://www.drupal.org/node/2652684
+    */
+    public function entityPermissions(ContentEntityTypeInterface $entity_type = NULL) {
+      return parent::entityPermissions(\Drupal::entityTypeManager()->getDefinition('{{ entity_name }}'));
+    }
+{% endblock %}
