@@ -10,6 +10,7 @@
 namespace Drupal\content_entity_base\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
+use Drupal\Core\Entity\EntityDescriptionInterface;
 
 /**
  * Defines the entity type configuration entity.
@@ -56,6 +57,14 @@ class EntityTypeBase extends ConfigEntityBundleBase implements EntityTypeBaseInt
    */
   public function getDescription() {
     return $this->description;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setDescription($description) {
+    $this->description = $description;
+    return $this;
   }
 
   /**

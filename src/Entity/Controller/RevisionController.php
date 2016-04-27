@@ -14,9 +14,9 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\RevisionLogInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\entity\Revision\EntityRevisionLogInterface;
 use Drupal\user\EntityOwnerInterface;
 
 /**
@@ -93,7 +93,7 @@ class RevisionController extends ControllerBase {
       $username = '';
     }
 
-    if ($revision instanceof EntityRevisionLogInterface) {
+    if ($revision instanceof RevisionLogInterface) {
       // Use revision link to link to revisions that are not active.
       $date = $this->dateFormatter()->format($revision->getRevisionCreationTime(), 'short');
       if (!$is_current) {
@@ -108,7 +108,7 @@ class RevisionController extends ControllerBase {
     }
 
     $markup = '';
-    if ($revision instanceof EntityRevisionLogInterface) {
+    if ($revision instanceof RevisionLogInterface) {
       $markup = $revision->getRevisionLogMessage();
     }
 

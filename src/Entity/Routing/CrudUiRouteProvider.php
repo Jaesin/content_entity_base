@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Route;
  * - add bundle page
  * - a collection page.
  */
-class CrudUiRouteProvider extends CreateHtmlRouteProvider implements EntityRouteProviderInterface {
+class CrudUiRouteProvider extends HtmlRouteProvider {
 
   /**
    * {@inheritdoc}

@@ -7,11 +7,12 @@
 namespace Drupal\content_entity_base\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
+use Drupal\Core\Entity\EntityDescriptionInterface;
 
 /**
  * Provides an interface defining a custom entity type entity.
  */
-interface EntityTypeBaseInterface extends ConfigEntityInterface {
+interface EntityTypeBaseInterface extends ConfigEntityInterface, EntityDescriptionInterface {
 
   /**
    * Returns the id of the referring entity type.
@@ -20,14 +21,6 @@ interface EntityTypeBaseInterface extends ConfigEntityInterface {
    *   The entity type id of the referring entity.
    */
   public function bundleOf();
-
-  /**
-   * Returns the description of the entity type.
-   *
-   * @return string
-   *   The description of the type of this entity.
-   */
-  public function getDescription();
 
   /**
    * Returns whether a new revision should be created by default.

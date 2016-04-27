@@ -27,8 +27,7 @@ use Drupal\content_entity_base\Entity\EntityTypeBase;
  *     },
  *     "list_builder" = "Drupal\content_entity_base\Entity\Listing\EntityTypeBaseListBuilder",
  *     "route_provider" = {
- *       "html" = "\Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider",
- *       "crud" = "\Drupal\content_entity_base\Entity\Routing\CrudUiRouteProvider",
+ *       "html" = "\Drupal\content_entity_base\Entity\Routing\HtmlRouteProvider",
  *     },
  *   },
  *   entity_keys = {

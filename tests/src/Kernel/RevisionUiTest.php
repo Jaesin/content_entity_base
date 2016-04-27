@@ -137,8 +137,7 @@ class RevisionUiTest extends KernelTestBase {
     $this->assertEquals(200, $response->getStatusCode());
 
     $this->setRawContent($response->getContent());
-    $date = \Drupal::service('date.formatter')->format($entity->getRevisionCreationTime());
-    $title = "Revision of original name from $date | ";
+    $title = "Revision of original name | ";
     $this->assertTitle($title);
     $this->assertRaw('<h1>Revision of <em class="placeholder">original name</em>');
   }

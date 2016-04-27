@@ -9,6 +9,7 @@ namespace Drupal\content_entity_base\Entity;
 
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityChangedInterface;
+use Drupal\Core\Entity\RevisionLogInterface;
 use Drupal\user\EntityOwnerInterface;
 
 use \Drupal\entity\Revision\EntityRevisionLogInterface as EntityEntityRevisionLogInterface;
@@ -16,7 +17,7 @@ use \Drupal\entity\Revision\EntityRevisionLogInterface as EntityEntityRevisionLo
 /**
  * Provides an interface defining a custom entity base entity.
  */
-interface EntityBaseInterface extends ContentEntityInterface, EntityChangedInterface, EntityEntityRevisionLogInterface, EntityOwnerInterface {
+interface EntityBaseInterface extends ContentEntityInterface, EntityChangedInterface, RevisionLogInterface, EntityOwnerInterface {
 
   /**
    * Sets the entity description.
