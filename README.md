@@ -19,4 +19,3 @@ This is currently a pre-release version but has been moderately tested with Drup
 * There is a 8.x-1.x branch which is compatible with Drupal 8.1.x and entity 8.x-1.x
 * There is a 8.x-2.x branch which is compatible with Drupal 8.2.x and entity 8.x-2.x
 
-
