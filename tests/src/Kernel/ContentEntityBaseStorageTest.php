@@ -20,7 +20,7 @@ class ContentEntityBaseStorageTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['content_entity_base', 'ceb_test', 'system', 'user'];
+  public static $modules = ['content_entity_base', 'ceb_test', 'system', 'user', 'entity'];
 
   /**
    * {@inheritdoc}

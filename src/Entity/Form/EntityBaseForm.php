@@ -92,15 +92,11 @@ class EntityBaseForm extends ContentEntityForm {
       ];
     }
 
-    $form['revision_information']['revision_log'] = [
-      '#type' => 'textarea',
-      '#title' => $this->t('Revision log message'),
-      '#rows' => 4,
-      '#default_value' => $this->entity->getRevisionLogMessage(),
-      '#description' => $this->t('Briefly describe the changes you have made.'),
-    ];
+    $form = parent::form($form, $form_state);
+    $form['revision_information']['revision_log_message'] = $form['revision_log_message'];
+    unset($form['revision_log_message']);
 
-    return parent::form($form, $form_state);
+    return $form;
   }
 
   /**

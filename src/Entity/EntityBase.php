@@ -12,6 +12,7 @@ use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\RevisionableContentEntityBase;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\entity\Revision\EntityRevisionLogTrait;
 use Drupal\entity\EntityKeysFieldsTrait;
@@ -21,11 +22,9 @@ use Drupal\user\UserInterface;
 /**
  * Defines a base entity class to be used by custom entities.
  */
-class EntityBase extends ContentEntityBase implements EntityBaseInterface {
+class EntityBase extends RevisionableContentEntityBase implements EntityBaseInterface {
 
   use EntityChangedTrait;
-  use EntityRevisionLogTrait;
-  use EntityKeysFieldsTrait;
 
   /**
    * {@inheritdoc}
@@ -71,7 +70,7 @@ class EntityBase extends ContentEntityBase implements EntityBaseInterface {
    * {@inheritdoc}
    */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
-    $fields = static::entityKeysBaseFieldDefinitions($entity_type);
+    $fields = parent::baseFieldDefinitions($entity_type);
 
     $fields['name'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Administrative Title'))
@@ -115,10 +114,10 @@ class EntityBase extends ContentEntityBase implements EntityBaseInterface {
       ->setTranslatable(TRUE)
       ->setDefaultValue(TRUE);
 
-    $fields['revision_log'] = BaseFieldDefinition::create('string_long')
-      ->setLabel(t('Revision log message'))
-      ->setDescription(t('The log entry explaining the changes in this revision.'))
-      ->setRevisionable(TRUE);
+    $fields['type'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Entity type (Bundle)'))
+      ->setDescription(t('The entity type.'))
+      ->setSetting('target_type', $entity_type->getBundleEntityType());
 
     $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel(t('Created'))
