@@ -15,8 +15,6 @@ use Drupal\user\EntityOwnerInterface;
 
 /**
  * Provides an interface defining a custom entity base entity.
- *
- * @ingroup content_entity_base
  */
 interface EntityBaseInterface extends ContentEntityInterface, EntityChangedInterface, RevisionLogInterface, EntityOwnerInterface {
 

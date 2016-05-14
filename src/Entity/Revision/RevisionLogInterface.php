@@ -11,8 +11,6 @@ use Drupal\user\UserInterface;
  * @internal This class is a backport of \Drupal\Core\Entity\RevisionLogInterface
  *   introduced in 8.1.x. This class will be removed in a future version of
  *   content entity base in favor of the core interface.
- *
- * @ingroup content_entity_base
  */
 interface RevisionLogInterface extends RevisionableInterface {
 

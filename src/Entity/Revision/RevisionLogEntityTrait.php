@@ -14,8 +14,6 @@ use Drupal\user\UserInterface;
  *   introduced in 8.1.x. This class will be removed in version 8.x-2.x of
  *   content entity base in favor of the core interface which uses different
  *   field id's than this trait.
- *
- * @ingroup content_entity_base
  */
 trait RevisionLogEntityTrait {
 

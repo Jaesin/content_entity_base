@@ -17,8 +17,6 @@ use Drupal\user\EntityOwnerInterface;
  * Utility base class for CEB entities.
  *
  * @see \Drupal\Core\Controller\ControllerBase
- *
- * @ingroup content_entity_base
  */
 class RevisionController extends ControllerBase {
 

@@ -16,8 +16,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a generic entity revision delete form.
- *
- * @ingroup content_entity_base
  */
 class EntityRevisionDeleteForm extends ConfirmFormBase {
 

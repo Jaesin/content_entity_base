@@ -28,7 +28,7 @@ class RevisionUiTest extends KernelTestBase {
     'content_entity_base',
     'ceb_test',
     'system',
-    'user', 'entity'
+    'user',
   ];
 
   /**

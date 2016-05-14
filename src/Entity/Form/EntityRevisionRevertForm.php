@@ -15,8 +15,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a generic entity revision revert form.
- *
- * @ingroup content_entity_base
  */
 class EntityRevisionRevertForm extends ConfirmFormBase {
 

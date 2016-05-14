@@ -19,8 +19,6 @@ use Drupal\user\UserInterface;
 
 /**
  * Defines a base entity class to be used by custom entities.
- *
- * @ingroup content_entity_base
  */
 class EntityBase extends ContentEntityBase implements EntityBaseInterface {
 
