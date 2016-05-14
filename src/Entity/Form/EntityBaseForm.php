@@ -42,6 +42,8 @@ class EntityBaseForm extends ContentEntityForm {
    */
   public function form(array $form, FormStateInterface $form_state) {
 
+    $form = parent::form($form, $form_state);
+
     $entity_type = $this->entity->getEntityType();
 
     $bundle = $this->entity->getBundleEntity();
@@ -74,33 +76,24 @@ class EntityBaseForm extends ContentEntityForm {
       '#access' => $this->entity->isNewRevision() || $account->hasPermission($entity_type->get('admin_permission')),
     ];
 
-    $form['revision_information']['revision'] = [
+    $form['revision'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Create new revision'),
       '#default_value' => $this->entity->isNewRevision(),
+      '#group' => 'revision_information',
       '#access' => $account->hasPermission($entity_type->get('admin_permission')),
     ];
 
-    // Check the revision log checkbox when the log textarea is filled in.
-    // This must not happen if "Create new revision" is enabled by default,
-    // since the state would auto-disable the checkbox otherwise.
-    if (!$this->entity->isNewRevision()) {
-      $form['revision_information']['revision']['#states'] = [
-        'checked' => [
-          'textarea[name="revision_log"]' => ['empty' => FALSE],
+    $form['revision_log'] += [
+      '#group' => 'revision_information',
+      '#states' => [
+        'visible' => [
+          'input[name="revision"]' => ['checked' => TRUE],
         ],
-      ];
-    }
-
-    $form['revision_information']['revision_log'] = [
-      '#type' => 'textarea',
-      '#title' => $this->t('Revision log message'),
-      '#rows' => 4,
-      '#default_value' => $this->entity->getRevisionLogMessage(),
-      '#description' => $this->t('Briefly describe the changes you have made.'),
+      ],
     ];
 
-    return parent::form($form, $form_state);
+    return $form;
   }
 
   /**

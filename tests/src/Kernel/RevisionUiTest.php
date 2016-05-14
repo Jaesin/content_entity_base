@@ -146,8 +146,6 @@ class RevisionUiTest extends KernelTestBase {
   public function testRevisionHistoryPagesWithMoreThanOneRevision() {
     /** @var \Drupal\Core\Session\AccountSwitcherInterface $account_switcher */
     $account_switcher = \Drupal::service('account_switcher');
-    /** @var \Drupal\entity\Access\EntityRevisionRouteAccessChecker $revision_access_check */
-    $revision_access_check = \Drupal::service('access_checker.entity_revision');
 
     $entity = CebTestContent::create([
       'type' => 'test_bundle',
@@ -163,7 +161,6 @@ class RevisionUiTest extends KernelTestBase {
     $response = $this->httpKernel->handle(Request::create($entity->url('version-history')));
     $this->assertEquals(403, $response->getStatusCode());
 
-    $revision_access_check->resetAccessCache();
     $user = $this->drupalCreateUser(['access ceb_test_content', 'view all ceb_test_content revisions']);
     $account_switcher->switchTo($user);
 
