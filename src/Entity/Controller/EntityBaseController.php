@@ -5,6 +5,7 @@ namespace Drupal\content_entity_base\Entity\Controller;
 use Drupal\Core\Entity\Controller\EntityController;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Render\RendererInterface;
@@ -109,7 +110,7 @@ class EntityBaseController extends EntityController {
    */
   public function addPage($entity_type_id) {
     $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
-    $bundles = $this->entityTypeManager->getBundleInfo($entity_type_id);
+    $bundles = $this->entityTypeBundleInfo->getBundleInfo($entity_type_id);
     $bundle_key = $entity_type->getKey('bundle');
     $bundle_entity_type_id = $entity_type->getBundleEntityType();
     $build = [
@@ -117,7 +118,6 @@ class EntityBaseController extends EntityController {
       '#bundles' => [],
     ];
     if ($bundle_entity_type_id) {
-      $bundle_argument = $bundle_entity_type_id;
       $bundle_entity_type = $this->entityTypeManager->getDefinition($bundle_entity_type_id);
       $bundle_entity_type_label = $bundle_entity_type->getLowercaseLabel();
       $build['#cache']['tags'] = $bundle_entity_type->getListCacheTags();
@@ -141,23 +141,20 @@ class EntityBaseController extends EntityController {
       // Add descriptions from the bundle entities.
       $bundles = $this->loadBundleDescriptions($bundles, $bundle_entity_type);
     }
-    else {
-      $bundle_argument = $bundle_key;
-    }
 
     $form_route_name = 'entity.' . $entity_type_id . '.add_form';
     // Redirect if there's only one bundle available.
     if (count($bundles) == 1) {
       $bundle_names = array_keys($bundles);
       $bundle_name = reset($bundle_names);
-      return $this->redirect($form_route_name, [$bundle_argument => $bundle_name]);
+      return $this->redirect($form_route_name, [$bundle_key => $bundle_name]);
     }
     // Prepare the #bundles array for the template.
     foreach ($bundles as $bundle_name => $bundle_info) {
       $build['#bundles'][$bundle_name] = [
         'label' => $bundle_info['label'],
         'description' => isset($bundle_info['description']) ? $bundle_info['description'] : '',
-        'add_link' => Link::createFromRoute($bundle_info['label'], $form_route_name, [$bundle_argument => $bundle_name]),
+        'add_link' => Link::createFromRoute($bundle_info['label'], $form_route_name, [$bundle_key => $bundle_name]),
       ];
     }
 
@@ -205,6 +202,35 @@ class EntityBaseController extends EntityController {
     else {
       return $this->addTitle($entity_type_id);
     }
+  }
+
+
+  /**
+   * Expands the bundle information with descriptions, if known.
+   *
+   * @param array $bundles
+   *   An array of bundle information.
+   * @param \Drupal\Core\Entity\EntityTypeInterface $bundle_entity_type
+   *   The ID of the bundle entity type.
+   *
+   * @return array
+   *   The expanded array of bundle information.
+   */
+  protected function loadBundleDescriptions(array $bundles, EntityTypeInterface $bundle_entity_type) {
+    if (!$bundle_entity_type->isSubclassOf('\Drupal\Core\Entity\EntityDescriptionInterface')) {
+      return $bundles;
+    }
+    $bundle_names = array_keys($bundles);
+    $storage = $this->entityTypeManager->getStorage($bundle_entity_type->id());
+    /** @var \Drupal\Core\Entity\EntityDescriptionInterface[] $bundle_entities */
+    $bundle_entities = $storage->loadMultiple($bundle_names);
+    foreach ($bundles as $bundle_name => &$bundle_info) {
+      if (isset($bundle_entities[$bundle_name])) {
+        $bundle_info['description'] = $bundle_entities[$bundle_name]->getDescription();
+      }
+    }
+
+    return $bundles;
   }
 
 }

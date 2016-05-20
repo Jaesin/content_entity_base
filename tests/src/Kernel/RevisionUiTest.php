@@ -68,7 +68,10 @@ class RevisionUiTest extends KernelTestBase {
   }
 
   /**
-   * @return \Drupal\user\UserInterface
+   * Creates a test user.
+   *
+   * @param array $permissions
+   * @return \Drupal\user\UserInterface|static
    */
   protected function drupalCreateUser(array $permissions = []) {
     $role = Role::create([

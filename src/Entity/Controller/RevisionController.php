@@ -10,6 +10,7 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\user\EntityOwnerInterface;
 
@@ -90,7 +91,7 @@ class RevisionController extends ControllerBase {
       // Use revision link to link to revisions that are not active.
       $date = $this->dateFormatter()->format($revision->getRevisionCreationTime(), 'short');
       if (!$is_current) {
-        $link = $this->l($date, $revision->toUrl('revision'));
+        $link = $revision->toLink($date, 'revision');
       }
       else {
         $link = $revision->toLink($date);
@@ -117,7 +118,7 @@ class RevisionController extends ControllerBase {
         '#type' => 'inline_template',
         '#template' => $template,
         '#context' => [
-          'date' => $link,
+          'date' => $link->toString(),
           'username' => $this->renderer()->renderPlain($username),
           'message' => ['#markup' => $markup, '#allowed_tags' => Xss::getHtmlTagList()],
         ],
