@@ -20,7 +20,12 @@ class ContentEntityBaseStorageTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['content_entity_base', 'ceb_test', 'system', 'user'];
+  public static $modules = [
+    'content_entity_base',
+    'ceb_test',
+    'system',
+    'user',
+  ];
 
   /**
    * {@inheritdoc}
@@ -37,7 +42,7 @@ class ContentEntityBaseStorageTest extends KernelTestBase {
    * @return \Drupal\content_entity_base\Entity\Storage\RevisionableStorageInterface
    */
   protected function getStorage() {
-    return \Drupal::entityManager()->getStorage('ceb_test_content');
+    return \Drupal::entityTypeManager()->getStorage('ceb_test_content');
   }
 
   public function testCountDefaultLanguageRevisions() {

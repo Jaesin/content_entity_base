@@ -1,21 +1,26 @@
 # Ceb_test content entity tasks links.
 entity.ceb_test_content.canonical:
+  title: View
   route_name: entity.ceb_test_content.canonical
   base_route: entity.ceb_test_content.canonical
-  title: 'View'
 
 entity.ceb_test_content.edit_form:
+  title: Edit
   route_name: entity.ceb_test_content.edit_form
   base_route: entity.ceb_test_content.canonical
-  title: 'Edit'
 
 entity.ceb_test_content.delete_form:
+  title: Delete
   route_name: entity.ceb_test_content.delete_form
   base_route: entity.ceb_test_content.canonical
-  title: 'Delete'
   weight: 10
 
 entity.ceb_test_content.collection:
+  title: CEB test content
   route_name: entity.ceb_test_content.collection
   base_route: system.admin_content
-  title: 'CEB test content'
+
+entity.ceb_test_content_type.edit_form:
+  title: Edit
+  route_name: entity.ceb_test_content_type.edit_form
+  base_route: entity.ceb_test_content_type.edit_form

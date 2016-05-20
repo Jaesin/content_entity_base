@@ -5,8 +5,7 @@ services:
     tags:
       - { name: paramconverter }
 
-  content_entity_base.entity_revision_access_checker:
-    class: \Drupal\content_entity_base\Entity\Routing\EntityRevisionRouteAccessChecker
-    arguments: ['@entity.manager']
+  route_enhancer.entity_always:
+    class: \Drupal\content_entity_base\Entity\Enhancer\EntityRouteEnhancer
     tags:
-      - { name: access_check, applies_to: _entity_access_revision }
+      - { name: route_enhancer, priority: 20 }
