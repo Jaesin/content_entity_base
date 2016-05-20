@@ -32,5 +32,15 @@ class CrudUiRouteProvider extends CreateHtmlRouteProvider implements EntityRoute
     $route->setRequirement('_permission', 'view ' . $entity_type->id() . ' entity');
     return $route;
   }
+  
+  /**
+   * {@inheritdoc}
+   */
+  protected function addFormRoute(EntityTypeInterface $entity_type) {
+    if ($route = parent::addFormRoute($entity_type)) {
+      $route->setOption('_admin_route', TRUE);
+      return $route;
+    }
+  }
 
 }
