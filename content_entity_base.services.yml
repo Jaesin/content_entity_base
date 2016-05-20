@@ -4,3 +4,8 @@ services:
     arguments: ['@entity.manager']
     tags:
       - { name: paramconverter }
+
+  route_enhancer.entity_always:
+    class: \Drupal\content_entity_base\Entity\Enhancer\EntityRouteEnhancer
+    tags:
+      - { name: route_enhancer, priority: 20 }

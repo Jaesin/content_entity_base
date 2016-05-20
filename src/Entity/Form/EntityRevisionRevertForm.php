@@ -7,10 +7,10 @@
 
 namespace Drupal\content_entity_base\Entity\Form;
 
+use Drupal\content_entity_base\Entity\Revision\RevisionLogInterface;
 use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\entity\Revision\EntityRevisionLogInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -62,7 +62,7 @@ class EntityRevisionRevertForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    if ($this->entityRevision instanceof EntityRevisionLogInterface) {
+    if ($this->entityRevision instanceof RevisionLogInterface) {
       return t('Are you sure you want to revert to the revision from %revision-date?', ['%revision-date' => $this->dateFormatter->format($this->entityRevision->getRevisionCreationTime())]);
     }
     else {
@@ -74,7 +74,7 @@ class EntityRevisionRevertForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return $this->entityRevision->urlInfo('version-history');
+    return $this->entityRevision->toUrl('version-history');
   }
 
   /**
@@ -111,7 +111,7 @@ class EntityRevisionRevertForm extends ConfirmFormBase {
     $this->entityRevision->setNewRevision();
     $this->entityRevision->isDefaultRevision(TRUE);
 
-    if ($this->entityRevision instanceof EntityRevisionLogInterface) {
+    if ($this->entityRevision instanceof RevisionLogInterface) {
       $original_revision_timestamp = $this->entityRevision->getRevisionCreationTime();
       $this->entityRevision->setRevisionLogMessage(t('Copy of the revision from %date.', ['%date' => $this->dateFormatter->format($original_revision_timestamp)]));
     }

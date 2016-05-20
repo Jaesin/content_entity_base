@@ -1,29 +1,23 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\foo\Entity\Controller\RevisionController.
- */
-
 namespace Drupal\content_entity_base\Entity\Controller;
 
 use Drupal\Component\Utility\Xss;
+use Drupal\content_entity_base\Entity\EntityBaseInterface;
+use Drupal\content_entity_base\Entity\Revision\RevisionLogInterface;
 use Drupal\content_entity_base\Entity\Routing\RevisionObjectExtractionTrait;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\entity\Revision\EntityRevisionLogInterface;
 use Drupal\user\EntityOwnerInterface;
 
 /**
- * @todo Get rid of this class as part of
- * - https://github.com/fago/entity/pull/13
- * - https://github.com/fago/entity/pull/17
- * - https://github.com/fago/entity/pull/18
+ * Utility base class for CEB entities.
+ *
+ * @see \Drupal\Core\Controller\ControllerBase
  */
 class RevisionController extends ControllerBase {
 
@@ -69,19 +63,19 @@ class RevisionController extends ControllerBase {
   protected function buildRevertRevisionLink(EntityInterface $entity_revision) {
     return [
       'title' => t('Revert'),
-      'url' => $entity_revision->urlInfo('revision-revert'),
+      'url' => $entity_revision->toUrl('revision-revert'),
     ];
   }
 
   protected function buildDeleteRevisionLink(EntityInterface $entity_revision) {
     return [
       'title' => t('Delete'),
-      'url' => $entity_revision->urlInfo('revision-delete'),
+      'url' => $entity_revision->toUrl('revision-delete'),
     ];
   }
 
   protected function getRevisionDescription(ContentEntityInterface $revision, $is_current = FALSE) {
-    /** @var \Drupal\Core\Entity\ContentEntityInterface|\Drupal\user\EntityOwnerInterface $revision */
+    /** @var EntityBaseInterface $revision */
 
     if ($revision instanceof EntityOwnerInterface) {
       $username = [
@@ -93,22 +87,22 @@ class RevisionController extends ControllerBase {
       $username = '';
     }
 
-    if ($revision instanceof EntityRevisionLogInterface) {
+    if ($revision instanceof RevisionLogInterface) {
       // Use revision link to link to revisions that are not active.
       $date = $this->dateFormatter()->format($revision->getRevisionCreationTime(), 'short');
       if (!$is_current) {
-        $link = $this->l($date, $revision->urlInfo('revision'));
+        $link = $revision->toLink($date, 'revision');
       }
       else {
-        $link = $revision->link($date);
+        $link = $revision->toLink($date);
       }
     }
     else {
-      $link = $revision->link($revision->label(), 'revision');
+      $link = $revision->toLink($revision->label(), 'revision');
     }
 
     $markup = '';
-    if ($revision instanceof EntityRevisionLogInterface) {
+    if ($revision instanceof RevisionLogInterface) {
       $markup = $revision->getRevisionLogMessage();
     }
 
@@ -124,7 +118,7 @@ class RevisionController extends ControllerBase {
         '#type' => 'inline_template',
         '#template' => $template,
         '#context' => [
-          'date' => $link,
+          'date' => $link->toString(),
           'username' => $this->renderer()->renderPlain($username),
           'message' => ['#markup' => $markup, '#allowed_tags' => Xss::getHtmlTagList()],
         ],
@@ -143,7 +137,8 @@ class RevisionController extends ControllerBase {
    *   Revision title.
    */
   public function revisionTitle(EntityInterface $_entity_revision) {
-    if ($_entity_revision instanceof EntityRevisionLogInterface) {
+    /** @var EntityBaseInterface $_entity_revision */
+    if ($_entity_revision instanceof RevisionLogInterface) {
       return $this->t('Revision of %title from %date', array('%title' => $_entity_revision->label(), '%date' => format_date($_entity_revision->getRevisionCreationTime())));
     }
     else {

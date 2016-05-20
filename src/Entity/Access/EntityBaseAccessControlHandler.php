@@ -23,7 +23,7 @@ class EntityBaseAccessControlHandler extends EntityAccessControlHandler {
   protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
     $access = parent::checkAccess($entity, $operation, $account);
 
-    if ($operation === 'view') {
+    if (in_array($operation, ['list', 'view'])) {
       $access = $access->orIf(AccessResult::allowedIfHasPermission($account, 'access ' . $entity->getEntityTypeId()));
     }
     return $access;

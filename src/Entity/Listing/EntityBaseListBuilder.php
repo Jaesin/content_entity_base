@@ -47,7 +47,7 @@ class EntityBaseListBuilder extends EntityListBuilder {
       $operations['version-history'] = [
         'title' => $this->t('Version history'),
         'weight' => 10,
-        'url' => $entity->urlInfo('version-history'),
+        'url' => $entity->toUrl('version-history'),
       ];
     }
     return $operations;
