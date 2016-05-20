@@ -25,7 +25,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class EntityBaseController extends EntityController {
 
-  use StringTranslationTrait;
   use UrlGeneratorTrait;
 
 
