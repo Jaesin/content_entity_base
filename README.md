@@ -12,3 +12,10 @@ You can get started with this module by copying the tests/modules/ceb_test modul
 @todo Add Drupal console support to this module.
 
 This is currently a pre-release version but has been moderately tested with Drupal 8.0.3.
+
+
+### Known issues
+
+In Drupal 8.0.x all content entity permissions will show up under "Content Entity
+Base" because you were not allowed to set the provider of permissions until 8.1.x.
+( See: <http://drupal.org/node/2673726> )

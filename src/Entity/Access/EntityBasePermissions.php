@@ -12,8 +12,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines a class containing permission callbacks.
+ *
+ * @deprecated: This (typically proxied) class will be removed in the 8.x-2.x
+ * version of CEB in favor of using the `permission_provider` entity handler.
  */
-class EntityBasePermissions implements ContainerInjectionInterface {
+class EntityBasePermissions implements ContainerInjectionInterface, EntityBasePermissionsInterface {
 
   use StringTranslationTrait;
   use UrlGeneratorTrait;
