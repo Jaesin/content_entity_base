@@ -30,15 +30,15 @@ install:
   # See: https://github.com/drush-ops/drush#install---composer
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
 
-  # Install drush globally
-  - composer global require drush/drush
-
-before_script:
   # Remove Xdebug as we don't need it and it causes
   # PHP Fatal error:  Maximum function nesting level of '256' reached.
   # We also don't care if that file exists or not on PHP 7.
   - phpenv config-rm xdebug.ini || true
 
+  # Install drush globally
+  - composer global require drush/drush
+
+before_script:
   # Remember the current content_entity_base test directory for later use in the Drupal
   # installation.
   - TESTDIR=$(pwd)
