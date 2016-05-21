@@ -7,11 +7,16 @@ php:
   - 7
   - hhvm
 
+env:
+  - DRUPAL_VERSION=8.0.x ENTITY_VERSION=8.x-0.x
+  - DRUPAL_VERSION=8.1.x ENTITY_VERSION=8.x-1.x
+
 matrix:
   allow_failures:
     # We cannot use hhvm-nightly since that does not work in Travis CI's old
     # Ubuntu 12.04.
     - php: hhvm
+
   # Don't wait for the allowed failures to build.
   fast_finish: true
 
@@ -25,15 +30,15 @@ install:
   # See: https://github.com/drush-ops/drush#install---composer
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
 
-  # Install drush globally
-  - composer global require drush/drush
-
-before_script:
   # Remove Xdebug as we don't need it and it causes
   # PHP Fatal error:  Maximum function nesting level of '256' reached.
   # We also don't care if that file exists or not on PHP 7.
   - phpenv config-rm xdebug.ini || true
 
+  # Install drush globally
+  - composer global require drush/drush
+
+before_script:
   # Remember the current content_entity_base test directory for later use in the Drupal
   # installation.
   - TESTDIR=$(pwd)
@@ -49,15 +54,15 @@ before_script:
   # Export web server URL for browser tests.
   - export SIMPLETEST_BASE_URL=http://localhost:8888
 
-  # Download Drupal 8 core.
-  - travis_retry git clone --branch 8.0.x --depth 1 http://git.drupal.org/project/drupal.git
+  # Download Drupal core with drush so we don't have to use composer install.
+  - drush dl -y --drupal-project-rename=drupal drupal-$DRUPAL_VERSION
   - cd drupal
 
   # Reference ceb in build site.
   - ln -s $TESTDIR modules/content_entity_base
 
   # Download the entity module.
-  - drush -y dl entity-8.x-0.x
+  - drush -y dl entity-$ENTITY_VERSION
 
   # Start a web server on port 8888, run in the background; wait for
   # initialization.
