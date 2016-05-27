@@ -79,22 +79,22 @@ class PermissionUiTest extends CEBKernelTestBase {
       $this->assertNoPattern('/<td[^>]*id="module-ceb_test"/', 'The permissions page does not contain an entry for the CEB Test Entity module.');
     }
 
-    $this->assertText('Access the CEB test content overview page');
-    $this->assertText('Administer CEB test content');
-    $this->assertText('Administer CEB test content types');
-    $this->assertText('Bypass CEB test content access control');
-    $this->assertText('View published CEB test content');
-    $this->assertText('View own unpublished CEB test content');
-    $this->assertText('Test Bundle: Delete any CEB test content');
-    $this->assertText('Test Bundle: Delete CEB test content revisions');
-    $this->assertText('Test Bundle: Create new CEB test content');
-    $this->assertText('Test Bundle: Delete own CEB test content');
-    $this->assertText('Test Bundle: Edit any CEB test content');
-    $this->assertText('Test Bundle: Edit own CEB test content');
-    $this->assertText('Test Bundle: Revert CEB test content revisions');
-    $this->assertText('Test Bundle: View CEB test content revisions');
-    $this->assertText('Delete all CEB test content revisions');
-    $this->assertText('Revert all CEB test content revisions');
-    $this->assertText('View all CEB test content revisions');
+    $this->assertText('Access the CEB Test overview page');
+    $this->assertText('Administer CEB Test');
+    $this->assertText('Administer CEB Test types');
+    $this->assertText('Bypass CEB Test access control');
+    $this->assertText('View published CEB Test');
+    $this->assertText('View own unpublished CEB Test');
+    $this->assertText('Test Bundle: Delete any CEB Test');
+    $this->assertText('Test Bundle: Delete CEB Test revisions');
+    $this->assertText('Test Bundle: Create new CEB Test');
+    $this->assertText('Test Bundle: Delete own CEB Test');
+    $this->assertText('Test Bundle: Edit any CEB Test');
+    $this->assertText('Test Bundle: Edit own CEB Test');
+    $this->assertText('Test Bundle: Revert CEB Test revisions');
+    $this->assertText('Test Bundle: View CEB Test revisions');
+    $this->assertText('Delete all CEB Test revisions');
+    $this->assertText('Revert all CEB Test revisions');
+    $this->assertText('View all CEB Test revisions');
   }
 }
