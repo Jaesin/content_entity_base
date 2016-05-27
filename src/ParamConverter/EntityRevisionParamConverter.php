@@ -6,7 +6,23 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\ParamConverter\ParamConverterInterface;
 use Symfony\Component\Routing\Route;
 
-
+/**
+ * Parameter converter for upcasting entity revision IDs to full objects.
+ *
+ * This is useful for pages which want to show a specific revision, like
+ * "/entity_example/{entity_example}/revision/{entity_example_revision}".
+ *
+ *
+ * In order to use it you should specify some additional options in your route:
+ * @code
+ * example.route:
+ *   path: /foo/{entity_example_revision}
+ *   options:
+ *     parameters:
+ *       entity_example_revision:
+ *         type: entity_revision:entity_example
+ * @endcode
+ */
 class EntityRevisionParamConverter implements ParamConverterInterface {
 
   /**

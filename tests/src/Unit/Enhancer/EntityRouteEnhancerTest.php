@@ -49,7 +49,7 @@ class EntityRouteEnhancerTest extends \PHPUnit_Framework_TestCase {
       ]
     ]);
 
-    $this->assertTrue($this->routeEnhancer->applies($route));
+    $this->assertTrue($this->routeEnhancer->applies($route), 'Route enhancer applies to route.');
   }
 
   /**

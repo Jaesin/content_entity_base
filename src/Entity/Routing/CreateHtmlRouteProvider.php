@@ -4,11 +4,11 @@ namespace Drupal\content_entity_base\Entity\Routing;
 
 use Drupal\content_entity_base\Entity\Controller\EntityBaseController;
 use Drupal\Core\Config\Entity\ConfigEntityTypeInterface;
-use Drupal\Core\Entity\Controller\EntityController;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityHandlerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\Routing\EntityRouteProviderInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Route;
@@ -180,6 +180,25 @@ class CreateHtmlRouteProvider implements EntityRouteProviderInterface, EntityHan
 
       return $route;
     }
+  }
+
+  /**
+   * Gets the type of the ID key for a given entity type.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   An entity type.
+   *
+   * @return string|null
+   *   The type of the ID key for a given entity type, or NULL if the entity
+   *   type does not support fields.
+   */
+  protected function getEntityTypeIdKeyType(EntityTypeInterface $entity_type) {
+    if (!$entity_type->isSubclassOf(FieldableEntityInterface::class)) {
+      return NULL;
+    }
+
+    $field_storage_definitions = $this->entityFieldManager->getFieldStorageDefinitions($entity_type->id());
+    return $field_storage_definitions[$entity_type->getKey('id')]->getType();
   }
 
 }
