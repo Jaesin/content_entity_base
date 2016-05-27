@@ -35,7 +35,10 @@ class EntityRevisionRouteEnhancer implements RouteEnhancerInterface {
     $options = $route->getOptions();
     if (isset($options['parameters'])) {
       foreach ($options['parameters'] as $name => $details) {
-        if (!empty($details['type']) && strpos($details['type'], 'entity_revision:') !== FALSE) {
+        if (!empty($details['type'])
+          && strpos($details['type'], 'entity_revision:') !== FALSE
+          && !empty($defaults[$name])
+        ) {
           $defaults['_entity_revision'] = $defaults[$name];
           break;
         }
