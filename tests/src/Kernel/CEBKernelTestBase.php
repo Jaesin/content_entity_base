@@ -60,6 +60,7 @@ class CEBKernelTestBase extends KernelTestBase {
       $role->grantPermission($permission);
     }
     $role->save();
+    /** @var \Drupal\user\UserInterface $user */
     $user = User::create([
       'name' => 'test name  ' . $this->randomMachineName(),
     ]);

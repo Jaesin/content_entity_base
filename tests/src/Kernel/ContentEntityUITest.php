@@ -87,8 +87,13 @@ class ContentEntityUITest extends CEBKernelTestBase {
     $this->account_switcher->switchTo($this->users['ceb_admin']);
     $response = $this->httpKernel->handle(Request::create('/admin/content/ceb_test_content'));
     $this->assertEquals(200, $response->getStatusCode());
+    $this->setRawContent($response->getContent());
+    $this->assertText('There are no CEB Test entities yet.');
+    // Test the add page.
     $response = $this->httpKernel->handle(Request::create('/admin/ceb_test_content/add'));
     $this->assertEquals(200, $response->getStatusCode());
+    $this->setRawContent($response->getContent());
+    $this->assertText('There is no ceb test content type yet.');
 
     // Switch back to the anon account.
     $this->account_switcher->switchBack();
@@ -129,8 +134,18 @@ class ContentEntityUITest extends CEBKernelTestBase {
     $this->account_switcher->switchTo($this->users['ceb_admin']);
     $response = $this->httpKernel->handle(Request::create('/admin/content/ceb_test_content'));
     $this->assertEquals(200, $response->getStatusCode());
+    $this->setRawContent($response->getContent());
+    $this->assertText('There are no CEB Test entities yet.');
+    // Test the add page.
     $response = $this->httpKernel->handle(Request::create('/admin/ceb_test_content/add'));
+    // The content add page should redirect to  ceb_test_content/add/{{bundle_0_id}} when there is only one bundle.
+    $this->assertEquals(302, $response->getStatusCode());
+    $this->assertEquals('http://localhost/admin/ceb_test_content/add/'. $this->bundles[0]->id(), $response->getTargetUrl());
+    // Test the add form.
+    $response = $this->httpKernel->handle(Request::create('/admin/ceb_test_content/add/'. $this->bundles[0]->id()));
     $this->assertEquals(200, $response->getStatusCode());
+    $this->setRawContent($response->getContent());
+    $this->assertTitle('Add ceb test | ');
 
     // Switch back to the anon account.
     $this->account_switcher->switchBack();
