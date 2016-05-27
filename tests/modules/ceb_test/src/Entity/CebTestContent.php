@@ -14,8 +14,8 @@ use Drupal\content_entity_base\Entity\EntityBase;
  *
  * @ContentEntityType(
  *   id                      = "ceb_test_content",
- *   label                   = @Translation("CEB test content"),
- *   bundle_label            = @Translation("CEB test content type"),
+ *   label                   = @Translation("CEB Test"),
+ *   bundle_label            = @Translation("CEB Test Content Type"),
  *   base_table              = "ceb_test_content",
  *   revision_table          = "ceb_test_content_revision",
  *   data_table              = "ceb_test_content_field_data",
@@ -58,7 +58,7 @@ use Drupal\content_entity_base\Entity\EntityBase;
  *     "collection"   = "/admin/content/ceb_test_content",
  *     "canonical"    = "/admin/ceb_test_content/{ceb_test_content}",
  *     "add-page"    = "/admin/ceb_test_content/add",
- *     "add-form"    = "/admin/ceb_test_content/add/{type}",
+ *     "add-form"    = "/admin/ceb_test_content/add/{ceb_test_content_type}",
  *     "delete-form"  = "/admin/ceb_test_content/{ceb_test_content}/delete",
  *     "edit-form"    = "/admin/ceb_test_content/{ceb_test_content}/edit",
  *     "version-history" = "/admin/ceb_test_content/{ceb_test_content}/revisions",

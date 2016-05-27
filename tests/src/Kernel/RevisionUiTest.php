@@ -1,16 +1,9 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\content_entity_base\Kernel\RevisionUiTest.
- */
-
 namespace Drupal\Tests\content_entity_base\Kernel;
 
 use Drupal\ceb_test\Entity\CebTestContent;
 use Drupal\ceb_test\Entity\CebTestContentType;
-use Drupal\KernelTests\KernelTestBase;
-use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -19,17 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @group content_entity_base
  */
-class RevisionUiTest extends KernelTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static $modules = [
-    'content_entity_base',
-    'ceb_test',
-    'system',
-    'user',
-  ];
+class RevisionUiTest extends CEBKernelTestBase {
 
   /**
    * @var \Symfony\Component\HttpKernel\HttpKernelInterface
@@ -47,10 +30,8 @@ class RevisionUiTest extends KernelTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->installEntitySchema('ceb_test_content');
-    $this->installEntitySchema('user');
-    $this->installSchema('system', ['router', 'sequences']);
     $this->installConfig('system');
+
     \Drupal::service('router.builder')->rebuild();
 
     $this->httpKernel = \Drupal::service('http_kernel');
@@ -65,29 +46,6 @@ class RevisionUiTest extends KernelTestBase {
       'name' => 'admin',
     ]);
     $root_user->save();
-  }
-
-  /**
-   * Creates a test user.
-   *
-   * @param array $permissions
-   * @return \Drupal\user\UserInterface|static
-   */
-  protected function drupalCreateUser(array $permissions = []) {
-    $role = Role::create([
-      'id' => 'test_role__' . $this->randomMachineName(),
-    ]);
-    foreach ($permissions as $permission) {
-      $role->grantPermission($permission);
-    }
-    $role->save();
-    $user = User::create([
-      'name' => 'test name  ' . $this->randomMachineName(),
-    ]);
-    $user->addRole($role->id());
-    $user->save();
-
-    return $user;
   }
 
   public function testPages() {

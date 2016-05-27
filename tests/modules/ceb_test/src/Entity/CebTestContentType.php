@@ -14,7 +14,7 @@ use Drupal\content_entity_base\Entity\EntityTypeBase;
  *
  * @ConfigEntityType(
  *   id               = "ceb_test_content_type",
- *   label            = @Translation("Ceb_test content type"),
+ *   label            = @Translation("CEB Test Content Type"),
  *   admin_permission = "administer ceb_test_content",
  *   config_prefix    = "content_type",
  *   bundle_of        = "ceb_test_content",

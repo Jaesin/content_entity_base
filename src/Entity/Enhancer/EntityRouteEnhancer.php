@@ -35,7 +35,10 @@ class EntityRouteEnhancer implements RouteEnhancerInterface {
     $options = $route->getOptions();
     if (isset($options['parameters'])) {
       foreach ($options['parameters'] as $name => $details) {
-        if (!empty($details['type']) && strpos($details['type'], 'entity:') !== FALSE) {
+        if (!empty($details['type'])
+          && strpos($details['type'], 'entity:') !== FALSE
+          && !empty($defaults[$name])
+        ) {
           $defaults['_entity'] = $defaults[$name];
           break;
         }

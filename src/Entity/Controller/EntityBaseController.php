@@ -117,6 +117,7 @@ class EntityBaseController extends EntityController {
       '#bundles' => [],
     ];
     if ($bundle_entity_type_id) {
+      $bundle_argument = $bundle_entity_type_id;
       $bundle_entity_type = $this->entityTypeManager->getDefinition($bundle_entity_type_id);
       $bundle_entity_type_label = $bundle_entity_type->getLowercaseLabel();
       $build['#cache']['tags'] = $bundle_entity_type->getListCacheTags();
@@ -139,6 +140,8 @@ class EntityBaseController extends EntityController {
       }
       // Add descriptions from the bundle entities.
       $bundles = $this->loadBundleDescriptions($bundles, $bundle_entity_type);
+    } else {
+      $bundle_argument = $bundle_key;
     }
 
     $form_route_name = 'entity.' . $entity_type_id . '.add_form';
@@ -146,7 +149,7 @@ class EntityBaseController extends EntityController {
     if (count($bundles) == 1) {
       $bundle_names = array_keys($bundles);
       $bundle_name = reset($bundle_names);
-      return $this->redirect($form_route_name, [$bundle_key => $bundle_name]);
+      return $this->redirect($form_route_name, [$bundle_argument => $bundle_name]);
     }
     // Prepare the #bundles array for the template.
     foreach ($bundles as $bundle_name => $bundle_info) {

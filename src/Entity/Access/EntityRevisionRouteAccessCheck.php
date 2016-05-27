@@ -53,13 +53,12 @@ class EntityRevisionRouteAccessCheck implements AccessInterface {
    * {@inheritdoc}
    */
   public function access(Route $route, AccountInterface $account, Request $request = NULL) {
-    $role_ids = $account->getRoles();
-    $role = entity_load('user_role', end($role_ids));
     if (empty($request)) {
       $request = $this->requestStack->getCurrentRequest();
     }
 
-    list(, $operation) = explode('.', $route->getRequirement('_entity_access_revision'), 2);
+    $operation = $route->getRequirement('_entity_access_revision');
+    list(, $operation) = explode('.', $operation, 2);
 
     if ($operation === 'list') {
       $_entity = $request->attributes->get('_entity', $request->attributes->get($route->getOption('entity_type_id')));
@@ -106,7 +105,7 @@ class EntityRevisionRouteAccessCheck implements AccessInterface {
 
     if (!isset($this->accessCache[$cid])) {
       // Perform basic permission checks first.
-      if (!$account->hasPermission($map[$operation]) && !$account->hasPermission($type_map[$operation]) && !$account->hasPermission('administer nodes')) {
+      if (!$account->hasPermission($map[$operation]) && !$account->hasPermission($type_map[$operation]) && !$account->hasPermission('administer ' . $entity_type_id)) {
         $this->accessCache[$cid] = FALSE;
         return FALSE;
       }

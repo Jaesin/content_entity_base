@@ -23,8 +23,12 @@ class EntityBaseAccessControlHandler extends EntityAccessControlHandler {
   protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
     $access = parent::checkAccess($entity, $operation, $account);
 
-    if (in_array($operation, ['list', 'view'])) {
-      $access = $access->orIf(AccessResult::allowedIfHasPermission($account, 'access ' . $entity->getEntityTypeId()));
+    // List is here for revision access. You cannot have a "list" all entities
+    // _entity_access check because _entity_access requires a single entity.
+    if (in_array($operation, ['view', 'list'])) {
+      $access = $access
+        ->orIf(AccessResult::allowedIfHasPermission($account, 'access ' . $entity->getEntityTypeId()))
+        ->orIf(AccessResult::allowedIfHasPermission($account, 'administer ' . $entity->getEntityTypeId()));
     }
     return $access;
   }
