@@ -1,22 +1,20 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\content_entity_base\Entity\Access\EntityBasePermissions.
- */
-
 namespace Drupal\content_entity_base\Entity\Access;
 
 use Drupal\content_entity_base\Entity\EntityTypeBaseInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\UrlGeneratorTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines a class containing permission callbacks.
+ *
+ * @deprecated: This (typically proxied) class will be removed in the 8.x-2.x
+ * version of CEB in favor of using the `permission_provider` entity handler.
  */
 class EntityBasePermissions implements ContainerInjectionInterface {
 
@@ -31,9 +29,9 @@ class EntityBasePermissions implements ContainerInjectionInterface {
   /**
    * Creates Drupal\content_entity_base\Entity\Access\EntityBasePermissions.
    *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_manager
    */
-  public function __construct(EntityManagerInterface $entity_manager) {
+  public function __construct(EntityTypeManagerInterface $entity_manager) {
     $this->entityManager = $entity_manager;
   }
 
@@ -42,7 +40,7 @@ class EntityBasePermissions implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.manager')
+      $container->get('entity_type.manager')
     );
   }
 
