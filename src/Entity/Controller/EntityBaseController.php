@@ -114,6 +114,7 @@ class EntityBaseController extends EntityController {
     $bundle_entity_type_id = $entity_type->getBundleEntityType();
     $build = [
       '#theme' => 'entity_add_list',
+      '#bundle_type' => $bundle_entity_type_id,
       '#bundles' => [],
     ];
     if ($bundle_entity_type_id) {
@@ -156,7 +157,7 @@ class EntityBaseController extends EntityController {
       $build['#bundles'][$bundle_name] = [
         'label' => $bundle_info['label'],
         'description' => isset($bundle_info['description']) ? $bundle_info['description'] : '',
-        'add_link' => Link::createFromRoute($bundle_info['label'], $form_route_name, [$bundle_key => $bundle_name]),
+        'add_link' => Link::createFromRoute($bundle_info['label'], $form_route_name, [$bundle_argument => $bundle_name]),
       ];
     }
 

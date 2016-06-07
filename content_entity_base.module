@@ -33,6 +33,7 @@ function content_entity_base_theme_registry_alter(&$theme_registry) {
     $theme_registry['entity_add_list'] = [
       'variables' => [
         'bundles' => [],
+        'bundle_type' => NULL,
         'add_bundle_message' => NULL,
       ],
       'template' => 'ceb-entity-add-list',
