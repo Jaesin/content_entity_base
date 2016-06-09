@@ -54,6 +54,11 @@ function content_entity_base_theme_registry_alter(&$theme_registry) {
  *     available if the entity type uses bundle entities.
  */
 function content_entity_base_preprocess_entity_add_list(&$variables) {
+  // Don't run this code in 8.1 or later, because
+  // \template_preprocess_entity_add_list does the same already.
+  if (version_compare(\Drupal::VERSION, '8.1') === 1) {
+    return;
+  }
   foreach ($variables['bundles'] as $bundle_name => $bundle_info) {
     $variables['bundles'][$bundle_name]['description'] = [
       '#markup' => $bundle_info['description'],
