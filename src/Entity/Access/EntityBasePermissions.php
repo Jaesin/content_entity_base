@@ -6,7 +6,6 @@ use Drupal\content_entity_base\Entity\EntityTypeBaseInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Routing\UrlGeneratorTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -19,7 +18,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class EntityBasePermissions implements ContainerInjectionInterface {
 
   use StringTranslationTrait;
-  use UrlGeneratorTrait;
 
   /**
    * @var \Drupal\Core\Entity\EntityManagerInterface

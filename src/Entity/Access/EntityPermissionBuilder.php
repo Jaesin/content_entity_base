@@ -16,7 +16,6 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 class EntityPermissionBuilder implements ContainerInjectionInterface {
 
   use StringTranslationTrait;
-  use UrlGeneratorTrait;
 
   /**
    * @var \Drupal\Core\Entity\EntityManagerInterface

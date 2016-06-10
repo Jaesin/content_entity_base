@@ -24,9 +24,9 @@ class EntityTypeBaseController extends ControllerBase {
    *   The page title.
    */
   public function getEntityTypeFormTitle($entity_type = NULL, $title_format = 'default') {
-    $entity = $this->entityManager()->getStorage($entity_type)->getEntityType();
+    $entity = $this->entityTypeManager()->getStorage($entity_type)->getEntityType();
     $bundle_of_label = $entity instanceof EntityTypeBaseInterface
-      ? $this->entityManager()->getDefinition($entity->bundleOf())->getLabel()
+      ? $this->entityTypeManager()->getDefinition($entity->bundleOf())->getLabel()
       : '';
     // @todo Add indefinite articles for the labels like: https://github.com/Kaivosukeltaja/php-indefinite-article
     return $this->t($title_format, [
