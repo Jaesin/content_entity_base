@@ -36,11 +36,7 @@ class RevisionUiTest extends CEBKernelTestBase {
 
     $this->httpKernel = \Drupal::service('http_kernel');
 
-    $this->bundle = CebTestContentType::create([
-      'id' => 'test_bundle',
-      'revision' => TRUE,
-    ]);
-    $this->bundle->save();
+    $this->createFirstBundle();
 
     $root_user = User::create([
       'name' => 'admin',
@@ -53,7 +49,7 @@ class RevisionUiTest extends CEBKernelTestBase {
     $account_switcher = \Drupal::service('account_switcher');
 
     $entity = CebTestContent::create([
-      'type' => 'test_bundle',
+      'type' => $this->getFirstBundleID(),
     ]);
     $entity->save();
 
@@ -75,11 +71,9 @@ class RevisionUiTest extends CEBKernelTestBase {
     /** @var \Drupal\Core\Session\AccountSwitcherInterface $account_switcher */
     $account_switcher = \Drupal::service('account_switcher');
 
-    $entity = CebTestContent::create([
-      'type' => 'test_bundle',
-      'name' => 'original name',
-    ]);
+    $entity = $this->createTestEntity()->set('name', 'original name');
     $entity->save();
+
     $old_revision = clone $entity;
     $old_revision->isDefaultRevision(FALSE);
 
@@ -108,13 +102,15 @@ class RevisionUiTest extends CEBKernelTestBase {
     /** @var \Drupal\Core\Session\AccountSwitcherInterface $account_switcher */
     $account_switcher = \Drupal::service('account_switcher');
 
-    $entity = CebTestContent::create([
-      'type' => 'test_bundle',
-    ]);
+    $entity = $this->createTestEntity()->setRevisionCreationTime(NULL);
     $entity->save();
 
+    $first_revision_id = $entity->getRevisionId();
+
     $entity->setNewRevision(TRUE);
-    $entity->save();
+    $entity->set('name', $this->randomString())
+      ->setRevisionCreationTime(1420070400)
+      ->save();
 
     $user = $this->drupalCreateUser(['access ceb_test_content']);
     $account_switcher->switchTo($user);
@@ -133,6 +129,12 @@ class RevisionUiTest extends CEBKernelTestBase {
     // Ensure that we have a link to the current and prevision revision.
     $this->assertLinkByHref($entity->url('canonical'));
     $this->assertLinkByHref($entity->url('revision'));
+
+    $old_revision = \Drupal::entityTypeManager()->getStorage('ceb_test_content')->loadRevision($first_revision_id);
+    $this->assertLinkByHref($old_revision->url('revision'));
+
+    // Make sure null timestamps don't cause an error.
+    $this->assertText('Unknown revision date');
   }
 
 }
