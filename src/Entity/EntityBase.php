@@ -63,6 +63,11 @@ class EntityBase extends ContentEntityBase implements EntityBaseInterface {
       // one.
       $record->revision_log = $this->original->getRevisionLogMessage();
     }
+
+    if (isset($this->original) && $this->isNewRevision() && $this->getRevisionCreationTime() === $this->original->getRevisionCreationTime()) {
+      // Set the revision_timestamp if it has not been set to some new value.
+      $record->revision_timestamp = REQUEST_TIME;
+    }
   }
 
   /**
