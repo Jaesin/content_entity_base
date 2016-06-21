@@ -28,6 +28,7 @@ class EntityBaseForm extends ContentEntityForm {
   protected function prepareEntity() {
     parent::prepareEntity();
 
+    /** @var \Drupal\content_entity_base\Entity\EntityTypeBaseInterface $bundle */
     $bundle = $this->entity->getBundleEntity();
 
     // Set up default values, if required.
@@ -126,7 +127,7 @@ class EntityBaseForm extends ContentEntityForm {
     if ($this->entity->id()) {
       $form_state->setValue('id', $this->entity->id());
       $form_state->set('id', $this->entity->id());
-      $form_state->setRedirectUrl($this->entity->urlInfo('collection'));
+      $form_state->setRedirectUrl($this->entity->toUrl('collection'));
     }
     else {
       // In the unlikely case something went wrong on save, the entity will be

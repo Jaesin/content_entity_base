@@ -35,7 +35,7 @@ class EntityPermissionProvider implements EntityPermissionProviderInterface, Ent
   /**
    * The original permission base that was proxied by content entity modules.
    *
-   * @var \Drupal\content_entity_base\Entity\Access\EntityBasePermissionsInterface
+   * @var \Drupal\content_entity_base\Entity\Access\EntityPermissionProviderInterface
    */
   protected $entity_base_permissions;
 

@@ -122,7 +122,7 @@ class EntityRevisionRevertForm extends ConfirmFormBase {
       '@type' => $this->entityRevision->{$this->entityRevision->getEntityType()->getKey('bundle')}->entity->label(),
       '%title' => $this->entityRevision->label(),
     ]));
-    $form_state->setRedirectUrl($this->entityRevision->urlInfo('version-history'));
+    $form_state->setRedirectUrl($this->entityRevision->toUrl('version-history'));
   }
 
 }
