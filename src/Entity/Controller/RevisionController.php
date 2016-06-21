@@ -10,7 +10,6 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\user\EntityOwnerInterface;
 
@@ -89,12 +88,12 @@ class RevisionController extends ControllerBase {
 
     if ($revision instanceof RevisionLogInterface) {
       // Use revision link to link to revisions that are not active.
-      $date = $this->dateFormatter()->format($revision->getRevisionCreationTime(), 'short');
+      $link_label = empty($revision->getRevisionCreationTime()) ? 'Unknown revision date' : $this->dateFormatter()->format($revision->getRevisionCreationTime(), 'short');
       if (!$is_current) {
-        $link = $revision->toLink($date, 'revision');
+        $link = $revision->toLink($link_label, 'revision');
       }
       else {
-        $link = $revision->toLink($date);
+        $link = $revision->toLink($link_label);
       }
     }
     else {
@@ -107,10 +106,10 @@ class RevisionController extends ControllerBase {
     }
 
     if ($username) {
-      $template = '{% trans %}{{ date }} by {{ username }}{% endtrans %}{% if message %}<p class="revision-log">{{ message }}</p>{% endif %}';
+      $template = '{% trans %}{{ link }} by {{ username }}{% endtrans %}{% if message %}<p class="revision-log">{{ message }}</p>{% endif %}';
     }
     else {
-      $template = '{% trans %} {{ date }} {% endtrans %}{% if message %}<p class="revision-log">{{ message }}</p>{% endif %}';
+      $template = '{% trans %} {{ link }} {% endtrans %}{% if message %}<p class="revision-log">{{ message }}</p>{% endif %}';
     }
 
     $column = [
@@ -118,7 +117,7 @@ class RevisionController extends ControllerBase {
         '#type' => 'inline_template',
         '#template' => $template,
         '#context' => [
-          'date' => $link->toString(),
+          'link' => $link->toString(),
           'username' => $this->renderer()->renderPlain($username),
           'message' => ['#markup' => $markup, '#allowed_tags' => Xss::getHtmlTagList()],
         ],

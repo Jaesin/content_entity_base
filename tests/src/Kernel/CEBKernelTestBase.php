@@ -2,7 +2,9 @@
 
 namespace Drupal\Tests\content_entity_base\Kernel;
 
+use Drupal\ceb_test\Entity\CebTestContent;
 use Drupal\ceb_test\Entity\CebTestContentType;
+use Drupal\content_entity_base\Entity\EntityBaseInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
@@ -95,10 +97,32 @@ class CEBKernelTestBase extends KernelTestBase {
   }
 
   /**
+   * Helper to get the first bundle id.
+   */
+  protected function getFirstBundleID() {
+
+    $bundle = reset($this->bundles);
+    return $bundle->id();
+  }
+
+  /**
    * Creates additional bundles.
    */
   protected function createAdditionalBundle() {
     $this->bundles[] = $this->createTestBundle();
   }
 
+  /**
+   * Creates a test entity.
+   *
+   * @return EntityBaseInterface
+   *   The created entity.
+   */
+  protected function createTestEntity() {
+    return CebTestContent::create([
+      'type' => 'test_bundle',
+      'name' => $this->randomString(),
+      'body' => $this->randomString(),
+    ]);
+  }
 }
