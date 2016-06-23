@@ -7,11 +7,11 @@
 
 namespace Drupal\content_entity_base\Entity\Form;
 
+use Drupal\content_entity_base\Entity\Revision\RevisionLogInterface;
 use Drupal\Core\Datetime\DateFormatter;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\entity\Revision\EntityRevisionLogInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -43,10 +43,10 @@ class EntityRevisionDeleteForm extends ConfirmFormBase {
    *
    * @param \Drupal\Core\Datetime\DateFormatter $date_formatter
    *   The date formatter service.
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_manager
    *   The entity manager.
    */
-  public function __construct(DateFormatter $date_formatter, EntityManagerInterface $entity_manager) {
+  public function __construct(DateFormatter $date_formatter, EntityTypeManagerInterface $entity_manager) {
     $this->dateFormatter = $date_formatter;
     $this->entityManager = $entity_manager;
   }
@@ -72,7 +72,7 @@ class EntityRevisionDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    if ($this->entityRevision instanceof EntityRevisionLogInterface) {
+    if ($this->entityRevision instanceof RevisionLogInterface) {
       return t('Are you sure you want to delete the revision from %revision-date?', ['%revision-date' => $this->dateFormatter->format($this->entityRevision->getRevisionCreationTime())]);
     }
     else {
@@ -84,7 +84,7 @@ class EntityRevisionDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return $this->entityRevision->urlInfo('version-history');
+    return $this->entityRevision->toUrl('version-history');
   }
 
   /**
@@ -122,6 +122,6 @@ class EntityRevisionDeleteForm extends ConfirmFormBase {
       '@type' => $this->entityRevision->{$this->entityRevision->getEntityType()->getKey('bundle')}->entity->label(),
       '%title' => $this->entityRevision->label(),
     ]));
-    $form_state->setRedirectUrl($this->entityRevision->urlInfo('version-history'));
+    $form_state->setRedirectUrl($this->entityRevision->toUrl('version-history'));
   }
 }

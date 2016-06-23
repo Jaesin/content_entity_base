@@ -1,15 +1,9 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\content_entity_base\Entity\Routing\CrudUiRouteProvider.
- */
-
 namespace Drupal\content_entity_base\Entity\Routing;
 
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Routing\EntityRouteProviderInterface;
-use Drupal\entity\Routing\CreateHtmlRouteProvider;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -35,7 +29,7 @@ class CrudUiRouteProvider extends CreateHtmlRouteProvider implements EntityRoute
     $route = new Route($entity_type->getLinkTemplate('collection'));
     $route->setDefault('_title', $entity_type->getLabel() . ' content');
     $route->setDefault('_entity_list', $entity_type->id());
-    $route->setRequirement('_permission', 'view ' . $entity_type->id() . ' entity');
+    $route->setRequirement('_permission', 'administer ' . $entity_type->id());
     return $route;
   }
 

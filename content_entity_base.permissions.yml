@@ -1,0 +1,3 @@
+# Checks entity definitions for `permission_provider` callbacks.
+permission_callbacks:
+  - \Drupal\content_entity_base\Entity\Access\EntityPermissionBuilder::providedPermissions

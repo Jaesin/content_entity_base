@@ -15,30 +15,7 @@ use Drupal\KernelTests\KernelTestBase;
  * @coversDefaultClass \Drupal\content_entity_base\Entity\Storage\ContentEntityBaseStorage
  * @group content_entity_base
  */
-class ContentEntityBaseStorageTest extends KernelTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static $modules = ['content_entity_base', 'ceb_test', 'system', 'user'];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp() {
-    parent::setUp();
-
-    $this->installEntitySchema('ceb_test_content');
-    $this->installEntitySchema('user');
-    $this->installSchema('system', ['sequences']);
-  }
-
-  /**
-   * @return \Drupal\content_entity_base\Entity\Storage\RevisionableStorageInterface
-   */
-  protected function getStorage() {
-    return \Drupal::entityManager()->getStorage('ceb_test_content');
-  }
+class ContentEntityBaseStorageTest extends CEBKernelTestBase {
 
   public function testCountDefaultLanguageRevisions() {
     $storage = $this->getStorage();

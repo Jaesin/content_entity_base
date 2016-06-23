@@ -1,16 +1,9 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\content_entity_base\Kernel\RevisionUiTest.
- */
-
 namespace Drupal\Tests\content_entity_base\Kernel;
 
 use Drupal\ceb_test\Entity\CebTestContent;
 use Drupal\ceb_test\Entity\CebTestContentType;
-use Drupal\KernelTests\KernelTestBase;
-use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -19,12 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @group content_entity_base
  */
-class RevisionUiTest extends KernelTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static $modules = ['content_entity_base', 'ceb_test', 'system', 'user'];
+class RevisionUiTest extends CEBKernelTestBase {
 
   /**
    * @var \Symfony\Component\HttpKernel\HttpKernelInterface
@@ -42,18 +30,13 @@ class RevisionUiTest extends KernelTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->installEntitySchema('ceb_test_content');
-    $this->installEntitySchema('user');
-    $this->installSchema('system', ['router', 'sequences']);
+    $this->installConfig('system');
+
     \Drupal::service('router.builder')->rebuild();
 
     $this->httpKernel = \Drupal::service('http_kernel');
 
-    $this->bundle = CebTestContentType::create([
-      'id' => 'test_bundle',
-      'revision' => TRUE,
-    ]);
-    $this->bundle->save();
+    $this->createFirstBundle();
 
     $root_user = User::create([
       'name' => 'admin',
@@ -61,32 +44,12 @@ class RevisionUiTest extends KernelTestBase {
     $root_user->save();
   }
 
-  /**
-   * @return \Drupal\user\UserInterface
-   */
-  protected function drupalCreateUser(array $permissions = []) {
-    $role = Role::create([
-      'id' => 'test_role__' . $this->randomMachineName(),
-    ]);
-    foreach ($permissions as $permission) {
-      $role->grantPermission($permission);
-    }
-    $role->save();
-    $user = User::create([
-      'name' => 'test name  ' . $this->randomMachineName(),
-    ]);
-    $user->addRole($role->id());
-    $user->save();
-
-    return $user;
-  }
-
   public function testPages() {
     /** @var \Drupal\Core\Session\AccountSwitcherInterface $account_switcher */
     $account_switcher = \Drupal::service('account_switcher');
 
     $entity = CebTestContent::create([
-      'type' => 'test_bundle',
+      'type' => $this->getFirstBundleID(),
     ]);
     $entity->save();
 
@@ -97,7 +60,8 @@ class RevisionUiTest extends KernelTestBase {
     $this->assertEquals(200, $response->getStatusCode());
 
     $response = $this->httpKernel->handle(Request::create($entity->url('add-page')));
-    $this->assertEquals(200, $response->getStatusCode());
+    // Redirects automatically to the right form.
+    $this->assertEquals(302, $response->getStatusCode());
 
     $response = $this->httpKernel->handle(Request::create($entity->url('edit-form')));
     $this->assertEquals(200, $response->getStatusCode());
@@ -107,11 +71,9 @@ class RevisionUiTest extends KernelTestBase {
     /** @var \Drupal\Core\Session\AccountSwitcherInterface $account_switcher */
     $account_switcher = \Drupal::service('account_switcher');
 
-    $entity = CebTestContent::create([
-      'type' => 'test_bundle',
-      'name' => 'original name',
-    ]);
+    $entity = $this->createTestEntity()->set('name', 'original name');
     $entity->save();
+
     $old_revision = clone $entity;
     $old_revision->isDefaultRevision(FALSE);
 
@@ -130,23 +92,25 @@ class RevisionUiTest extends KernelTestBase {
     $this->assertEquals(200, $response->getStatusCode());
 
     $this->setRawContent($response->getContent());
-    $this->assertTitle('Revision of original name | ');
+    $date = \Drupal::service('date.formatter')->format($entity->getRevisionCreationTime());
+    $title = "Revision of original name from $date | ";
+    $this->assertTitle($title);
     $this->assertRaw('<h1>Revision of <em class="placeholder">original name</em>');
   }
 
   public function testRevisionHistoryPagesWithMoreThanOneRevision() {
     /** @var \Drupal\Core\Session\AccountSwitcherInterface $account_switcher */
     $account_switcher = \Drupal::service('account_switcher');
-    /** @var \Drupal\content_entity_base\Entity\Routing\EntityRevisionRouteAccessChecker $revision_access_check */
-    $revision_access_check = \Drupal::service('content_entity_base.entity_revision_access_checker');
 
-    $entity = CebTestContent::create([
-      'type' => 'test_bundle',
-    ]);
+    $entity = $this->createTestEntity()->setRevisionCreationTime(NULL);
     $entity->save();
+
+    $first_revision_id = $entity->getRevisionId();
 
     $entity->setNewRevision(TRUE);
-    $entity->save();
+    $entity->set('name', $this->randomString())
+      ->setRevisionCreationTime(1420070400)
+      ->save();
 
     $user = $this->drupalCreateUser(['access ceb_test_content']);
     $account_switcher->switchTo($user);
@@ -154,7 +118,6 @@ class RevisionUiTest extends KernelTestBase {
     $response = $this->httpKernel->handle(Request::create($entity->url('version-history')));
     $this->assertEquals(403, $response->getStatusCode());
 
-    $revision_access_check->resetAccessCache();
     $user = $this->drupalCreateUser(['access ceb_test_content', 'view all ceb_test_content revisions']);
     $account_switcher->switchTo($user);
 
@@ -166,6 +129,12 @@ class RevisionUiTest extends KernelTestBase {
     // Ensure that we have a link to the current and prevision revision.
     $this->assertLinkByHref($entity->url('canonical'));
     $this->assertLinkByHref($entity->url('revision'));
+
+    $old_revision = \Drupal::entityTypeManager()->getStorage('ceb_test_content')->loadRevision($first_revision_id);
+    $this->assertLinkByHref($old_revision->url('revision'));
+
+    // Make sure null timestamps don't cause an error.
+    $this->assertText('Unknown revision date');
   }
 
 }

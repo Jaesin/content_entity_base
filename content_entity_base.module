@@ -19,5 +19,48 @@ function content_entity_base_help($route_name, RouteMatchInterface $route_match)
       return $output;
 
     default:
+      return '';
+  }
+}
+
+/**
+ * Implements hook_theme_registry_alter.
+ */
+function content_entity_base_theme_registry_alter(&$theme_registry) {
+  // Check for entity_add_list which was added in 8.1.x.
+  if (!isset($theme_registry['entity_add_list'])) {
+    $theme_registry['entity_add_list'] = [
+      'variables' => [
+        'bundles' => [],
+        'bundle_type' => NULL,
+        'add_bundle_message' => NULL,
+      ],
+      'template' => 'ceb-entity-add-list',
+      'path' => drupal_get_path('module','content_entity_base').'/templates',
+    ];
+  }
+}
+
+/**
+ * Prepares variables for the list of available bundles.
+ *
+ * Default template: entity-add-list.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - bundles: An array of bundles with the label, description, add_link keys.
+ *   - add_bundle_message: The message shown when there are no bundles. Only
+ *     available if the entity type uses bundle entities.
+ */
+function content_entity_base_preprocess_entity_add_list(&$variables) {
+  // Don't run this code in 8.1 or later, because
+  // \template_preprocess_entity_add_list does the same already.
+  if (version_compare(\Drupal::VERSION, '8.1') === 1) {
+    return;
+  }
+  foreach ($variables['bundles'] as $bundle_name => $bundle_info) {
+    $variables['bundles'][$bundle_name]['description'] = [
+      '#markup' => $bundle_info['description'],
+    ];
   }
 }

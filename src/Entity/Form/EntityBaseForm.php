@@ -10,6 +10,7 @@ namespace Drupal\content_entity_base\Entity\Form;
 use Drupal\content_entity_base\Entity\EntityTypeBaseInterface;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Form controller for the custom entity edit forms.
@@ -27,6 +28,7 @@ class EntityBaseForm extends ContentEntityForm {
   protected function prepareEntity() {
     parent::prepareEntity();
 
+    /** @var \Drupal\content_entity_base\Entity\EntityTypeBaseInterface $bundle */
     $bundle = $this->entity->getBundleEntity();
 
     // Set up default values, if required.
@@ -41,6 +43,8 @@ class EntityBaseForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function form(array $form, FormStateInterface $form_state) {
+
+    $form = parent::form($form, $form_state);
 
     $entity_type = $this->entity->getEntityType();
 
@@ -74,33 +78,24 @@ class EntityBaseForm extends ContentEntityForm {
       '#access' => $this->entity->isNewRevision() || $account->hasPermission($entity_type->get('admin_permission')),
     ];
 
-    $form['revision_information']['revision'] = [
+    $form['revision'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Create new revision'),
       '#default_value' => $this->entity->isNewRevision(),
+      '#group' => 'revision_information',
       '#access' => $account->hasPermission($entity_type->get('admin_permission')),
     ];
 
-    // Check the revision log checkbox when the log textarea is filled in.
-    // This must not happen if "Create new revision" is enabled by default,
-    // since the state would auto-disable the checkbox otherwise.
-    if (!$this->entity->isNewRevision()) {
-      $form['revision_information']['revision']['#states'] = [
-        'checked' => [
-          'textarea[name="revision_log"]' => ['empty' => FALSE],
+    $form['revision_log'] += [
+      '#group' => 'revision_information',
+      '#states' => [
+        'visible' => [
+          'input[name="revision"]' => ['checked' => TRUE],
         ],
-      ];
-    }
-
-    $form['revision_information']['revision_log'] = [
-      '#type' => 'textarea',
-      '#title' => $this->t('Revision log message'),
-      '#rows' => 4,
-      '#default_value' => $this->entity->getRevisionLogMessage(),
-      '#description' => $this->t('Briefly describe the changes you have made.'),
+      ],
     ];
 
-    return parent::form($form, $form_state);
+    return $form;
   }
 
   /**
@@ -132,7 +127,7 @@ class EntityBaseForm extends ContentEntityForm {
     if ($this->entity->id()) {
       $form_state->setValue('id', $this->entity->id());
       $form_state->set('id', $this->entity->id());
-      $form_state->setRedirectUrl($this->entity->urlInfo('collection'));
+      $form_state->setRedirectUrl($this->entity->toUrl('collection'));
     }
     else {
       // In the unlikely case something went wrong on save, the entity will be
@@ -140,5 +135,31 @@ class EntityBaseForm extends ContentEntityForm {
       drupal_set_message($this->t('The entity could not be saved.'), 'error');
       $form_state->setRebuild();
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getEntityFromRouteMatch(RouteMatchInterface $route_match, $entity_type_id) {
+    if ($route_match->getRawParameter($entity_type_id) !== NULL) {
+      $entity = $route_match->getParameter($entity_type_id);
+    }
+    else {
+      $values = [];
+      // If the entity has bundles, fetch it from the route match.
+      $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
+      if ($bundle_key = $entity_type->getKey('bundle')) {
+        if (($bundle_entity_type_id = $entity_type->getBundleEntityType()) && $route_match->getRawParameter($bundle_entity_type_id)) {
+          $values[$bundle_key] = $route_match->getParameter($bundle_entity_type_id)->id();
+        }
+        elseif ($route_match->getRawParameter($bundle_key)) {
+          $values[$bundle_key] = $route_match->getParameter($bundle_key);
+        }
+      }
+
+      $entity = $this->entityTypeManager->getStorage($entity_type_id)->create($values);
+    }
+
+    return $entity;
   }
 }

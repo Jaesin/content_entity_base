@@ -7,15 +7,14 @@
 
 namespace Drupal\content_entity_base\Entity;
 
+use Drupal\content_entity_base\Entity\Revision\RevisionLogEntityTrait;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
-use Drupal\entity\Revision\EntityRevisionLogTrait;
-use Drupal\entity\EntityKeysFieldsTrait;
-use Drupal\user\EntityOwnerInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\user\UserInterface;
 
 /**
@@ -24,8 +23,7 @@ use Drupal\user\UserInterface;
 class EntityBase extends ContentEntityBase implements EntityBaseInterface {
 
   use EntityChangedTrait;
-  use EntityRevisionLogTrait;
-  use EntityKeysFieldsTrait;
+  use RevisionLogEntityTrait;
 
   /**
    * {@inheritdoc}
@@ -64,6 +62,11 @@ class EntityBase extends ContentEntityBase implements EntityBaseInterface {
       // revision and the user did not supply a revision log, keep the existing
       // one.
       $record->revision_log = $this->original->getRevisionLogMessage();
+    }
+
+    if (isset($this->original) && $this->isNewRevision() && $this->getRevisionCreationTime() === $this->original->getRevisionCreationTime()) {
+      // Set the revision_timestamp if it has not been set to some new value.
+      $record->revision_timestamp = REQUEST_TIME;
     }
   }
 
@@ -115,10 +118,12 @@ class EntityBase extends ContentEntityBase implements EntityBaseInterface {
       ->setTranslatable(TRUE)
       ->setDefaultValue(TRUE);
 
-    $fields['revision_log'] = BaseFieldDefinition::create('string_long')
-      ->setLabel(t('Revision log message'))
-      ->setDescription(t('The log entry explaining the changes in this revision.'))
-      ->setRevisionable(TRUE);
+    $fields['type'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Entity type (Bundle)'))
+      ->setDescription(t('The entity type.'))
+      ->setSetting('target_type', $entity_type->getBundleEntityType());
+
+    $fields += static::revisionLogBaseFieldDefinitions($entity_type);
 
     $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel(t('Created'))
@@ -141,6 +146,73 @@ class EntityBase extends ContentEntityBase implements EntityBaseInterface {
 
     return $fields;
   }
+
+  /**
+   * Returns the base field definitions for entity keys.
+   *
+   * @internal Reference will be replaced with parent::baseFieldDefinitions in
+   *   8.x-1.x of this module.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type.
+   *
+   * @return \Drupal\Core\Field\BaseFieldDefinition[]
+   */
+  protected static function entityKeysBaseFieldDefinitions(EntityTypeInterface $entity_type) {
+    $fields = [];
+    if ($entity_type->hasKey('id')) {
+      $fields[$entity_type->getKey('id')] = BaseFieldDefinition::create('integer')
+        ->setLabel(new TranslatableMarkup('ID'))
+        ->setReadOnly(TRUE)
+        ->setSetting('unsigned', TRUE);
+    }
+    if ($entity_type->hasKey('uuid')) {
+      $fields[$entity_type->getKey('uuid')] = BaseFieldDefinition::create('uuid')
+        ->setLabel(new TranslatableMarkup('UUID'))
+        ->setReadOnly(TRUE);
+    }
+    if ($entity_type->hasKey('revision')) {
+      $fields[$entity_type->getKey('revision')] = BaseFieldDefinition::create('integer')
+        ->setLabel(new TranslatableMarkup('Revision ID'))
+        ->setReadOnly(TRUE)
+        ->setSetting('unsigned', TRUE);
+    }
+    if ($entity_type->hasKey('langcode')) {
+      $fields[$entity_type->getKey('langcode')] = BaseFieldDefinition::create('language')
+        ->setLabel(new TranslatableMarkup('Language'))
+        ->setDisplayOptions('view', [
+          'type' => 'hidden',
+        ])
+        ->setDisplayOptions('form', [
+          'type' => 'language_select',
+          'weight' => 2,
+        ]);
+      if ($entity_type->isRevisionable()) {
+        $fields[$entity_type->getKey('langcode')]->setRevisionable(TRUE);
+      }
+      if ($entity_type->isTranslatable()) {
+        $fields[$entity_type->getKey('langcode')]->setTranslatable(TRUE);
+      }
+    }
+    if ($entity_type->hasKey('bundle')) {
+      if ($bundle_entity_type_id = $entity_type->getBundleEntityType()) {
+        $fields[$entity_type->getKey('bundle')] = BaseFieldDefinition::create('entity_reference')
+          ->setLabel($entity_type->getBundleLabel())
+          ->setSetting('target_type', $bundle_entity_type_id)
+          ->setRequired(TRUE)
+          ->setReadOnly(TRUE);
+      }
+      else {
+        $fields[$entity_type->getKey('bundle')] = BaseFieldDefinition::create('string')
+          ->setLabel($entity_type->getBundleLabel())
+          ->setRequired(TRUE)
+          ->setReadOnly(TRUE);
+      }
+    }
+
+    return $fields;
+  }
+
 
   /**
    * {@inheritdoc}
