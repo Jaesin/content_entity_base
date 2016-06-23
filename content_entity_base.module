@@ -14,9 +14,10 @@ function content_entity_base_help($route_name, RouteMatchInterface $route_match)
   switch ($route_name) {
     // Main module help for the content_entity_base module.
     case 'help.page.content_entity_base':
-      $output = '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('Provides base classes for bundle-able custom entities.') . '</p>';
-      return $output;
+      return t('<h3>@title</h3><p>@help_text</p>', [
+        '@title' => 'About',
+        '@help_text' => 'Provides base classes for bundle-able custom entities.',
+      ]);
 
     default:
       return '';

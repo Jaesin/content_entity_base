@@ -26,7 +26,7 @@ class EntityTypeBaseForm extends EntityForm {
     $form = parent::form($form, $form_state);
 
     // Get the content entity type.
-    $content_entity_id = $this->getContentEntityTypeID();
+    $content_entity_type = $this->getContentEntityTypeID();
     // Get the content entity type.
     $content_entity_label = $this->getContentEntityTypeLabel();
 
@@ -34,10 +34,10 @@ class EntityTypeBaseForm extends EntityForm {
     $entity_type = $this->entity;
     // Get the default field definitions or the overridden settings if editing.
     if ($this->operation == 'add') {
-      $fields = $this->entityManager->getBaseFieldDefinitions($content_entity_id);
+      $fields = $this->entityManager->getBaseFieldDefinitions($content_entity_type);
     }
     else {
-      $fields = $this->entityManager->getFieldDefinitions($content_entity_id, $entity_type->id());
+      $fields = $this->entityManager->getFieldDefinitions($content_entity_type, $entity_type->id());
     }
 
     $form['label'] = array(
@@ -96,7 +96,7 @@ class EntityTypeBaseForm extends EntityForm {
       '#title' => t('Create new revision'),
       '#default_value' => $entity_type->shouldCreateNewRevision(),
       '#group' => 'workflow',
-      '#description' => t('Create a new revision by default for this %content_label type.', ['%content_label' => $content_entity_label])
+      '#description' => t('Create a new revision by default for this "%content_label" type.', ['%content_label' => $content_entity_label])
     );
 
     if ($this->moduleHandler->moduleExists('language')) {
@@ -106,11 +106,11 @@ class EntityTypeBaseForm extends EntityForm {
         '#group' => 'additional_settings',
       );
 
-      $language_configuration = ContentLanguageSettings::loadByEntityTypeBundle($content_entity_id, $entity_type->id());
+      $language_configuration = ContentLanguageSettings::loadByEntityTypeBundle($content_entity_type, $entity_type->id());
       $form['language']['language_configuration'] = array(
         '#type' => 'language_configuration',
         '#entity_information' => array(
-          'entity_type' => $content_entity_id,
+          'entity_type' => $content_entity_type,
           'bundle' => $entity_type->id(),
         ),
         '#default_value' => $language_configuration,
