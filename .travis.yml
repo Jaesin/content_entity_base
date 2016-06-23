@@ -8,8 +8,8 @@ php:
   - hhvm
 
 env:
-  - DRUPAL_VERSION=8.0.x ENTITY_VERSION=8.x-0.x
   - DRUPAL_VERSION=8.1.x ENTITY_VERSION=8.x-1.x
+  - DRUPAL_VERSION=8.2.x ENTITY_VERSION=8.x-1.x
 
 matrix:
   allow_failures:
