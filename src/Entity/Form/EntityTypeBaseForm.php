@@ -32,6 +32,11 @@ class EntityTypeBaseForm extends EntityForm {
 
     /* @var \Drupal\content_entity_base\Entity\EntityTypeBaseInterface $entity_type */
     $entity_type = $this->entity;
+
+    // Get the bundle entity type definition and the exportable entries.
+    $type_definition = $this->entityTypeManager->getDefinition($entity_type->getEntityTypeId());
+    $exportable_config = $type_definition->get('config_export');
+
     // Get the default field definitions or the overridden settings if editing.
     if ($this->operation == 'add') {
       $fields = $this->entityManager->getBaseFieldDefinitions($content_entity_type);
@@ -72,18 +77,24 @@ class EntityTypeBaseForm extends EntityForm {
       ),
     );
 
-    $form['submission'] = array(
-      '#type' => 'details',
-      '#title' => t('Submission form settings'),
-      '#group' => 'additional_settings',
-      '#open' => TRUE,
-    );
-    $form['submission']['name_label'] = array(
-      '#title' => t('Name field label'),
-      '#type' => 'textfield',
-      '#default_value' => $fields['name']->getLabel(),
-      '#required' => TRUE,
-    );
+    if (in_array('name_label', $exportable_config)) {
+      $form['submission'] = array(
+        '#type' => 'details',
+        '#title' => t('Submission form settings'),
+        '#group' => 'additional_settings',
+        '#open' => TRUE,
+      );
+
+      $form['submission']['name_label'] = array(
+        '#title' => t('Title label'),
+        '#type' => 'textfield',
+        '#default_value' => $fields['name']->getLabel(),
+        '#required' => TRUE,
+        '#description' => t(' default all entities have a name field. This field 
+        is used to identify the entity but may or may not be displayed. By value 
+        set here will be used in the entity creation and edit forms.'),
+      );
+    }
 
     $form['workflow'] = array(
       '#type' => 'details',

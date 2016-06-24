@@ -9,6 +9,8 @@ ceb_test.content_type.*:
     label:
       type: label
       label: 'Label'
+    name_label:
+      type: string
     uuid:
       type: string
     description:
