@@ -146,6 +146,7 @@ class ContentEntityUITest extends CEBKernelTestBase {
     $this->assertEquals(200, $response->getStatusCode());
     $this->setRawContent($response->getContent());
     $this->assertTitle('Add ceb test | ');
+    $this->assertPattern('/\<label[^\>]+\>Administrative Title\<\/label\>/', "The default name label (Administrative Title) was used in the add form.");
 
     // Create another bundle.
     $name_label = $this->randomMachineName();
