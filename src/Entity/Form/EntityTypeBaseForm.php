@@ -34,8 +34,7 @@ class EntityTypeBaseForm extends EntityForm {
     $entity_type = $this->entity;
 
     // Get the bundle entity type definition and the exportable entries.
-    $type_definition = $this->entityTypeManager->getDefinition($entity_type->getEntityTypeId());
-    $exportable_config = $type_definition->get('config_export');
+    $exportable_config = $entity_type->getEntityType()->get('config_export');
 
     // Get the default field definitions or the overridden settings if editing.
     if ($this->operation == 'add') {
@@ -158,16 +157,6 @@ class EntityTypeBaseForm extends EntityForm {
     if ($status != SAVED_UPDATED) {
       $this->contentAddBodyField($entity_type->id());
       $update_verb = 'added';
-    }
-
-    // Get any overriden field settings for this bundle.
-    $fields = $this->entityManager->getFieldDefinitions($content_entity_type, $entity_type->id());
-    // Update title field definition.
-    $name_field = $fields['name'];
-    $name_label = $form_state->getValue('name_label');
-    // Set the name label if it hsa been updated.
-    if ($name_field->getLabel() != $name_label) {
-      $name_field->getConfig($entity_type->id())->setLabel($name_label)->save();
     }
 
     drupal_set_message(t('%content_label entity type %label has been @verb.', [
