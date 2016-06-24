@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\content_entity_base\Entity\Form\EntityTypeBaseForm.
- */
-
 namespace Drupal\content_entity_base\Entity\Form;
 
 use Drupal\Core\Entity\EntityForm;
@@ -33,6 +28,17 @@ class EntityTypeBaseForm extends EntityForm {
     /* @var \Drupal\content_entity_base\Entity\EntityTypeBaseInterface $entity_type */
     $entity_type = $this->entity;
 
+    // Get the bundle entity type definition and the exportable entries.
+    $exportable_config = $entity_type->getEntityType()->get('config_export');
+
+    // Get the default field definitions or the overridden settings if editing.
+    if ($this->operation == 'add') {
+      $fields = $this->entityManager->getBaseFieldDefinitions($content_entity_type);
+    }
+    else {
+      $fields = $this->entityManager->getFieldDefinitions($content_entity_type, $entity_type->id());
+    }
+
     $form['label'] = array(
       '#type' => 'textfield',
       '#title' => t('Label'),
@@ -58,10 +64,44 @@ class EntityTypeBaseForm extends EntityForm {
       '#title' => t('Description'),
     );
 
+    $form['additional_settings'] = array(
+      '#type' => 'vertical_tabs',
+      '#attached' => array(
+        'library' => array('node/drupal.content_types'),
+      ),
+    );
+
+    if (in_array('name_label', $exportable_config)) {
+      $form['submission'] = array(
+        '#type' => 'details',
+        '#title' => t('Submission settings'),
+        '#group' => 'additional_settings',
+        '#open' => TRUE,
+      );
+
+      $form['name_label'] = array(
+        '#title' => t('Title label'),
+        '#type' => 'textfield',
+        '#default_value' => $fields['name']->getLabel(),
+        '#required' => TRUE,
+        '#description' => t(' default all entities have a name field. This field 
+          is used to identify the entity but may or may not be displayed. By value 
+          set here will be used in the entity creation and edit forms.'),
+        '#group' => 'submission',
+      );
+    }
+
+    $form['workflow'] = array(
+      '#type' => 'details',
+      '#title' => t('Publishing options'),
+      '#group' => 'additional_settings',
+    );
+
     $form['revision'] = array(
       '#type' => 'checkbox',
       '#title' => t('Create new revision'),
       '#default_value' => $entity_type->shouldCreateNewRevision(),
+      '#group' => 'workflow',
       '#description' => t('Create a new revision by default for this "%content_label" type.', ['%content_label' => $content_entity_label])
     );
 

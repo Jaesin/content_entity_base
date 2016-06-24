@@ -75,10 +75,11 @@ class CEBKernelTestBase extends KernelTestBase {
   /**
    * Creates a test entity bundle.
    *
+   * @param array $config
    * @return \Drupal\ceb_test\Entity\CebTestContentType|static
    */
-  protected function createTestBundle() {
-    $test_bundle = CebTestContentType::create([
+  protected function createTestBundle($config = []) {
+    $test_bundle = CebTestContentType::create($config + [
       'id' => $this->randomMachineName(),
       'label' => $this->randomString(),
       'revision' => TRUE,
@@ -106,10 +107,15 @@ class CEBKernelTestBase extends KernelTestBase {
   }
 
   /**
-   * Creates additional bundles.
+   * Creates a test entity bundle.
+   *
+   * @param array $config
+   * @return \Drupal\ceb_test\Entity\CebTestContentType|static
    */
-  protected function createAdditionalBundle() {
-    $this->bundles[] = $this->createTestBundle();
+  protected function createAdditionalBundle($config = []) {
+    $this->bundles[] = $this->createTestBundle($config);
+
+    return end($this->bundles);
   }
 
   /**
