@@ -84,9 +84,9 @@ class EntityTypeBaseForm extends EntityForm {
         '#type' => 'textfield',
         '#default_value' => $fields['name']->getLabel(),
         '#required' => TRUE,
-        '#description' => t(' default all entities have a name field. This field 
-          is used to identify the entity but may or may not be displayed. By value 
-          set here will be used in the entity creation and edit forms.'),
+        '#description' => t('This field is used to identify the entity but may
+          or may not be displayed. By value set here will be used in the entity
+          creation and edit forms.'),
         '#group' => 'submission',
       );
     }
