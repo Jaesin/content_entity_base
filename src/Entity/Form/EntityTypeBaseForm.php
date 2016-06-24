@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\content_entity_base\Entity\Form\EntityTypeBaseForm.
- */
-
 namespace Drupal\content_entity_base\Entity\Form;
 
 use Drupal\Core\Entity\EntityForm;
@@ -79,19 +74,20 @@ class EntityTypeBaseForm extends EntityForm {
     if (in_array('name_label', $exportable_config)) {
       $form['submission'] = array(
         '#type' => 'details',
-        '#title' => t('Submission form settings'),
+        '#title' => t('Submission settings'),
         '#group' => 'additional_settings',
         '#open' => TRUE,
       );
 
-      $form['submission']['name_label'] = array(
+      $form['name_label'] = array(
         '#title' => t('Title label'),
         '#type' => 'textfield',
         '#default_value' => $fields['name']->getLabel(),
         '#required' => TRUE,
         '#description' => t(' default all entities have a name field. This field 
-        is used to identify the entity but may or may not be displayed. By value 
-        set here will be used in the entity creation and edit forms.'),
+          is used to identify the entity but may or may not be displayed. By value 
+          set here will be used in the entity creation and edit forms.'),
+        '#group' => 'submission',
       );
     }
 
