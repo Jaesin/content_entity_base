@@ -1,0 +1,18 @@
+content_entity_base_entity_type_base:
+  type: config_entity
+  label: 'Entity type base'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    revision:
+      type: boolean
+      label: 'Create new revision'
+    description:
+      type: string
+      label: 'Description'
+    name_label:
+      type: string
