@@ -52,7 +52,7 @@ class CEBKernelTestBase extends KernelTestBase {
    * Creates a test user.
    *
    * @param array $permissions
-   * @return \Drupal\user\UserInterface|static
+   * @return \Drupal\user\UserInterface
    */
   protected function drupalCreateUser(array $permissions = []) {
     $role = Role::create([

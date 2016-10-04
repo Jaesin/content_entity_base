@@ -73,34 +73,21 @@ class EntityCreateAnyAccessCheck implements AccessInterface {
       return $access_control_handler->createAccess(NULL, $account, [], TRUE);
     }
 
-    $access = AccessResult::neutral();
-    $bundles = array_keys($this->entityTypeBundleInfo->getBundleInfo($entity_type_id));
+    list($entity_type, $bundle) = explode(':', $route->getRequirement($this->requirementsKey) . ':');
 
-    // Include list cache tag as access might change if more bundles are added.
-    if ($entity_type->getBundleEntityType()) {
-      $access->addCacheTags($this->entityTypeManager->getDefinition($entity_type->getBundleEntityType())->getListCacheTags());
-
-      // Check if the user is allowed to create new bundles. If so, allow
-      // access, so the add page can show a link to create one.
-      // @see \Drupal\Core\Entity\Controller\EntityController::addPage()
-      $bundle_access_control_handler = $this->entityTypeManager->getAccessControlHandler($entity_type->getBundleEntityType());
-      $access = $access->orIf($bundle_access_control_handler->createAccess(NULL, $account, [], TRUE));
-      if ($access->isAllowed()) {
-        return $access;
+    // The bundle argument can contain request argument placeholders like
+    // {name}, loop over the raw variables and attempt to replace them in the
+    // bundle name. If a placeholder does not exist, it won't get replaced.
+    if ($bundle && strpos($bundle, '{') !== FALSE) {
+      foreach ($route_match->getRawParameters()->all() as $name => $value) {
+        $bundle = str_replace('{' . $name . '}', $value, $bundle);
+      }
+      // If we were unable to replace all placeholders, deny access.
+      if (strpos($bundle, '{') !== FALSE) {
+        return AccessResult::neutral();
       }
     }
-
-    // Check whether an entity of any bundle may be created.
-    foreach ($bundles as $bundle) {
-      $access = $access->orIf($access_control_handler->createAccess($bundle, $account, [], TRUE));
-      // In case there is a least one bundle user can create entities for,
-      // access is allowed.
-      if ($access->isAllowed()) {
-        break;
-      }
-    }
-
-    return $access;
+    return $this->entityTypeManager->getAccessControlHandler($entity_type)->createAccess($bundle, $account, [], TRUE);
   }
 
 }
