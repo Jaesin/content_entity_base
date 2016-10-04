@@ -66,7 +66,7 @@ class PermissionUiTest extends CEBKernelTestBase {
     $this->assertEquals(200, $response->getStatusCode());
 
     $this->setRawContent($response->getContent());
-    $this->assertTitle('Permissions | ');
+    $this->assertTitle('Permissions | Drupal');
 
     $drupal_version_parts = explode('.',\Drupal::VERSION );
     $drupal_minor = $drupal_version_parts[1];

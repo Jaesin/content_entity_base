@@ -128,7 +128,7 @@ class ContentEntityUITest extends CEBKernelTestBase {
     $response = $this->httpKernel->handle(Request::create('/admin/ceb_test_content/add/'. $this->bundles[0]->id()));
     $this->assertEquals(200, $response->getStatusCode());
     $this->setRawContent($response->getContent());
-    $this->assertTitle('Add ceb test | ');
+    $this->assertTitle('Add ceb test | Drupal');
 
     // #### CEB ADMIN ####
     $this->account_switcher->switchTo($this->users['ceb_admin']);
@@ -145,7 +145,7 @@ class ContentEntityUITest extends CEBKernelTestBase {
     $response = $this->httpKernel->handle(Request::create('/admin/ceb_test_content/add/'. $this->bundles[0]->id()));
     $this->assertEquals(200, $response->getStatusCode());
     $this->setRawContent($response->getContent());
-    $this->assertTitle('Add ceb test | ');
+    $this->assertTitle('Add ceb test | Drupal');
     $this->assertPattern('/\<label[^\>]+\>Administrative Title\<\/label\>/', "The default name label (Administrative Title) was used in the add form.");
 
     // Create another bundle.
