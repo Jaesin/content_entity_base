@@ -32,6 +32,13 @@ class EntityTypeBase extends ConfigEntityBundleBase implements EntityTypeBaseInt
   protected $label;
 
   /**
+   * The name label.
+   *
+   * @var string
+   */
+  protected $name_label;
+
+  /**
    * The default revision setting for custom entities of this type.
    *
    * @var bool
