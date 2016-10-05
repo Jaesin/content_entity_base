@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- *   Contains \Drupal\content_entity_base\Entity\Listing\EntityBaseListBuilder.
- */
-
 namespace Drupal\content_entity_base\Entity\Listing;
 
 use Drupal\Core\Entity\EntityInterface;
@@ -20,7 +15,7 @@ class EntityBaseListBuilder extends EntityListBuilder {
    */
   public function buildHeader() {
     return [
-      'label' => $this->t('')
+      'label' => '',
     ] + parent::buildHeader();
   }
 
@@ -66,4 +61,5 @@ class EntityBaseListBuilder extends EntityListBuilder {
 
     return $build;
   }
+
 }

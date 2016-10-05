@@ -20,7 +20,7 @@ class ContentEntityBaseServiceProvider extends ServiceProviderBase {
    */
   public function alter(ContainerBuilder $container) {
     // Get the entity_create_any access check if it exists.
-    if ( ! $container->has('access_check.entity_create_any') ) {
+    if ( !$container->has('access_check.entity_create_any') ) {
       // Add a back port of the core 8.1.x access_check.entity_create_any.
       $container
         ->register('access_check.entity_create_any', EntityCreateAnyAccessCheck::class)
@@ -30,7 +30,7 @@ class ContentEntityBaseServiceProvider extends ServiceProviderBase {
     }
 
     // Get the entity_revision param converter if it exists.
-    if ( ! $container->has('paramconverter.entity_revision') ) {
+    if ( !$container->has('paramconverter.entity_revision') ) {
       // Add a back port of the core 8.1.x paramconverter.entity_revision.
       $container
         ->register('paramconverter.entity_revision', EntityRevisionParamConverter::class)
@@ -39,7 +39,7 @@ class ContentEntityBaseServiceProvider extends ServiceProviderBase {
     }
 
     // Get the entity_revision route enhancer if it exists.
-    if ( ! $container->has('route_enhancer.entity_revision') ) {
+    if ( !$container->has('route_enhancer.entity_revision') ) {
       // Add a back port of the core 8.1.x route_enhancer.entity_revision.
       $container
         ->register('route_enhancer.entity_revision', EntityRevisionRouteEnhancer::class)
@@ -47,7 +47,7 @@ class ContentEntityBaseServiceProvider extends ServiceProviderBase {
     }
 
     // Get the entity_revision access check if it exists.
-    if ( ! $container->has('access_check.entity.revision') ) {
+    if ( !$container->has('access_check.entity.revision') ) {
       // Add a access check for entity revisions.
       $container
         ->register('access_check.entity.revision', EntityRevisionRouteAccessCheck::class)
@@ -71,4 +71,5 @@ class ContentEntityBaseServiceProvider extends ServiceProviderBase {
       ->setClass(EntityRevisionRouteAccessCheck::class)
       ->setArguments([new Reference('entity_type.manager'), new Reference('request_stack')]);
   }
+
 }

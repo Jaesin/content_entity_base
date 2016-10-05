@@ -1,13 +1,7 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\content_entity_base\Entity\Views\EntityBaseViewsData.
- */
-
 namespace Drupal\content_entity_base\Entity\Views;
 
-use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\views\EntityViewsData;
 
 /**
@@ -67,4 +61,5 @@ class EntityBaseViewsData extends EntityViewsData {
 
     return $data;
   }
+
 }

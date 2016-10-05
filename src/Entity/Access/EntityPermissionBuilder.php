@@ -5,7 +5,6 @@ namespace Drupal\content_entity_base\Entity\Access;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Routing\UrlGeneratorTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 
@@ -54,7 +53,7 @@ class EntityPermissionBuilder implements ContainerInjectionInterface {
 
     $permissions = [];
     foreach ($providers as $entity_type_id => $handler) {
-      $permissions +=  $handler->entityPermissions();
+      $permissions += $handler->entityPermissions();
     }
     return $permissions;
   }

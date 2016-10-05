@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- *   Contains \Drupal\content_entity_base\ParamConverter\EntityDefinitionConverter.
- */
 
 namespace Drupal\content_entity_base\ParamConverter;
 
@@ -29,4 +25,5 @@ class EntityDefinitionConverter extends EntityConverter {
   public function applies($definition, $name, Route $route) {
     return (!empty($definition['type']) && $definition['type'] == 'entity_definition');
   }
+
 }

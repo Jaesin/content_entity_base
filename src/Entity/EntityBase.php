@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\content_entity_base\Entity\EntityBase.
- */
-
 namespace Drupal\content_entity_base\Entity;
 
 use Drupal\content_entity_base\Entity\Revision\RevisionLogEntityTrait;
@@ -297,4 +292,5 @@ class EntityBase extends ContentEntityBase implements EntityBaseInterface {
       ? $this->{$this->getEntityType()->getKey('bundle')}->entity
       : FALSE;
   }
+
 }

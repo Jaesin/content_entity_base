@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\content_entity_base\Entity\Form\EntityRevisionRevertForm.
- */
-
 namespace Drupal\content_entity_base\Entity\Form;
 
 use Drupal\content_entity_base\Entity\Revision\RevisionLogInterface;

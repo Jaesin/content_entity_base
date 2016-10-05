@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\content_entity_base\Entity\Access\EntityBaseAccessControlHandler.
- */
-
 namespace Drupal\content_entity_base\Entity\Access;
 
 use Drupal\Core\Access\AccessResult;

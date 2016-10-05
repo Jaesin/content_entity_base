@@ -1,13 +1,7 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\content_entity_base\Entity\Form\EntityBaseForm.
- */
-
 namespace Drupal\content_entity_base\Entity\Form;
 
-use Drupal\content_entity_base\Entity\EntityTypeBaseInterface;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -17,7 +11,8 @@ use Drupal\Core\Routing\RouteMatchInterface;
  */
 class EntityBaseForm extends ContentEntityForm {
 
-  /** @var \Drupal\content_entity_base\Entity\EntityBaseInterface */
+  /**
+ * @var \Drupal\content_entity_base\Entity\EntityBaseInterface */
   protected $entity;
 
   /**
@@ -162,4 +157,5 @@ class EntityBaseForm extends ContentEntityForm {
 
     return $entity;
   }
+
 }

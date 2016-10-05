@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\content_entity_base\Entity\EntityBaseInterface.
- */
-
 namespace Drupal\content_entity_base\Entity;
 
 use Drupal\content_entity_base\Entity\Revision\RevisionLogInterface;

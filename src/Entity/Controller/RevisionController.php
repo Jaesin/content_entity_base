@@ -3,7 +3,6 @@
 namespace Drupal\content_entity_base\Entity\Controller;
 
 use Drupal\Component\Utility\Xss;
-use Drupal\content_entity_base\Entity\EntityBaseInterface;
 use Drupal\content_entity_base\Entity\Revision\RevisionLogInterface;
 use Drupal\content_entity_base\Entity\Routing\RevisionObjectExtractionTrait;
 use Drupal\Core\Access\AccessResult;

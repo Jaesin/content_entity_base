@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @see tests/modules/ceb_test/src/Entity/CebTestContent.php
  */
-class EntityPermissionProvider implements EntityPermissionProviderInterface, EntityHandlerInterface  {
+class EntityPermissionProvider implements EntityPermissionProviderInterface, EntityHandlerInterface {
 
   use StringTranslationTrait;
 
@@ -67,7 +67,7 @@ class EntityPermissionProvider implements EntityPermissionProviderInterface, Ent
    */
   public function entityPermissions() {
     // Use the legacy permission provider until it is removed.
-    $legacy_permission_provider =  EntityBasePermissions::create(\Drupal::getContainer());
+    $legacy_permission_provider = EntityBasePermissions::create(\Drupal::getContainer());
 
     $perms = $legacy_permission_provider->entityPermissions($this->entity_type);
 
@@ -78,4 +78,5 @@ class EntityPermissionProvider implements EntityPermissionProviderInterface, Ent
 
     return $perms;
   }
+
 }

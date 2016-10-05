@@ -191,7 +191,7 @@ class EntityTypeBaseForm extends EntityForm {
     $field = FieldConfig::loadByName($content_entity_type, $entity_type_id, 'body');
     if (empty($field)) {
       $field = entity_create('field_config', array(
-        'field_storage' =>  FieldStorageConfig::loadByName($content_entity_type, 'body'),
+        'field_storage' => FieldStorageConfig::loadByName($content_entity_type, 'body'),
         'bundle' => $entity_type_id,
         'label' => $label,
         'settings' => array('display_summary' => FALSE),

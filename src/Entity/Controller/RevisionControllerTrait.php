@@ -1,19 +1,10 @@
 <?php
 
-/**
- * @file
- * Contains
- *   \Drupal\content_entity_base\Entity\Controller\RevisionControllerTrait.
- */
-
 namespace Drupal\content_entity_base\Entity\Controller;
 
 use Drupal\Core\Entity\ContentEntityInterface;
-use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Defines a trait for common revision UI functionality.
@@ -84,9 +75,8 @@ trait RevisionControllerTrait {
    *   The entity to build a revert revision link for.
    *
    * @return array A link render array.
-   * A link render array.
+   *   A link render array.
    * @internal param int $revision_id The revision ID of the revert link.*   The revision ID of the revert link.
-   *
    */
   abstract protected function buildRevertRevisionLink(EntityInterface $entity_revision);
 
@@ -97,9 +87,8 @@ trait RevisionControllerTrait {
    *   The entity to build a delete revision link for.
    *
    * @return array A link render array.
-   * A link render array.
+   *   A link render array.
    * @internal param int $revision_id The revision ID of the delete link.*   The revision ID of the delete link.
-   *
    */
   abstract protected function buildDeleteRevisionLink(EntityInterface $entity_revision);
 
@@ -142,7 +131,7 @@ trait RevisionControllerTrait {
     $vids = $entity_storage->revisionIds($entity);
     $entity_revisions = array_combine($vids, array_map(function($vid) use ($entity_storage) {
       return $entity_storage->loadRevision($vid);
-      }, $vids));
+    }, $vids));
 
     $latest_revision = TRUE;
 

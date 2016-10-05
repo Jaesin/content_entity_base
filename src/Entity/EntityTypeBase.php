@@ -1,12 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\content_entity_base\Entity\EntityTypeBase.
- *
- * @todo Can we use a generic bundle across multiple custom entity types?
- */
-
 namespace Drupal\content_entity_base\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;

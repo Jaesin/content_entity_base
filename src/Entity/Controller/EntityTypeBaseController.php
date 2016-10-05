@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\content_entity_base\Entity\Controller\EntityTypeBaseController.
- */
-
 namespace Drupal\content_entity_base\Entity\Controller;
 
 use Drupal\content_entity_base\Entity\EntityTypeBaseInterface;
@@ -35,4 +30,5 @@ class EntityTypeBaseController extends ControllerBase {
       '%type' => $entity->label(),
     ]);
   }
+
 }

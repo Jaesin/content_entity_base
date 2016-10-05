@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\content_entity_base\Entity\Storage\ContentEntityBaseStorage.
- */
-
 namespace Drupal\content_entity_base\Entity\Storage;
 
 use Drupal\Core\Entity\ContentEntityInterface;

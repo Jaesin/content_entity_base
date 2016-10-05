@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains
- *   \Drupal\content_entity_base\Entity\Routing\RevisionObjectExtractionTrait.
- */
-
 namespace Drupal\content_entity_base\Entity\Routing;
 
 use Drupal\Core\Routing\RouteMatchInterface;

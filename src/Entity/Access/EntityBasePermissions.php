@@ -164,4 +164,5 @@ class EntityBasePermissions implements ContainerInjectionInterface {
       ],
     ];
   }
+
 }
