@@ -33,4 +33,25 @@ class EntityBaseAccessControlHandler extends EntityAccessControlHandler {
     return $access;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
+    $allowed_permissions = [];
+    if ($admin_permission = $this->entityType->getAdminPermission()) {
+      $allowed_permissions[] = $admin_permission;
+    }
+
+    if ($entity_bundle) {
+      $allowed_permissions[] = "create {$entity_bundle} {$this->entityTypeId}";
+    }
+
+    foreach ($allowed_permissions as $allowed_permission) {
+      if ($account->hasPermission($allowed_permission)) {
+        return AccessResult::allowed()->addCacheContexts(['user.permissions']);
+      }
+    }
+    return AccessResult::neutral();
+  }
+
 }
