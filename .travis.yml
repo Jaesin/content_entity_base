@@ -8,6 +8,7 @@ php:
   - hhvm
 
 env:
+  - DRUPAL_VERSION="~8.1.0" ENTITY_VERSION="1.x-dev"
   - DRUPAL_VERSION="~8.2.0-dev" ENTITY_VERSION="1.x-dev"
 
 matrix:
@@ -15,6 +16,7 @@ matrix:
     # We cannot use hhvm-nightly since that does not work in Travis CI's old
     # Ubuntu 12.04.
     - php: hhvm
+    - env: DRUPAL_VERSION="~8.1.0" ENTITY_VERSION="1.x-dev"
 
   # Don't wait for the allowed failures to build.
   fast_finish: true
