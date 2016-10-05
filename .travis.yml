@@ -27,25 +27,27 @@ mysql:
 install:
   # Remove Xdebug.
   - phpenv config-rm xdebug.ini || true
-  # Remember the module folder.
-  - TESTDIR=$(pwd)
-  # Install drupal with composer.
-  - composer create-project drupal/drupal drupal "$DRUPAL_VERSION" --no-interaction && cd drupal
-  - composer config repositories.drupal composer https://packages.drupal.org/8
-  - composer require drupal/entity:$ENTITY_VERSION
-
-before_script:
   # Create database.
   - mysql -e 'create database ceb'
-
   # Export database variable for kernel tests.
   - export SIMPLETEST_DB=mysql://root:@127.0.0.1/ceb
   # Export web server URL for browser tests.
   - export SIMPLETEST_BASE_URL=http://localhost:8888
 
+  # Remember the module folder.
+  - TESTDIR=$(pwd)
+  # Navigate out of module directory to prevent blown stack by recursive module lookup.
+  - cd ..
+
+  # Install drupal and dependent modules with composer.
+  - composer create-project drupal/drupal drupal "$DRUPAL_VERSION" --no-interaction && cd drupal
+  - composer config repositories.drupal composer https://packages.drupal.org/8
+  - composer require drupal/entity:$ENTITY_VERSION
+
   # Reference module in build site.
   - ln -s $TESTDIR modules/content_entity_base
 
+before_script:
   # Start a web server on port 8888, run in the background; wait for
   # initialization.
   - nohup php -S localhost:8888 > /dev/null 2>&1 &
