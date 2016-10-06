@@ -12,7 +12,8 @@ use Drupal\Core\Routing\RouteMatchInterface;
 class EntityBaseForm extends ContentEntityForm {
 
   /**
- * @var \Drupal\content_entity_base\Entity\EntityBaseInterface */
+   * @var \Drupal\content_entity_base\Entity\EntityBaseInterface
+   */
   protected $entity;
 
   /**
