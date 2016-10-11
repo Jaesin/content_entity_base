@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- *   Contains Drupal\ceb_test\Entity\CebTestContentType.
- */
-
 namespace Drupal\ceb_test\Entity;
 
 use Drupal\content_entity_base\Entity\EntityTypeBase;

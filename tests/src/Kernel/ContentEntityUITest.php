@@ -2,9 +2,6 @@
 
 namespace Drupal\Tests\content_entity_base\Kernel;
 
-use Drupal\ceb_test\Entity\CebTestContent;
-use Drupal\ceb_test\Entity\CebTestContentType;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\user\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -55,7 +52,7 @@ class ContentEntityUITest extends CEBKernelTestBase {
     $this->users = [
       'anon' => User::load(0),
       'root' => $root_user,
-      'ceb_admin' => $this->drupalCreateUser(['administer '. $this->entity_definition->id()]),
+      'ceb_admin' => $this->drupalCreateUser(['administer ' . $this->entity_definition->id()]),
     ];
 
     $this->account_switcher = \Drupal::service('account_switcher');
@@ -123,9 +120,9 @@ class ContentEntityUITest extends CEBKernelTestBase {
     $response = $this->httpKernel->handle(Request::create('/admin/ceb_test_content/add'));
     // The content add page should redirect to  ceb_test_content/add/{{bundle_0_id}} when there is only one bundle.
     $this->assertEquals(302, $response->getStatusCode());
-    $this->assertEquals('http://localhost/admin/ceb_test_content/add/'. $this->bundles[0]->id(), $response->getTargetUrl());
+    $this->assertEquals('http://localhost/admin/ceb_test_content/add/' . $this->bundles[0]->id(), $response->getTargetUrl());
     // Test the add form.
-    $response = $this->httpKernel->handle(Request::create('/admin/ceb_test_content/add/'. $this->bundles[0]->id()));
+    $response = $this->httpKernel->handle(Request::create('/admin/ceb_test_content/add/' . $this->bundles[0]->id()));
     $this->assertEquals(200, $response->getStatusCode());
     $this->setRawContent($response->getContent());
     $this->assertTitle('Add ceb test | Drupal');
@@ -140,9 +137,9 @@ class ContentEntityUITest extends CEBKernelTestBase {
     $response = $this->httpKernel->handle(Request::create('/admin/ceb_test_content/add'));
     // The content add page should redirect to  ceb_test_content/add/{{bundle_0_id}} when there is only one bundle.
     $this->assertEquals(302, $response->getStatusCode());
-    $this->assertEquals('http://localhost/admin/ceb_test_content/add/'. $this->bundles[0]->id(), $response->getTargetUrl());
+    $this->assertEquals('http://localhost/admin/ceb_test_content/add/' . $this->bundles[0]->id(), $response->getTargetUrl());
     // Test the add form.
-    $response = $this->httpKernel->handle(Request::create('/admin/ceb_test_content/add/'. $this->bundles[0]->id()));
+    $response = $this->httpKernel->handle(Request::create('/admin/ceb_test_content/add/' . $this->bundles[0]->id()));
     $this->assertEquals(200, $response->getStatusCode());
     $this->setRawContent($response->getContent());
     $this->assertTitle('Add ceb test | Drupal');
@@ -156,7 +153,7 @@ class ContentEntityUITest extends CEBKernelTestBase {
     $response = $this->httpKernel->handle(Request::create('/admin/ceb_test_content/add/' . $name_label_bundle->id()));
     $this->assertEquals(200, $response->getStatusCode());
     $this->setRawContent($response->getContent());
-    $this->assertPattern('/\<label[^\>]+\>'.$name_label.'\<\/label\>/', "The name label ({$name_label}) was used in the add form.");
+    $this->assertPattern('/\<label[^\>]+\>' . $name_label . '\<\/label\>/', "The name label ({$name_label}) was used in the add form.");
     // Switch back to the anon account.
     $this->account_switcher->switchBack();
   }

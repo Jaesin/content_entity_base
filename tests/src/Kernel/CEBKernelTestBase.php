@@ -4,7 +4,6 @@ namespace Drupal\Tests\content_entity_base\Kernel;
 
 use Drupal\ceb_test\Entity\CebTestContent;
 use Drupal\ceb_test\Entity\CebTestContentType;
-use Drupal\content_entity_base\Entity\EntityBaseInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
@@ -131,4 +130,5 @@ class CEBKernelTestBase extends KernelTestBase {
       'body' => $this->randomString(),
     ]);
   }
+
 }

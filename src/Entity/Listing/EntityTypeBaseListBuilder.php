@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\content_entity_base\Entity\Listing\EntityTypeBaseListBuilder.
- */
-
 namespace Drupal\content_entity_base\Entity\Listing;
 
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
@@ -75,4 +70,5 @@ class EntityTypeBaseListBuilder extends ConfigEntityListBuilder {
   protected function getBundleOfDefinition() {
     return \Drupal::entityManager()->getDefinition($this->entityType->getBundleOf());
   }
+
 }

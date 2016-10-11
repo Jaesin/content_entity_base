@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\content_entity_base\Entity\Form\EntityRevisionDeleteForm.
- */
-
 namespace Drupal\content_entity_base\Entity\Form;
 
 use Drupal\content_entity_base\Entity\Revision\RevisionLogInterface;
@@ -124,4 +119,5 @@ class EntityRevisionDeleteForm extends ConfirmFormBase {
     ]));
     $form_state->setRedirectUrl($this->entityRevision->toUrl('version-history'));
   }
+
 }

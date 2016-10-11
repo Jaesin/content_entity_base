@@ -37,7 +37,7 @@ function content_entity_base_theme_registry_alter(&$theme_registry) {
         'add_bundle_message' => NULL,
       ],
       'template' => 'ceb-entity-add-list',
-      'path' => drupal_get_path('module','content_entity_base').'/templates',
+      'path' => drupal_get_path('module', 'content_entity_base') . '/templates',
     ];
   }
 }

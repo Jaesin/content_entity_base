@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\content_entity_base\Entity\Form\EntityTypeBaseDeleteForm.
- */
-
 namespace Drupal\content_entity_base\Entity\Form;
 
 use Drupal\Core\Entity\EntityDeleteForm;

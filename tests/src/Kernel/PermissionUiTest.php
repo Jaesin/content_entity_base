@@ -1,16 +1,8 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\content_entity_base\Kernel\RevisionUiTest.
- */
-
 namespace Drupal\Tests\content_entity_base\Kernel;
 
-use Drupal\ceb_test\Entity\CebTestContent;
 use Drupal\ceb_test\Entity\CebTestContentType;
-use Drupal\KernelTests\KernelTestBase;
-use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -68,13 +60,14 @@ class PermissionUiTest extends CEBKernelTestBase {
     $this->setRawContent($response->getContent());
     $this->assertTitle('Permissions | Drupal');
 
-    $drupal_version_parts = explode('.',\Drupal::VERSION );
+    $drupal_version_parts = explode('.', \Drupal::VERSION );
     $drupal_minor = $drupal_version_parts[1];
     if ($drupal_minor !== "0") {
       // This test will require Drupal 8.1.x.
       $this->assertNoPattern('/<td[^>]*id="module-content_entity_base"/', 'The permissions page does not contain an entry for content entity base.');
       $this->assertPattern('/<td[^>]*id="module-ceb_test"/', 'The permissions page contains an entry for the CEB Test Entity module.');
-    } else {
+    }
+    else {
       $this->assertPattern('/<td[^>]*id="module-content_entity_base"/', 'The permissions page contains an entry for content entity base.');
       $this->assertNoPattern('/<td[^>]*id="module-ceb_test"/', 'The permissions page does not contain an entry for the CEB Test Entity module.');
     }
@@ -97,4 +90,5 @@ class PermissionUiTest extends CEBKernelTestBase {
     $this->assertText('Revert all CEB Test revisions');
     $this->assertText('View all CEB Test revisions');
   }
+
 }

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\content_entity_base\Entity\Storage\RevisionableStorageInterface.
- */
-
 namespace Drupal\content_entity_base\Entity\Storage;
 
 use Drupal\Core\Entity\ContentEntityInterface;
@@ -22,7 +17,7 @@ interface RevisionableStorageInterface extends EntityStorageInterface {
    *   The entity.
    *
    * @return int The number of revisions in the default language.
-   * The number of revisions in the default language.
+   *   The number of revisions in the default language.
    */
   public function countDefaultLanguageRevisions(ContentEntityInterface $entity);
 

@@ -3,7 +3,6 @@
 namespace Drupal\Tests\content_entity_base\Kernel;
 
 use Drupal\ceb_test\Entity\CebTestContent;
-use Drupal\ceb_test\Entity\CebTestContentType;
 use Drupal\user\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 

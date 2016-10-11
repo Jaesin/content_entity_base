@@ -1,15 +1,8 @@
 <?php
 
-/**
- * @file
- * Contains
- *   \Drupal\Tests\content_entity_base\Kernel\ContentEntityBaseStorageTest.
- */
-
 namespace Drupal\Tests\content_entity_base\Kernel;
 
 use Drupal\ceb_test\Entity\CebTestContent;
-use Drupal\KernelTests\KernelTestBase;
 
 /**
  * @coversDefaultClass \Drupal\content_entity_base\Entity\Storage\ContentEntityBaseStorage

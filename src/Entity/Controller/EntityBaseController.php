@@ -12,7 +12,6 @@ use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Routing\UrlGeneratorTrait;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -141,7 +140,8 @@ class EntityBaseController extends EntityController {
       }
       // Add descriptions from the bundle entities.
       $bundles = $this->loadBundleDescriptions($bundles, $bundle_entity_type);
-    } else {
+    }
+    else {
       $bundle_argument = $bundle_key;
     }
 
