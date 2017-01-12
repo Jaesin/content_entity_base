@@ -15,8 +15,9 @@ env:
     - SIMPLETEST_DB="mysql://root:@127.0.0.1/drupal"
     # Web server URL for browser tests.
     - SIMPLETEST_BASE_URL="http://localhost:8888"
-  - DRUPAL_VERSION="~8.1.0" ENTITY_VERSION="1.x-dev"
-  - DRUPAL_VERSION="~8.2.0-dev" ENTITY_VERSION="1.x-dev"
+  matrix:
+    - DRUPAL_VERSION="~8.1.0" ENTITY_VERSION="1.x-dev"
+    - DRUPAL_VERSION="~8.2.0-dev" ENTITY_VERSION="1.x-dev"
 
 matrix:
   allow_failures:
