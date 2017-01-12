@@ -4,10 +4,17 @@ sudo: false
 php:
   - 5.5
   - 5.6
-  - 7
+  - 7.1
   - hhvm
 
 env:
+  global: 
+    # The name of the moduel to run tests on (this module).
+    - DRUPAL_MODULE=content_entity_base
+    # Database variable for kernel tests.
+    - SIMPLETEST_DB="mysql://root:@127.0.0.1/drupal"
+    # Web server URL for browser tests.
+    - SIMPLETEST_BASE_URL="http://localhost:8888"
   - DRUPAL_VERSION="~8.1.0" ENTITY_VERSION="1.x-dev"
   - DRUPAL_VERSION="~8.2.0-dev" ENTITY_VERSION="1.x-dev"
 
@@ -22,7 +29,7 @@ matrix:
   fast_finish: true
 
 mysql:
-  database: ceb
+  database: drupal
   username: root
   encoding: utf8
 
@@ -30,14 +37,8 @@ install:
   # Remove Xdebug.
   - phpenv config-rm xdebug.ini || true
   # Create database.
-  - mysql -e 'create database ceb'
-  # Export database variable for kernel tests.
-  - export SIMPLETEST_DB=mysql://root:@127.0.0.1/ceb
-  # Export web server URL for browser tests.
-  - export SIMPLETEST_BASE_URL=http://localhost:8888
+  - mysql -e 'CREATE DATABASE IF NOT EXISTS drupal CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci' -uroot
 
-  # Remember the module folder.
-  - TESTDIR=$(pwd)
   # Navigate out of module directory to prevent blown stack by recursive module lookup.
   - cd ..
 
@@ -47,7 +48,7 @@ install:
   - composer require drupal/entity:$ENTITY_VERSION
 
   # Reference module in build site.
-  - ln -s $TESTDIR modules/content_entity_base
+  - ln -s $TRAVIS_BUILD_DIR modules/$DRUPAL_MODULE
 
 before_script:
   # Start a web server on port 8888, run in the background; wait for
@@ -56,4 +57,4 @@ before_script:
 
 script:
   # Run the PHPUnit tests which also include the kernel tests.
-  - ./vendor/phpunit/phpunit/phpunit -c ./core/phpunit.xml.dist --verbose ./modules/content_entity_base
+  - ./vendor/phpunit/phpunit/phpunit -c ./core/phpunit.xml.dist --verbose ./modules/$DRUPAL_MODULE
